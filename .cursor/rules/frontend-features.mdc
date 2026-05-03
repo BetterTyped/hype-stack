@@ -1,0 +1,22 @@
+---
+description: Frontend feature vertical architecture rules
+globs: apps/frontend/src/features/**/*
+alwaysApply: false
+---
+
+# Frontend Features
+
+When working in `apps/frontend/src/features`, organize code by vertical ownership using `src/features/<domain>/<feature>`.
+Read `apps/frontend/src/features/README.md` for the full feature guidelines before making structural changes.
+
+- **ALWAYS nest feature files inside a `<domain>/<feature>/` folder.** Never place files directly inside `src/features/<domain>/` without the feature subfolder. Even a single-file feature must have its own folder: `src/features/settings/profile-tab/profile-tab.tsx`, not `src/features/settings/profile-tab.tsx`.
+- **Pages belong in `src/routes/`, NOT in features.** Route files import feature components and render them. Features never contain "page" files.
+- Keep feature-specific components, hooks, queries, schemas, types, utils, tests, and assets inside the owning `src/features/<domain>/<feature>` folder.
+- **Hooks are scoped to where they're needed:** feature-level in `<feature>/hooks/` when only one feature uses them, domain-level in `<domain>/hooks/` when shared across features in the domain, global in `src/hooks/` when truly app-wide.
+- **No flat files at the domain level** except domain-scoped shared folders (`hooks/`, `listeners/`, `types/`, `constants/`).
+- Do not add new features as flat `src/features/<feature>` folders.
+- Do not move feature code into global `components`, `hooks`, `utils`, or `types` folders just because of file kind.
+- Import another feature through its public root API when available. Avoid deep imports into another feature's internals.
+- Add new shared code only when there is a real shared owner. Otherwise keep it colocated with the feature that needs it.
+- Preserve and update feature root exports when changing public behavior.
+- Run the most targeted available Nx checks for the affected feature, then broaden checks when changes cross feature boundaries.

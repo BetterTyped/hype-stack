@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "composite": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "paths": {
+      "@backend/*": ["./src/*"]
+    }
+  },
+  "files": [],
+  "include": ["./global.d.ts"],
+  "extends": "../../tsconfig.base.json"
+}

@@ -1,0 +1,59 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
+    "jsx": "react-jsx",
+    "lib": ["dom"],
+    "types": ["node", "vite/client"],
+    "rootDir": "../..",
+    "strict": true,
+    "composite": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@/assets/*": ["./assets/*"],
+      "@/*": ["./src/*"],
+      "@hype-stack/backend": ["../backend/exported/index.ts"],
+      "@hype-stack/backend/*": ["../backend/exported/*"],
+      "@backend/*": ["../backend/src/*"],
+      "@prisma/client": ["../backend/src/db/postgres/generated/client"]
+    }
+  },
+  "exclude": [
+    "out-tsc",
+    "dist",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "src/**/*.spec.tsx",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.js",
+    "src/**/*.test.js",
+    "src/**/*.spec.jsx",
+    "src/**/*.test.jsx",
+    "configs/vite.web.config.mts",
+    "vite.config.mts",
+    "vitest.config.ts",
+    "vitest.config.mts",
+    "eslint.config.js",
+    "eslint.config.cjs",
+    "eslint.config.mjs"
+  ],
+  "include": [
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.json",
+    "src/config.ts",
+    "../backend/exported/**/*.ts",
+    "../backend/global.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../packages/enums/tsconfig.lib.json"
+    },
+    {
+      "path": "../backend/tsconfig.app.json"
+    }
+  ]
+}

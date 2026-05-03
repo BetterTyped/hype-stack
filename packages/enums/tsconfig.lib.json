@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
+    "emitDeclarationOnly": true,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@enums/*": ["./src/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "references": [],
+  "exclude": ["vite.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts"]
+}

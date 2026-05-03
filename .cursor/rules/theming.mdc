@@ -1,0 +1,78 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Theme System
+
+All visual theming is controlled by CSS custom properties in a single file. Never use raw Tailwind palette colors (`zinc-*`, `blue-500`, `amber-400`, etc.) in application code — always use semantic tokens so the theme stays consistent when someone rethemes the template.
+
+## Where tokens live
+
+**`apps/frontend/assets/styles.css`** is the single source of truth:
+
+- **`:root { … }`** — light-mode token values (OKLCH color format).
+- **`.dark { … }`** — dark-mode overrides (same variable names, different values).
+- **`@theme inline { … }`** — bridges CSS variables into Tailwind utility classes (e.g. `--color-primary: var(--primary)` enables `bg-primary`, `text-primary`, etc.).
+
+## Two-layer background
+
+The layout uses two distinct background layers controlled by custom tokens:
+
+| Token | Purpose | Applied where |
+|-------|---------|---------------|
+| `--page-background` | Outer page chrome — the creamy/tinted backdrop visible around edges and padding | `body` via `bg-page-background` in `styles.css` base layer |
+| `--content-background` | Inner content surface — the panel containing sidebar + main content | `Layout` grid in `apps/frontend/src/components/layouts/page/layout.tsx` via `bg-content-background` |
+
+Both are wired into `@theme inline` as `--color-page-background` and `--color-content-background`.
+
+## How to retheme
+
+1. Open `apps/frontend/assets/styles.css`.
+2. Edit the `:root` block to change light-mode colors (all values use OKLCH: `oklch(lightness chroma hue)`).
+3. Edit the `.dark` block for dark-mode equivalents.
+4. That's it — all components use semantic tokens that resolve to these variables.
+
+Key tokens to customize:
+
+- **Brand**: `--primary`, `--primary-foreground`, `--secondary`, `--secondary-foreground`
+- **Surfaces**: `--page-background`, `--content-background`, `--background`, `--card`, `--popover`, `--sidebar`
+- **Neutrals**: `--muted`, `--accent`, `--border`, `--input`, `--ring` (and their `-foreground` variants)
+- **Text**: `--foreground`, `--muted-foreground`, `--accent-foreground`
+
+## Semantic token inventory
+
+| Group | Tokens |
+|-------|--------|
+| Page surfaces | `page-background`, `content-background`, `background`, `card`, `popover`, `sidebar` |
+| Brand | `primary`, `secondary`, `destructive` (each with `-foreground`) |
+| Neutrals | `muted`, `accent`, `border`, `input`, `ring` (each with `-foreground` where applicable) |
+| Sidebar | `sidebar`, `sidebar-foreground`, `sidebar-primary`, `sidebar-accent`, `sidebar-border`, `sidebar-ring` (each with `-foreground`) |
+| Charts | `chart-1` through `chart-5` (HSL format for chart libraries) |
+| Decorative | `color-1` through `color-5` (gradient/rainbow accents) |
+
+## What NOT to do
+
+- **Don't use raw Tailwind palette colors** in components (e.g. `bg-zinc-400`, `text-blue-500`). Use `bg-accent`, `text-muted-foreground`, `bg-primary`, etc.
+- **Don't hardcode hex/oklch values** in JSX `style` props or Tailwind arbitrary values for brand-related colors. Reference `var(--primary)`, `var(--secondary)`, etc.
+- **Don't use `bg-primary-foreground`** as a surface color — it's meant for text on primary buttons. Use `bg-content-background` for the content panel.
+- **Exception**: macOS traffic-light window button colors (`bg-red-500`, `bg-green-500`, `bg-yellow-500`) in `native-layout.tsx` are OS conventions, not brand colors.
+
+## Login page gradient
+
+The login page right panel (`routes/(public)/login/index.tsx`) uses a conic gradient built from `var(--primary)` and `var(--secondary)`. It auto-adapts when the theme tokens change.
+
+## Logo and branding assets
+
+All brand images live in `apps/frontend/assets/images/`:
+
+| File | Usage |
+|------|-------|
+| `icon.png` | Sidebar header, sub-sidebar, mobile drawer, signup form, Electron window |
+| `logo.png` | Login page hero |
+| `text.png` | Login page header wordmark |
+| `placeholder.png` | Login / new-password decorative image |
+| `favicon.ico`, `favicon-*.png`, `apple-touch-icon.png` | Browser chrome (`index.html`) |
+
+To rebrand: replace these files with same-name equivalents and update `apps/frontend/src/config.ts` for the app name.

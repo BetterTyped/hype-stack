@@ -1,0 +1,83 @@
+---
+globs: apps/frontend/**/*.test.ts,apps/frontend/**/*.test.tsx
+alwaysApply: false
+---
+
+# Frontend Testing Guidelines
+
+## Core Philosophy
+
+**Test real code. No mocks unless physically impossible.**
+
+Components render with real hooks, real SDK, real state management. The only boundary is the network -- HyperFetch `setMock` intercepts HTTP requests so components behave exactly like production, just with controlled responses.
+
+**`vi.mock` is FORBIDDEN unless there is no other way.** If you think you need `vi.mock`, you're wrong. Find the real way. The only acceptable reason to mock is **third-party integrations that are not available in the test environment** (external SaaS APIs with no local equivalent). This also keeps tests fast by avoiding external network calls.
+
+When a new third-party integration needs mocking, **build a reusable helper in `src/testing/helpers/`** so every test file can import a single function instead of duplicating setup. Keep mock helpers focused, typed, and documented so future tests get mocking for free.
+
+## Network mocks
+
+HyperFetch `setMock` on request objects. This is NOT mocking -- it's the framework's built-in test mode that replaces the network layer while keeping everything else real.
+
+```tsx
+import { sdk } from "@/api/sdk";
+
+sdk.users.me.$get.setMock({
+  data: { user: { id: "1", email: "test@example.com" } },
+});
+sdk.auth.login.$post.setMock({ data: { sealedSession: "token" } });
+sdk.auth.login.$post.setMock({
+  data: null,
+  error: { message: "Invalid credentials" },
+  status: 401,
+});
+```
+
+Clean up in `afterEach`:
+
+```tsx
+afterEach(() => {
+  sdk.users.me.$get.setMock(undefined);
+});
+```
+
+## What is NEVER acceptable
+
+- `vi.mock("@hyper-fetch/react")` -- NO
+- `vi.mock("@/api/sdk")` -- NO
+- `vi.mock("@/hooks/use-auth")` -- NO
+- `vi.mock("@tanstack/react-router")` -- NO (use a test router provider)
+- `vi.mock` on ANY internal module -- NO
+
+## Setup
+
+- **Global** (`src/testing/setup/setup.ts`): `@testing-library/jest-dom/vitest`, `cleanup()` after each test.
+- **Config**: `configs/vite.base.config.ts` -- jsdom, globals enabled.
+- **Env vars**: `VITE_API_BASE_URL`, `VITE_APP_TYPE=web`, `VITE_ENVIRONMENT=test`.
+
+## Critical Rules
+
+1. **NEVER import vitest** -- globals are available.
+2. **NEVER `vi.mock` anything** unless physically impossible without it. `setMock` handles API data.
+3. **Use `@testing-library/react`** -- `render`, `screen`, `fireEvent`, `waitFor`.
+4. **No `any` types**.
+5. **No snapshot tests**.
+6. **Tests must be independent** -- clean up `setMock` in `afterEach`.
+7. **Every test MUST use `// Arrange`, `// Act`, `// Assert` comments** to clearly separate setup, execution, and verification. Skip `// Arrange` only when there is no setup.
+
+## File Structure
+
+- Component tests: `<name>.test.tsx` next to the component.
+- Hook tests: `<name>.test.ts` next to the hook.
+- Integration tests: `__tests__/<flow>.integration.test.tsx` inside the feature.
+
+## What to Test
+
+- Renders correct elements with real hooks running against `setMock` data
+- Loading, error, empty, success states -- all driven by `setMock` responses
+- User interactions with real handlers firing real logic
+- Navigation, form submission, conditional rendering -- all real
+
+## What NOT to Test
+
+- CSS/styling, third-party component internals, exact DOM structure

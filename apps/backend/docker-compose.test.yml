@@ -1,0 +1,84 @@
+version: "3.9"
+
+name: hype-stack-test
+
+services:
+  # Dev secret manager for tests (HashiCorp Vault in dev mode).
+  # Exposed on 8201 to avoid clashing with the non-test compose.
+  vault-test:
+    image: hashicorp/vault:1.16
+    container_name: backend-vault-test
+    ports:
+      - "8201:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_TOKEN_TEST:-dev-root-token}
+      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
+    cap_add:
+      - IPC_LOCK
+    command: ["server", "-dev"]
+    restart: unless-stopped
+
+  postgres-test:
+    image: pgvector/pgvector:pg17
+    container_name: backend-postgres-test
+    env_file:
+      - .env.test
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+      - ./db/postgres/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ai_user} -d ${POSTGRES_DB:-hype_stack_test}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  valkey-test:
+    image: valkey/valkey:latest
+    container_name: backend-valkey-test
+    env_file:
+      - .env.test
+    command: ["valkey-server", "--appendonly", "yes"]
+    ports:
+      - "6380:6379"
+    volumes:
+      - valkey_test_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping | grep PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  rustfs-test:
+    image: rustfs/rustfs:latest
+    container_name: backend-rustfs-test
+    ports:
+      - "9002:9000"
+      - "9003:9001"
+    environment:
+      RUSTFS_ADDRESS: ":9000"
+      RUSTFS_ACCESS_KEY: rustfstest
+      RUSTFS_SECRET_KEY: rustfstest
+      RUSTFS_CONSOLE_ENABLE: "false"
+    volumes:
+      - rustfs_test_data:/data
+    command: ["/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 9000"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  postgres_test_data:
+  valkey_test_data:
+  rustfs_test_data:

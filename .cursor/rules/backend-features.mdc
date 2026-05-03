@@ -1,0 +1,216 @@
+---
+description: Backend feature vertical architecture rules
+globs: apps/backend/src/features/**/*,apps/backend/src/routes/**/*
+alwaysApply: false
+---
+
+# Backend Features
+
+When working in `apps/backend/src/features`, organize code by vertical domain ownership.
+Read `apps/backend/src/features/README.md` for the full feature guidelines before making structural changes.
+
+- Keep domain-owned code inside the owning `src/features/<domain>` folder.
+- Use `modules/<module>/index.ts` for domain use cases and capabilities.
+- Put module supporting files in clear-purpose folders such as `schemas/`, `types/`, `helpers/`, `mappers/`, `emails/`, or `constants/`.
+- Keep email templates (React Email) in the module's `emails/` folder, colocated with the feature that sends them.
+- Keep real-time WebSocket emitters in the domain's `ws/emitters.ts` folder for server-side push logic via `wsManager.pushToUser()`. Socket event definitions (schemas, types, handlers) live in `src/sockets/<domain>/index.ts` using `SocketRouter`.
+- Keep routes thin: validate request input, read context, call module functions, and return responses.
+- Keep database reads in `db/queries` and writes/state changes in `db/mutations`.
+- Avoid cross-feature imports into incidental internals; call clear public modules instead.
+- Add shared code only when there is a real shared owner. Otherwise keep it colocated with the domain/module that needs it.
+- **Do NOT create a `src/services/` directory.** Shared infrastructure belongs in `src/libs/`, third-party setup in `src/libs/`, database clients in `src/db/`, cache in `src/cache/`, and global middleware in `src/middleware/`.
+- Run the most targeted backend checks for the affected feature, then broaden checks when changes cross feature or route boundaries.
+
+## Structure
+
+```txt
+src/features/<domain>/
+  modules/
+    <use-case>/
+      index.ts
+      schemas/
+        <use-case>.schema.ts
+      types/
+      helpers/
+      emails/
+  db/
+    queries/
+      get-by-id.query.ts
+      get-many.query.ts
+    mutations/
+      create-example.mutation.ts
+      update-example.mutation.ts
+  schemas.ts
+  types/
+  helpers/
+  constants/
+  cron/
+  webhooks/
+  ws/
+    emitters.ts
+  __tests__/
+```
+
+Use only the folders a domain actually needs. Small domains might only need a `schemas.ts` or one module folder.
+
+## Sockets
+
+WebSocket event definitions live in `src/sockets/<domain>/index.ts`, separate from HTTP routes:
+
+```txt
+src/sockets/<domain>/
+  index.ts          # SocketRouter definition with .emitter() and .listener() declarations
+```
+
+Use `createSocketRouter()` to define events:
+
+- **`.emitter(topic)<Payload>()`** declares a server-to-client event (backend pushes, frontend listens). Type-only — the actual push happens via `wsManager.pushToUser()` in the feature's `ws/emitters.ts`.
+- **`.listener(topic, handler)`** declares a client-to-server event with an inline handler (backend listens, frontend emits). Use `wsValidate(schema)` middleware for Zod validation.
+
+```ts
+import { createSocketRouter } from "@backend/libs/websocket/socket-router";
+import { wsValidate } from "@backend/libs/websocket/ws-validate";
+import { z } from "zod";
+
+const markReadSchema = z.object({ notificationId: z.string() });
+
+export const notificationSockets = createSocketRouter()
+  .emitter("new")<WsNotificationPayload>()
+  .emitter("count")<WsUnreadCountPayload>()
+  .listener("mark-read", wsValidate(markReadSchema), async (c) => {
+    await markReadMutation({ notificationId: c.data.notificationId, userId: c.userId });
+  });
+```
+
+Register socket routers in `src/sockets/index.ts` with `.socket(prefix, router)` — mirroring Hono's `app.route()`:
+
+```ts
+const sockets = new SocketRouter()
+  .socket("/notification", notificationSockets)
+  .socket("/invitation", invitationSockets);
+
+export const registerSockets = (app: Hono) => {
+  app.route("/ws", sockets.routes());
+};
+```
+
+### Server-side emitting
+
+Use `wsEmit` from `@backend/sockets/emit` for type-safe server-side pushes. It enforces correct topic strings and payload types at compile time:
+
+```ts
+import { wsEmit } from "@backend/sockets/emit";
+
+wsEmit.toUser({ userId, topic: "notification/new", data: notification });
+wsEmit.toUsers({ userIds, topic: "notification/new", data: notification });
+wsEmit.toOrganization({ organizationId, topic: "invitation/new", data: invitation });
+wsEmit.broadcast({ topic: "notification/count", data: { unreadCount: 0 } });
+```
+
+Do **not** use `wsManager.pushToUser()` directly for application messages — always use `wsEmit` so topics and payloads are type-checked.
+
+Do **not** use the old `registerWsHandler()` pattern — all WebSocket event handling goes through `SocketRouter`.
+
+## Routes
+
+Domain HTTP endpoints live in `src/routes/<domain>/index.ts`. All routes for a domain should be consolidated into a
+single file:
+
+```ts
+// src/routes/workflows/index.ts
+import { getAuthenticatedApp } from "@/utils/misc/hono";
+import { validate } from "@/middleware/validation/validate";
+import { createWorkflow } from "@/features/workflows/modules/create-workflow";
+import { createWorkflowSchema } from "@/features/workflows/modules/create-workflow/schemas/create-workflow.schema";
+
+export const workflowRoutes = getAuthenticatedApp()
+  .get("/", async (ctx) => {
+    return ctx.json({ ... });
+  })
+  .post("/", validate("json", createWorkflowSchema), async (ctx) => {
+    const body = ctx.req.valid("json");
+    const result = await createWorkflow({ data: body });
+    return ctx.json(result);
+  });
+```
+
+Then register in the main routes file:
+
+```ts
+// src/routes/index.ts
+import { workflowRoutes } from "./workflows";
+
+export const registerRoutes = (app: Hono) => {
+  app.route("/workflows", workflowRoutes);
+};
+```
+
+Route files should stay thin:
+
+- Use `getAuthenticatedApp()` for authenticated route groups or a plain Hono app for public routes.
+- Import schemas and module functions from the owning domain.
+- Use descriptive route params such as `:workflowId` -- avoid generic `:id`.
+- Throw typed application errors and let global error middleware serialize them.
+- Move logic into the owning module when a handler starts doing more than request/response coordination.
+
+## Validation Schemas
+
+Use Zod for request and operation validation. Keep schemas next to the features they validate, NOT in routes:
+
+- `modules/<module>/schemas/<module>.schema.ts` for module-specific schemas.
+- `db/mutations/*.mutation.ts` for schemas tightly coupled to a write operation.
+- `db/queries/*.query.ts` for schemas tightly coupled to a read/filter operation.
+- `schemas.ts` at the domain level for schemas shared by multiple modules or routes.
+
+```ts
+// features/auth/modules/login/schemas/login.schema.ts
+import { z } from "zod";
+
+export const loginSchema = z.object({
+  email: z.string(),
+  password: z.string(),
+});
+
+export type LoginSchema = z.infer<typeof loginSchema>;
+```
+
+## Database Access
+
+- Put reads in `db/queries` and writes/state changes in `db/mutations`.
+- For INSERTS: always use Prisma. Only exception is complex inserts requiring transactions.
+- For query building: use Kysely.
+- Module functions should call db functions instead of reaching directly into ORM/query-builder APIs.
+- Use the shared `getPaginatedQuery` helper for paginated reads.
+
+```ts
+import { getPaginatedQuery } from "@/utils/database/pagination";
+
+export const getMany = async ({
+  context,
+  queryParams,
+}: {
+  context: Context;
+  queryParams: QueryParams;
+}) => {
+  const { limit = 20, offset = 0 } = queryParamsSchema.parse(queryParams);
+  const query = context.var.postgres.selectFrom("...").selectAll();
+  return getPaginatedQuery({ query, limit, offset });
+};
+```
+
+## Errors And Permissions
+
+Use predefined errors with `ApplicationError` to throw errors. We do not need try/catch since we have a global
+middleware handling errors -- just throw with the correct error class.
+
+- Use application errors for domain failures (not found, invalid state, bad request).
+- Use auth errors for authentication/session failures.
+- Use authorization errors for missing permissions.
+- Let validation errors come from schema parsing and validation middleware.
+
+## URL Parameters
+
+Use full names to describe parameters:
+
+- Bad: `workflows/:id`
+- Good: `workflows/:workflowId`

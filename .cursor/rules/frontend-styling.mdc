@@ -1,0 +1,37 @@
+---
+description: Frontend styling and UI component conventions
+globs: apps/frontend/src/**/*
+alwaysApply: false
+---
+
+# Frontend Styling
+
+Style all frontend UI with **Tailwind CSS** utility classes and **shadcn/ui** components.
+
+- Use Tailwind utility classes for layout, spacing, typography, and colors. Do not write custom CSS unless Tailwind cannot express the style.
+- Use existing shadcn/ui primitives from `components/ui/` (Button, Input, Label, Card, Alert, Dialog, etc.) before creating custom components.
+- Compose variants with `class-variance-authority` (`cva`) when a component needs multiple visual states.
+- Use `cn()` from `@/lib/utils` to merge conditional class names.
+- Use CSS variables defined in `assets/styles.css` for theme tokens (colors, radius, etc.) rather than hard-coded hex values in application code.
+- Keep email templates (React Email in the backend) styled with the `<Tailwind>` wrapper from `@react-email/components` so the same utility-class approach applies to emails.
+
+## Page Layout Consistency
+
+All pages rendered inside the app layout (`<Outlet />`) must follow the same structural pattern:
+
+- **Full width.** Pages use `w-full` — never constrain with `max-w-*` or `mx-auto` at the page level. The layout wrapper already handles padding (`p-4`).
+- **Page header:** icon + `h1` title + description paragraph, matching the settings page pattern:
+  ```
+  <div className="w-full space-y-8">
+    <div className="space-y-1">
+      <div className="flex items-center gap-2.5">
+        <Icon className="h-5 w-5 text-muted-foreground" />
+        <h1 className="text-xl font-semibold tracking-tight">Page Title</h1>
+      </div>
+      <p className="text-sm text-muted-foreground">Description text.</p>
+    </div>
+    {/* page content */}
+  </div>
+  ```
+- **No extra Card wrappers for top-level page content.** Card is for distinct sections within a page (e.g., profile card, organization card inside settings). Don't wrap an entire feature's content in a Card just because it's a page — use the page header pattern above instead.
+- **Do NOT add page-level padding** (`p-6`, `p-8`, etc.) in route components — the layout already provides it.

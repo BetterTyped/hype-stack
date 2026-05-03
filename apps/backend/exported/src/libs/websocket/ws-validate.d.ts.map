@@ -1,0 +1,1 @@
+{"version":3,"file":"ws-validate.d.ts","sourceRoot":"","sources":["../../../../src/libs/websocket/ws-validate.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,CAAC,EAAE,MAAM,KAAK,CAAC;AAE7B,OAAO,KAAK,EAAE,YAAY,EAAE,MAAM,SAAS,CAAC;AAE5C,eAAO,MAAM,UAAU,GAAI,CAAC,SAAS,CAAC,CAAC,SAAS,UAAU,CAAC,KAAG,YAAY,CAAC,CAAC,CAAC,KAAK,CAAC,CAAC,CAAC,CAEnF,CAAC"}

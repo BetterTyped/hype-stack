@@ -1,0 +1,15 @@
+{
+  "name": "@hype-stack/frontend-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "format": "pnpm --dir ../.. exec oxfmt --write apps/frontend-e2e",
+    "typecheck": "tsgo --noEmit",
+    "lint": "pnpm --dir ../.. exec oxlint --fix apps/frontend-e2e"
+  },
+  "nx": {
+    "implicitDependencies": [
+      "@hype-stack/frontend"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Backend
+
+Hype Stack is an open-source full-stack template. The backend lives in `apps/backend`.
+
+## Tech Stack
+
+1. Framework: **Hono**
+2. Database: **Postgres**
+3. ORM: **Prisma**
+4. Query Builder: **Kysely**
+5. Cache: **Redis**
+6. Auth: **WorkOS**
+7. Requests: **HyperFetch**
+
+## General Rules
+
+- NEVER USE `as any` -- always find the right types.
+- NEVER USE dynamic imports.

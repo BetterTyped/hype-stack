@@ -1,0 +1,144 @@
+---
+globs: apps/backend/**/*.test.ts
+alwaysApply: false
+---
+
+# Backend Testing Guidelines
+
+## Core Philosophy
+
+**Test real code. No mocks unless physically impossible.**
+
+Feature module tests (`features/<domain>/modules/<feature>/index.ts`) are INTEGRATION TESTS.
+They use real DB (Postgres), real cache (Valkey), real storage (S3/RustFS) from the test Docker environment.
+They create real data via `db/mutations/` functions, query it back, and verify the full flow.
+
+**`vi.mock` is FORBIDDEN unless there is no other way.** If you think you need `vi.mock`, you're wrong. Find the real way. The only acceptable reason to mock is **third-party integrations that are not available in the test Docker environment** (external SaaS APIs with no local equivalent). This also keeps tests fast by avoiding network calls to external services.
+
+Currently mocked third-party services:
+
+- WorkOS (external SaaS -- auth, organizations, memberships, invitations)
+- Resend (external SaaS -- email sending)
+
+When a new third-party integration needs mocking, **build a reusable helper in `src/testing/helpers/`** so every test file can import a single function instead of duplicating setup. Keep mock helpers focused, typed, and documented so future tests get mocking for free.
+
+**Everything else runs real:**
+
+- Database queries/mutations -- real Postgres from Docker
+- Valkey/Redis operations -- real Valkey from Docker
+- S3/Storage operations -- real RustFS from Docker
+- Internal feature logic, helpers, utils, channels, services -- all real
+
+**Unit tests are ONLY for:**
+
+- Pure utility functions with no side effects
+- Schema validation logic
+- Mapping/transformation functions
+- Sub-components of features (not the main `index.ts`)
+
+## Setup Architecture
+
+- **Global** (`src/testing/setup/setup.ts`): loads `.env.test`, sets `NODE_ENV=test`. Runs for every test.
+- **Integration** (`setupIntegrationTest()`): connects to real Postgres, Valkey, S3. Call at top of integration test files.
+
+```typescript
+import { setupIntegrationTest } from "@backend/testing/setup/test-utils";
+const env = setupIntegrationTest();
+
+beforeEach(async () => {
+  await env.flushAll();
+});
+```
+
+## File Structure
+
+- **Feature integration tests**: `features/<domain>/modules/<feature>/index.test.ts` (next to source)
+- **Cross-feature integration tests**: `features/<domain>/__tests__/<flow>.integration.test.ts`
+- **Unit tests** (utils, schemas, sub-components only): `{filename}.test.ts` next to source
+
+## Critical Rules
+
+1. **NEVER import vitest** -- globals are available.
+2. **NEVER mock DB, Valkey, or S3** -- they run in Docker.
+3. **Create real data** -- use `db/mutations/` to insert, `db/queries/` to verify.
+4. **Mock only third-party services unavailable in Docker** (WorkOS, Resend, etc.) -- build reusable mock helpers in `src/testing/helpers/` so every test reuses the same setup.
+5. **No `try/catch` for error assertions** -- use `expect().rejects`.
+6. **No `any` types** -- use `vi.fn<(args) => ReturnType>()`.
+7. **Tests must be independent** -- each test creates its own data, `flushAll()` in `beforeEach`.
+8. **Every test MUST use `// Arrange`, `// Act`, `// Assert` comments** to clearly separate setup, execution, and verification. Skip `// Arrange` only when there is no setup.
+
+## WorkOS Mock Pattern
+
+Create reusable mocks in `src/testing/helpers/workos.mock.ts`:
+
+```typescript
+export function mockWorkos() {
+  const mock = {
+    userManagement: {
+      createUser: vi.fn(),
+      authenticateWithPassword: vi.fn(),
+      // ... all methods used in tests
+    },
+    organizations: {
+      createOrganization: vi.fn(),
+      // ... all methods
+    },
+  };
+  vi.spyOn(context, "workos", "get").mockReturnValue(mock as unknown as WorkOS);
+  return mock;
+}
+```
+
+## Test Patterns
+
+### Integration Test (feature modules)
+
+```typescript
+const env = setupIntegrationTest();
+beforeEach(async () => {
+  await env.flushAll();
+});
+
+it("creates project and persists it", async () => {
+  // Arrange -- insert real data
+  const orgId = "org_test_1";
+  const userId = "user_test_1";
+  // Act -- call the actual feature function
+  const result = await createProject({
+    data: { name: "Test" },
+    creatorId: userId,
+    organizationId: orgId,
+  });
+  // Assert -- query DB to verify
+  const saved = await getProjectByIdQuery({
+    projectId: result.projectId,
+    organizationId: orgId,
+  });
+  expect(saved.name).toBe("Test");
+});
+```
+
+### Error Assertions
+
+```typescript
+await expect(doSomething()).rejects.toThrow(AuthError);
+const promise = doSomething();
+await expect(promise).rejects.toThrow(AuthError);
+await expect(promise).rejects.toMatchObject({
+  code: AuthErrorCode.AUTH_NO_SESSION,
+});
+```
+
+## What to Test in Integration Tests
+
+- Full happy path: create data, call feature, verify DB state
+- Error scenarios with real validation (Zod schemas, DB constraints)
+- Side effects: notifications created in DB, cache keys set in Valkey
+- Data integrity: cascade deletes, foreign key constraints
+- Edge cases: empty states, duplicate data, missing references
+
+## What NOT to Test
+
+- External library internals (Prisma, Kysely, Hono routing)
+- TypeScript types, generated code
+- Things already tested by the DB engine (unique constraints fire correctly -- test your code's response)

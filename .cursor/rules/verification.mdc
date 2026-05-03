@@ -1,0 +1,14 @@
+---
+description: Run verification after making changes
+globs:
+alwaysApply: true
+---
+
+# Verification After Changes
+
+- Only run `pnpm typecheck` / `pnpm lint` after large features or refactors touching many files, or when the user explicitly asks.
+- For small and medium fixes, rely on IDE linter feedback (ReadLints) on edited files instead of full project typechecks.
+- If changes are scoped to one app, use the app-specific command:
+  - Backend: `pnpm --filter @hype-stack/backend typecheck`
+  - Frontend: `pnpm --filter @hype-stack/frontend typecheck`
+- Fix any errors you introduced before reporting the work as complete.

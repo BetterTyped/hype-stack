@@ -1,0 +1,34 @@
+---
+description: Use HyperFetch SDK for all API and WebSocket communication on the frontend
+globs: apps/frontend/src/**/*
+alwaysApply: true
+---
+
+# HyperFetch Data Exchange
+
+All frontend API calls should go through the HyperFetch SDK (`sdk` from `@/api/sdk`) instead of raw `fetch()`, `axios`, or other HTTP clients.
+
+## HTTP
+
+- **Reads:** `useFetch(sdk.<path>.$get)` from `@hyper-fetch/react`.
+- **Mutations:** `useSubmit(sdk.<path>.$post | .$put | .$delete)` from `@hyper-fetch/react`.
+- Use `onSubmitSuccess` / `onSubmitError` callbacks for side effects (toast, refetch, navigation).
+- For file uploads, pass `{ payload: formData }` to `submit()` where `formData` is a `FormData` instance.
+- The SDK is fully typed end-to-end from Hono backend routes. Bypassing it loses type safety.
+- New backend endpoints are automatically available on the SDK via the Hono-to-HyperFetch type bridge.
+
+## Cache Invalidation
+
+- Import `client` from `@/api/client` and use `client.cache.invalidate(pattern)` to invalidate cached data.
+- Pass a regex that matches the endpoint path, e.g. `client.cache.invalidate(/\/invitations\/pending/)`.
+- **Never** traverse through an SDK request to reach the cache (e.g. `sdk.foo.$get.client.cache.invalidate(...)`) — always use the `client` import directly.
+- Invalidate after mutations that affect data consumed by other components so all `useFetch` hooks sharing that cache key refetch automatically.
+- Use `refetch()` from `useFetch` when you only need to refresh the current component's own data.
+
+## WebSockets
+
+- **Listening:** `useListener(socketSdk.<domain>.<event>.$listener)` from `@hyper-fetch/react`. Use `onEvent` for incoming data. Never use raw `useEffect` + `.listen()` for socket subscriptions.
+- **Emitting:** `useEmitter(socketSdk.<domain>.<event>.$emitter)` from `@hyper-fetch/react`. Use `emit()` to send data.
+- **Always use `socketSdk` directly** in components and hooks — import it from `@/api/socket`. Do not create intermediate re-export files (e.g. `listeners/index.ts`) or alias variables for socket events. Pass `socketSdk.<domain>.<event>.$listener` / `.$emitter` inline.
+- For payload types, import them directly from `@hype-stack/backend` (e.g. `WsNotificationPayload`). Do not re-export or alias payload types through barrel files.
+- New backend socket events are automatically available on the frontend SDK via the Hono-to-HyperFetch type bridge — no manual type wiring needed.

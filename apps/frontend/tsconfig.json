@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "composite": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "strict": true,
+    "jsx": "react-jsx",
+    "outDir": "dist",
+    "rootDir": "../..",
+    "paths": {
+      "@/assets/*": ["./assets/*"],
+      "@/*": ["./src/*"],
+      "@hype-stack/backend": ["../backend/exported/index.ts"],
+      "@hype-stack/backend/*": ["../backend/exported/*"],
+      "@backend/*": ["../backend/src/*"],
+      "@prisma/client": ["../backend/src/db/postgres/generated/client"]
+    }
+  },
+  "files": [],
+  "include": [],
+  "extends": "../../tsconfig.base.json"
+}

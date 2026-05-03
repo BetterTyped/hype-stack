@@ -1,0 +1,23 @@
+{
+  "name": "@hype-stack/enums",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "vite build",
+    "format": "pnpm --dir ../.. exec oxfmt --write packages/enums",
+    "typecheck": "tsgo --noEmit",
+    "lint": "pnpm --dir ../.. exec oxlint --fix packages/enums"
+  },
+  "nx": {
+    "targets": {
+      "test": {
+        "options": {
+          "passWithNoTests": true
+        }
+      }
+    }
+  }
+}

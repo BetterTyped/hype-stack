@@ -1,0 +1,137 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "eslint",
+    "typescript",
+    "oxc",
+    "unicorn",
+    "react",
+    "react-perf",
+    "import",
+    "jsx-a11y",
+    "promise",
+    "node",
+    "vitest"
+  ],
+  "jsPlugins": [{ "name": "rules", "specifier": "./rules/index.ts" }],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "warn"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2022": true,
+    "vitest": true
+  },
+  "ignorePatterns": [
+    "dist/**",
+    "coverage/**",
+    ".nx/cache/**",
+    ".nx/workspace-data/**",
+    "**/vite.config.*.timestamp*",
+    "**/vitest.config.*.timestamp*",
+    "**/test-output/**",
+    "**/db/postgres/generated/**",
+    "**/exported/**"
+  ],
+  "settings": {
+    "import/internal-regex": "^(@|@license)/",
+    "react": {
+      "version": "19"
+    }
+  },
+  "rules": {
+    "rules/no-json-error-response": "error",
+    "rules/require-json-generic-type": "error",
+    "rules/require-route-crumb": "error",
+    "rules/no-dynamic-import": "error",
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-continue": "off",
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": ["draft", "acc"]
+      }
+    ],
+    "max-params": ["error", 3],
+    "no-unused-vars": "error",
+    "consistent-return": "off",
+    "typescript/no-explicit-any": "error",
+    "import/no-default-export": "error",
+    "import/no-cycle": "off",
+    "import/group-exports": "off",
+    "import/max-dependencies": "off",
+    "import/no-anonymous-default-export": "off",
+    "import/no-named-export": "off",
+    "import/no-nodejs-modules": "off",
+    "import/prefer-default-export": "off",
+    "sort-imports": "off",
+    "sort-keys": "off",
+    "no-magic-numbers": "off",
+    "id-length": "off",
+    "func-style": "off",
+    "max-statements": "off",
+    "no-ternary": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "warn",
+    "react-perf/jsx-no-new-function-as-prop": "off",
+    "react-perf/jsx-no-new-object-as-prop": "error"
+  },
+  "overrides": [
+    {
+      "files": ["apps/frontend/**/*.{ts,tsx,js,jsx}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@backend/*"],
+                "message": "Do not import from @backend/ in frontend code. Use shared types/contracts or the frontend API client instead."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["apps/frontend/src/entry.ts"],
+      "rules": {
+        "rules/no-dynamic-import": "off"
+      }
+    },
+    {
+      "files": ["*.config.*", "vitest.workspace.ts"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    },
+    {
+      "files": [
+        "*.spec.ts",
+        "*.spec.tsx",
+        "*.spec.js",
+        "*.spec.jsx",
+        "*.test.ts",
+        "*.test.tsx",
+        "*.test.js",
+        "*.test.jsx",
+        "**/testing/**"
+      ],
+      "env": {
+        "vitest": true
+      },
+      "rules": {
+        "max-lines": "off",
+        "vitest/require-mock-type-parameters": "off",
+        "jest/require-to-throw-message": "off",
+        "rules/require-json-generic-type": "off",
+        "no-import-assign": "off"
+      }
+    }
+  ]
+}

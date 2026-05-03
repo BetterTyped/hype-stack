@@ -1,0 +1,39 @@
+{
+  "name": "@hype-stack/backend-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "format": "pnpm --dir ../.. exec oxfmt --write apps/backend-e2e",
+    "typecheck": "tsgo --noEmit",
+    "lint": "pnpm --dir ../.. exec oxlint --fix apps/backend-e2e"
+  },
+  "dependencies": {
+    "@hype-stack/backend": "workspace:*"
+  },
+  "nx": {
+    "implicitDependencies": [
+      "@hype-stack/backend"
+    ],
+    "targets": {
+      "test": {
+        "options": {
+          "passWithNoTests": true
+        }
+      },
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "apps/backend-e2e/jest.config.ts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "@hype-stack/backend:build",
+          "@hype-stack/backend:serve"
+        ]
+      }
+    }
+  }
+}

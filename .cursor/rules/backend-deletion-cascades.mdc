@@ -1,0 +1,29 @@
+---
+description: Backend deletion mutations must remove owned dependencies
+globs: apps/backend/src/**/*.ts
+alwaysApply: false
+---
+
+# Backend Deletion Cascades
+
+When removing a backend domain entity, delete all of its owned dependencies as part of the same mutation.
+
+- Perform dependent deletes in a single database transaction.
+- Keep delete logic in the relevant `db/mutations` function.
+- Delete child records before the parent record when database constraints require it.
+- Do not leave placeholder delete mutations that only return the removed entity ID.
+
+Example:
+
+```ts
+import { postgres } from "@backend/context";
+
+export const deleteProjectMutation = async ({ projectId }: { projectId: string }) => {
+  await postgres.qb.transaction().execute(async (trx) => {
+    await trx.deleteFrom("document").where("projectId", "=", projectId).execute();
+    await trx.deleteFrom("project").where("id", "=", projectId).execute();
+  });
+
+  return { projectId };
+};
+```

@@ -1,0 +1,43 @@
+---
+description: Backend Hono file upload middleware rules
+globs: apps/backend/src/**/*.ts
+alwaysApply: false
+---
+
+# Backend File Uploads
+
+When adding file uploads to backend Hono routes, use the existing file middleware from `apps/backend/src/middleware/file`.
+Read `apps/backend/src/middleware/file/README.md` before implementing or changing upload behavior.
+
+- Import upload helpers from `@backend/middleware/file`.
+- Use `fileUpload(...)` as route middleware before the Hono handler.
+- Prefer `diskStorage(...)` for production uploads and larger files.
+- Use `memoryStorage()` only for small files that need direct buffer access.
+- Always configure appropriate `limits`, especially `fileSize` and file count limits.
+- Use `fileFilter` when uploads must be restricted by MIME type or other file metadata.
+- Read uploaded data from Hono context with `c.get("file")`, `c.get("files")`, or `c.get("body")` according to the upload method.
+
+Example:
+
+```ts
+import { fileUpload, diskStorage } from "@backend/middleware/file";
+
+app.post(
+  "/upload",
+  fileUpload({
+    storage: diskStorage({ destination: "./uploads" }),
+    limits: {
+      fileSize: 5 * 1024 * 1024,
+      files: 1,
+    },
+    fileFilter: (_req, file, cb) => {
+      cb(null, file.mimetype.startsWith("image/"));
+    },
+  }).single("file"),
+  async (c) => {
+    const file = c.get("file");
+
+    return c.json({ fileId: file.filename });
+  },
+);
+```

@@ -1,0 +1,34 @@
+---
+description: Permission layer conventions for backend and frontend
+globs: apps/backend/src/middleware/permissions/**/*,apps/backend/src/features/permissions/**/*,apps/backend/src/libs/permissions/**/*,apps/frontend/src/hooks/use-user.ts,apps/frontend/src/components/permissions/**/*,packages/enums/src/permissions/**/*
+alwaysApply: false
+---
+
+# Permissions
+
+## Source of truth
+
+- WorkOS authenticates users, owns organization membership, and assigns roles via `roleSlug`.
+- Built-in permission presets live in `packages/enums/src/permissions/presets.ts` and map from WorkOS `roleSlug` to `PermissionString[]`.
+- Role assignment stays in WorkOS. Do not duplicate role storage in Postgres.
+
+## Permission strings
+
+- Format: `action:subject` (e.g. `read:project`, `manage:all`).
+- Actions and subjects are plain strings. Use `PermissionAction` and `PermissionSubject` enum constants for known built-ins; new values do not require a migration.
+- Use `formatPermission` and `parsePermission` from `@hype-stack/enums` instead of hand-written string concatenation.
+
+## Backend
+
+- `withAuthUser` resolves the active WorkOS role, builds CASL `ability`, and stores it on `context.var.ability`.
+- `hasAccess({ action, subject })` checks `context.var.ability`. Apply it to routes that need explicit permission checks.
+- `assertAbilityPermission({ action, subject, ability })` is the shared assertion helper for lower-level permission checks outside route middleware.
+- Route guards alone are not enough. Database queries and mutations for org-scoped resources must explicitly filter by the active `organizationId`.
+- `GET /users/me` returns `permissions: PermissionString[] | null` and `role: { slug, name } | null`. `null` permissions means deny all.
+
+## Frontend
+
+- `useUser()` exposes `permissions`, `role`, and `hasPermission(action, subject)`.
+- `PermissionGate` renders children only when `hasPermission` succeeds; otherwise renders `fallback` (default `null`).
+- When `permissions` is `null` (not yet loaded or no role), all checks return `false` and gated content is blocked.
+- After org switch or role change, call `refetch()` from `useUser()` to refresh permissions.
