@@ -131,7 +131,3 @@ type MergeUnionToRecord<U> = {
 export type HonoToHyperFetch<T, Client extends ClientInstance> = Prettify<
   NestFlatRecord<ConvertToRequest<MergeUnionToRecord<UnionSchemas<T>>, Client>>
 >;
-
-export type HonoAppToHyperFetch<App, Client extends ClientInstance> = App extends Hono<any, infer S, any>
-  ? Prettify<NestFlatRecord<ConvertToRequest<S, Client>>>
-  : {};
