@@ -19,6 +19,8 @@ export default defineConfig({
     teardownTimeout: 30000,
     fileParallelism: false, // Run test files sequentially to avoid database conflicts
 
+    passWithNoTests: true,
+
     // Test file patterns - support colocated tests under src as well as legacy tests
     include: ["tests/**/*.test.ts", "src/**/*.test.ts", "src/**/*.spec.ts", "tests/**/*.spec.ts"],
     exclude: ["node_modules/**", "dist/**"],
