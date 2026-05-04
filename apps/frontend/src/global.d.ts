@@ -3,9 +3,9 @@
 /// <reference types="@electron-forge/plugin-vite/forge-vite-env" />
 /// <reference types="vite/client" />
 
-import { ElectronAPI } from "@electron-toolkit/preload";
-import type { ExtendedElectronAPI } from "app/preload";
+import type { ElectronAPI } from "@electron-toolkit/preload";
 
+import type { ExtendedElectronAPI } from "./app/preload";
 import type { FullEnv } from "./env/env.config";
 
 declare global {

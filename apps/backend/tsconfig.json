@@ -7,7 +7,6 @@
       "@backend/*": ["./src/*"]
     }
   },
-  "files": [],
   "include": ["./global.d.ts"],
   "extends": "../../tsconfig.base.json"
 }

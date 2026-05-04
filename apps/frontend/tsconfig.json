@@ -5,6 +5,7 @@
     "emitDeclarationOnly": false,
     "strict": true,
     "jsx": "react-jsx",
+    "lib": ["es2022", "dom"],
     "outDir": "dist",
     "rootDir": "../..",
     "paths": {
@@ -16,7 +17,5 @@
       "@prisma/client": ["../backend/src/db/postgres/generated/client"]
     }
   },
-  "files": [],
-  "include": [],
   "extends": "../../tsconfig.base.json"
 }
