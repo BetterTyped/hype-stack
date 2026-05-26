@@ -1,12 +1,16 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ClientInstance, Request } from "@hyper-fetch/core";
-import type { Hono } from "hono";
-// import { BlankSchema } from "hono/types";
+import type { HonoBase } from "hono/hono-base";
 
-// Step 1: Extract route tuple [prefix, HonoRoute]
+// Step 1: Extract route tuple [prefix, HonoRoute].
+//
+// IMPORTANT: We extract the schema from `HonoBase` (4 generics: E, S, BasePath, CurrentPath),
+// not from `Hono` (3 generics: E, S, BasePath). Hono's `.route()` actually returns
+// `HonoBase<E, MergeSchemaPath<...> | S, BasePath, CurrentPath>` (4 generics), so matching
+// against `Hono<any, infer S, any>` would fail to infer S correctly and resolve to `{}`.
 type ExtractRouteTuple<T> = T extends readonly [infer Prefix extends string, infer Route]
-  ? { prefix: Prefix; schema: Route extends Hono<any, infer S, any> ? S : {} }
+  ? { prefix: Prefix; schema: Route extends HonoBase<any, infer S, any, any> ? S : {} }
   : never;
 
 // Step 2: Prefix all paths in a schema with the route prefix
@@ -131,3 +135,8 @@ type MergeUnionToRecord<U> = {
 export type HonoToHyperFetch<T, Client extends ClientInstance> = Prettify<
   NestFlatRecord<ConvertToRequest<MergeUnionToRecord<UnionSchemas<T>>, Client>>
 >;
+
+export type HonoAppToHyperFetch<App, Client extends ClientInstance> =
+  App extends HonoBase<any, infer S, any, any>
+    ? Prettify<NestFlatRecord<ConvertToRequest<MergeUnionToRecord<S>, Client>>>
+    : {};

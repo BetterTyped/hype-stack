@@ -15,9 +15,6 @@ export const envSchema = z.object({
   RUSTFS_ENDPOINT: z.string(),
   RUSTFS_ACCESS_KEY: z.string(),
   RUSTFS_SECRET_KEY: z.string(),
-  // # WorkOS
-  WORKOS_COOKIE_PASSWORD: z.string(),
-  WORKOS_GOOGLE_OAUTH_CALLBACK: z.string(),
   // # Resend
   RESEND_API_KEY: z.string(),
   // # Sentry
