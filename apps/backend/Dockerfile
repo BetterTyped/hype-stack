@@ -12,6 +12,12 @@ COPY libs ./libs
 
 RUN npm ci
 
+
+# Generate the Prisma client and prisma-kysely types before the build.
+# Without this, "@prisma/client" has no PrismaClient export and the Kysely
+# query-builder types are missing, so the backend build fails to typecheck.
+RUN pnpm --filter @hype-stack/backend run generate
+
 # Build backend (uses Nx target)
 RUN npm run backend:build
 
