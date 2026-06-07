@@ -1,11 +1,13 @@
-import { app, clipboard, Menu, shell } from "electron";
+import { app, clipboard, Menu } from "electron";
+
+import { appConfig } from "@/config";
 
 export const isMac = process.platform === "darwin";
 
 export const createMenu = () => {
   const template: Array<Electron.MenuItemConstructorOptions | Electron.MenuItem> = [
     {
-      label: "AI Fullstack App Template",
+      label: appConfig.name,
       submenu: [
         {
           label: "Quit",
@@ -99,24 +101,6 @@ export const createMenu = () => {
           label: "Close",
           accelerator: "CmdOrCtrl+W",
           role: "close",
-        },
-      ],
-    },
-    {
-      label: "Help",
-      role: "help",
-      submenu: [
-        {
-          label: "AI Fullstack App Template",
-          click() {
-            shell.openExternal("https://github.com/BetterTyped/hype-stack");
-          },
-        },
-        {
-          label: "Documentation",
-          click() {
-            shell.openExternal("https://github.com/BetterTyped/hype-stack/docs");
-          },
         },
       ],
     },

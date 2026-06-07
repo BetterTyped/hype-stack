@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "composite": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "strict": true,
+    "jsx": "react-jsx",
+    "outDir": "dist",
+    "rootDir": "../..",
+    "paths": {
+      "@/assets/*": ["./assets/*"],
+      "@/*": ["./src/*"],
+      "@hype-stack/backend": ["../backend/exported/index.ts"],
+      "@hype-stack/backend/*": ["../backend/exported/*"]
+    }
+  },
+  "files": [],
+  "include": [],
+  "extends": "../../tsconfig.base.json",
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.spec.json" }]
+}

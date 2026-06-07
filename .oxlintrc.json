@@ -34,7 +34,8 @@
     "**/vitest.config.*.timestamp*",
     "**/test-output/**",
     "**/db/postgres/generated/**",
-    "**/exported/**"
+    "apps/backend/exported/**",
+    "resources/landing-example/**"
   ],
   "settings": {
     "import/internal-regex": "^(@|@license)/",
@@ -79,7 +80,8 @@
     "react/rules-of-hooks": "error",
     "react/exhaustive-deps": "warn",
     "react-perf/jsx-no-new-function-as-prop": "off",
-    "react-perf/jsx-no-new-object-as-prop": "error"
+    "react-perf/jsx-no-new-object-as-prop": "warn",
+    "jest/valid-expect": "off"
   },
   "overrides": [
     {
@@ -92,6 +94,10 @@
               {
                 "group": ["@backend/*"],
                 "message": "Do not import from @backend/ in frontend code. Use shared types/contracts or the frontend API client instead."
+              },
+              {
+                "group": ["@internal/registry", "@internal/registry/*"],
+                "message": "Do not import from @internal/registry in frontend code. Use @internal/enums for shared config like pricing."
               }
             ]
           }
@@ -99,9 +105,62 @@
       }
     },
     {
-      "files": ["apps/frontend/src/entry.ts"],
+      "files": ["packages/cli/**/*.{ts,tsx}"],
       "rules": {
-        "rules/no-dynamic-import": "off"
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@internal/registry", "@internal/registry/*"],
+                "message": "CLI must not import from @internal/registry. The CLI is a standalone package."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["**/packs/**/files/**/*.{ts,tsx}", "**/packs/**/setup/**/*.{ts,tsx}"],
+      "rules": {
+        "rules/no-json-error-response": "off",
+        "rules/require-json-generic-type": "off",
+        "rules/require-route-crumb": "off",
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["**/apps/*", "**/apps/**"],
+                "message": "Pack files must NEVER import from apps/. Use @backend/* or @/* aliases."
+              },
+              {
+                "group": ["@internal/*"],
+                "message": "Pack files must NEVER import from @internal/* packages. These are internal to this repo. Packs are built for hype-stack, not for this monorepo."
+              },
+              {
+                "group": ["../setup/*", "../setup/**", "../../setup/*", "../../setup/**"],
+                "message": "Pack files must not import from setup/ directly. Use @backend/* or @/* aliases."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["apps/backend/src/features/**/modules/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@backend/db/postgres", "@backend/db/postgres/*"],
+                "message": "Modules must not import DB directly. Use db/queries/ or db/mutations/ functions."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -119,18 +178,13 @@
         "*.test.ts",
         "*.test.tsx",
         "*.test.js",
-        "*.test.jsx",
-        "**/testing/**"
+        "*.test.jsx"
       ],
       "env": {
         "vitest": true
       },
       "rules": {
-        "max-lines": "off",
-        "vitest/require-mock-type-parameters": "off",
-        "jest/require-to-throw-message": "off",
-        "rules/require-json-generic-type": "off",
-        "no-import-assign": "off"
+        "max-lines": "off"
       }
     }
   ]

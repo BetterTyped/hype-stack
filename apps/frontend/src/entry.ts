@@ -1,3 +1,4 @@
+// oxlint-disable rules/no-dynamic-import
 // oxlint-disable-next-line import/no-unassigned-import
 import "@/assets/styles.css";
 

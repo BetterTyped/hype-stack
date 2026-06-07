@@ -1,5 +1,7 @@
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 
+import { appConfig } from "@/config";
+
 /**
  * Your app will check for updates at startup, then every ten minutes. This interval is configurable.
  * No need to wait for your app's ready event; the module figures that out.
@@ -10,7 +12,7 @@ export const autoUpdater = () => {
   updateElectronApp({
     updateSource: {
       type: UpdateSourceType.ElectronPublicUpdateService,
-      repo: "BetterTyped/hype-stack",
+      repo: `${appConfig.repository.owner}/${appConfig.repository.name}`,
     },
     updateInterval: "1 hour",
   });

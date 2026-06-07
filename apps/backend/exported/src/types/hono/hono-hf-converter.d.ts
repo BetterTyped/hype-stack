@@ -1,8 +1,8 @@
 import { ClientInstance, Request } from "@hyper-fetch/core";
-import type { Hono } from "hono";
+import type { HonoBase } from "hono/hono-base";
 type ExtractRouteTuple<T> = T extends readonly [infer Prefix extends string, infer Route] ? {
     prefix: Prefix;
-    schema: Route extends Hono<any, infer S, any> ? S : {};
+    schema: Route extends HonoBase<any, infer S, any, any> ? S : {};
 } : never;
 type PrefixPaths<Schema extends Record<string, any>, Prefix extends string> = {
     [Path in keyof Schema as Path extends string ? `${Prefix}${Path}` : never]: Schema[Path];
@@ -48,6 +48,6 @@ type MergeUnionToRecord<U> = {
     [K in UnionKeys<U> & string]: UnionToIntersection<U extends any ? (K extends keyof U ? U[K] : never) : never>;
 };
 export type HonoToHyperFetch<T, Client extends ClientInstance> = Prettify<NestFlatRecord<ConvertToRequest<MergeUnionToRecord<UnionSchemas<T>>, Client>>>;
-export type HonoAppToHyperFetch<App, Client extends ClientInstance> = App extends Hono<any, infer S, any> ? Prettify<NestFlatRecord<ConvertToRequest<S, Client>>> : {};
+export type HonoAppToHyperFetch<App, Client extends ClientInstance> = App extends HonoBase<any, infer S, any, any> ? Prettify<NestFlatRecord<ConvertToRequest<MergeUnionToRecord<S>, Client>>> : {};
 export {};
 //# sourceMappingURL=hono-hf-converter.d.ts.map

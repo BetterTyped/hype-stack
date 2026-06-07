@@ -1,9 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { ConnectionManager } from "./connection-manager";
 import type { WsHandler, WsHandlerEntry, WsMiddleware } from "./types";
 import { createWsRoutes, type WsAuthenticator } from "./ws-route";
 
 export type SocketRouterOptions = {
   authenticate: WsAuthenticator;
+  /**
+   * Connection registry connections are registered into. Defaults to the shared
+   * `appWsManager`. Pass a dedicated instance to isolate a namespace (e.g.
+   * admin), so broadcasts over that manager never reach other routers.
+   */
+  manager: ConnectionManager;
 };
 
 export class SocketRouter<
@@ -15,15 +22,15 @@ export class SocketRouter<
 > {
   private _handlers = new Map<string, WsHandlerEntry>();
   private _childRoutes: [string, SocketRouter<any>][] = [];
-  private _options: SocketRouterOptions;
+  private _options?: SocketRouterOptions;
 
-  constructor(options: SocketRouterOptions) {
+  constructor(options?: SocketRouterOptions) {
     this._options = options;
   }
 
   /**
    * Declare a server-to-client event (backend emits, frontend listens).
-   * Type-only — no handler needed. The actual push happens via `wsManager.pushToUser()`.
+   * Type-only - no handler needed. The actual push happens via `wsEmit.toUser()`.
    *
    * Uses curried generics so `Topic` is inferred as a literal from the argument
    * and `Payload` is specified explicitly in the second call:
@@ -83,7 +90,7 @@ export class SocketRouter<
   }
 
   /**
-   * Mount a child SocketRouter under a prefix — mirrors Hono's `app.route(prefix, routes)`.
+   * Mount a child SocketRouter under a prefix - mirrors Hono's `app.route(prefix, routes)`.
    *
    * ```ts
    * new SocketRouter()
@@ -113,10 +120,16 @@ export class SocketRouter<
       }
     }
 
-    return createWsRoutes(merged, this._options.authenticate);
+    if (!this._options?.authenticate) {
+      throw new Error(
+        "SocketRouter requires `authenticate` in options to build routes. Only the root router needs this.",
+      );
+    }
+
+    return createWsRoutes(merged, this._options.authenticate, this._options.manager);
   }
 
-  /** @hype-stack — used by parent routers to collect handlers */
+  /** @hype-stack - used by parent routers to collect handlers */
   _getHandlers(): ReadonlyMap<string, WsHandlerEntry> {
     return this._handlers;
   }
@@ -124,4 +137,4 @@ export class SocketRouter<
 
 type StripLeadingSlash<S extends string> = S extends `/${infer Rest}` ? Rest : S;
 
-export const createSocketRouter = (options: SocketRouterOptions) => new SocketRouter(options);
+export const createSocketRouter = (options?: SocketRouterOptions) => new SocketRouter(options);

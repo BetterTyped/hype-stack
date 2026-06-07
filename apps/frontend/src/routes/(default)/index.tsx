@@ -117,8 +117,6 @@ function LandingPage() {
             <span className="text-border">·</span>
             <span>HyperFetch</span>
             <span className="text-border">·</span>
-            <span>WorkOS</span>
-            <span className="text-border">·</span>
             <span>Stripe</span>
             <span className="text-border">·</span>
             <span>Tailwind</span>

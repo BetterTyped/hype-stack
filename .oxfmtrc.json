@@ -18,7 +18,7 @@
       ["internal", "subpath", "parent", "sibling", "index"]
     ],
     "newlinesBetween": true,
-    "internalPattern": ["@/", "@hype-stack/"]
+    "internalPattern": ["@/", "@backend/", "@hype-stack/"]
   },
   "ignorePatterns": ["/dist", "/coverage", "/.nx/cache", "/.nx/workspace-data"]
 }

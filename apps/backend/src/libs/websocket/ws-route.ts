@@ -2,14 +2,18 @@ import { logger } from "@backend/libs/logger/logger";
 import { getUpgradeWebSocket } from "@backend/utils/misc/websocket";
 import { Hono } from "hono";
 
-import { wsManager } from "./connection-manager";
+import { appWsManager, type ConnectionManager } from "./connection-manager";
 import type { WsAuthResult, WsMessage, WsHandlerEntry } from "./types";
 
 export type WsAuthenticator = (headers: Headers) => Promise<WsAuthResult | null>;
 
 const userMetaMap = new WeakMap<WebSocket, { userId: string; organizationId: string | undefined }>();
 
-export const createWsRoutes = (topicHandlers: Map<string, WsHandlerEntry>, authenticate: WsAuthenticator) =>
+export const createWsRoutes = (
+  topicHandlers: Map<string, WsHandlerEntry>,
+  authenticate: WsAuthenticator,
+  manager: ConnectionManager = appWsManager,
+) =>
   new Hono().get(
     "/",
     getUpgradeWebSocket()((c) => ({
@@ -22,7 +26,7 @@ export const createWsRoutes = (topicHandlers: Map<string, WsHandlerEntry>, authe
 
         const rawWs = ws.raw as unknown as WebSocket;
         userMetaMap.set(rawWs, authResult);
-        wsManager.register(authResult.userId, ws, authResult.organizationId);
+        manager.register(authResult.userId, ws, authResult.organizationId);
         logger.debug({ userId: authResult.userId }, "WebSocket connected");
       },
 
@@ -52,7 +56,7 @@ export const createWsRoutes = (topicHandlers: Map<string, WsHandlerEntry>, authe
         const rawWs = ws.raw as unknown as WebSocket;
         const meta = userMetaMap.get(rawWs);
         if (meta) {
-          wsManager.unregister(meta.userId, ws);
+          manager.unregister(meta.userId, ws);
           userMetaMap.delete(rawWs);
           logger.debug({ userId: meta.userId }, "WebSocket disconnected");
         }
@@ -62,7 +66,7 @@ export const createWsRoutes = (topicHandlers: Map<string, WsHandlerEntry>, authe
         const rawWs = ws.raw as unknown as WebSocket;
         const meta = userMetaMap.get(rawWs);
         if (meta) {
-          wsManager.unregister(meta.userId, ws);
+          manager.unregister(meta.userId, ws);
           userMetaMap.delete(rawWs);
         }
       },

@@ -8,12 +8,10 @@
     "graph": "nx graph",
     "reset": "nx reset",
     "build": "nx run-many --target=build --parallel --skip-nx-cache --verbose",
-    "lint": "oxlint .",
-    "lint:fix": "oxlint --fix .",
-    "format": "oxfmt --write .",
-    "format:check": "oxfmt --check .",
-    "test": "nx run-many --target=test --parallel --skip-nx-cache",
-    "typecheck": "nx run-many --target=typecheck --projects=backend,frontend --parallel=1 --skip-nx-cache"
+    "test": "nx run-many --target=test --parallel=1 --skip-nx-cache",
+    "lint": "nx run-many --target=lint --parallel=3 --skip-nx-cache",
+    "format": "nx run-many --target=format --parallel=3 --skip-nx-cache",
+    "typecheck": "nx run-many --target=typecheck --parallel=2 --skip-nx-cache"
   },
   "private": true,
   "dependencies": {

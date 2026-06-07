@@ -3,8 +3,9 @@ import { Link } from "@tanstack/react-router";
 import { RefreshCw, AlertTriangle, ArrowLeft } from "lucide-react";
 import { ErrorInfo } from "react";
 
-import { Button } from "@/components/ui/button";
 import { Meteors } from "@/components/magicui/meteors";
+import { Button } from "@/components/ui/button";
+import { appConfig } from "@/config";
 
 const handleRefresh = () => {
   window.location.reload();
@@ -53,7 +54,7 @@ export const PageError = ({ error, errorInfo }: { error: Error; errorInfo: Error
         <p className="text-sm text-zinc-500 text-center">
           If the problem persists, please fill the bug report{" "}
           <a
-            href="https://github.com/BetterTyped/hype-stack/issues"
+            href={`https://github.com/${appConfig.repository.owner}/${appConfig.repository.name}/issues`}
             target="_blank"
             className="text-blue-500 hover:text-blue-400 transition-colors"
             rel="noreferrer"

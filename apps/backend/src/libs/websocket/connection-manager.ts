@@ -7,7 +7,7 @@ type ConnectionEntry = {
   organizationId: string | undefined;
 };
 
-class ConnectionManager {
+export class ConnectionManager {
   private connections = new Map<string, Set<ConnectionEntry>>();
 
   register(userId: string, ws: WSContext, organizationId: string | undefined): void {
@@ -80,4 +80,15 @@ class ConnectionManager {
   }
 }
 
-export const wsManager = new ConnectionManager();
+/**
+ * Storefront namespace (`/ws`). Holds every authenticated user connection and
+ * backs `wsEmit` for per-user, per-organization, and broadcast pushes.
+ */
+export const appWsManager = new ConnectionManager();
+
+/**
+ * Admin namespace (`/ws/admin`). A separate instance so superadmin broadcasts
+ * stay isolated and never reach storefront connections. Only superadmins can
+ * register here (enforced at upgrade by `wsSuperadminAuthenticate`).
+ */
+export const adminWsManager = new ConnectionManager();

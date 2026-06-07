@@ -3,6 +3,8 @@ import { z } from "zod";
 export const envSchema = z.object({
   // # Internal
   FRONTEND_URL: z.string(),
+  ADMIN_URL: z.string(),
+  SERVER_URL: z.string(),
   // # Postgres
   DATABASE_URL: z.string(),
   POSTGRES_USER: z.string().optional(),

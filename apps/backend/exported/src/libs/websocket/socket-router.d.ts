@@ -1,4 +1,15 @@
+import type { ConnectionManager } from "./connection-manager";
 import type { WsHandler, WsHandlerEntry, WsMiddleware } from "./types";
+import { type WsAuthenticator } from "./ws-route";
+export type SocketRouterOptions = {
+    authenticate: WsAuthenticator;
+    /**
+     * Connection registry connections are registered into. Defaults to the shared
+     * `appWsManager`. Pass a dedicated instance to isolate a namespace (e.g.
+     * admin), so broadcasts over that manager never reach other routers.
+     */
+    manager: ConnectionManager;
+};
 export declare class SocketRouter<Schema extends {
     listeners: Record<string, any>;
     emitters: Record<string, any>;
@@ -8,9 +19,11 @@ export declare class SocketRouter<Schema extends {
 }, Routes extends readonly (readonly [string, SocketRouter<any>])[] = readonly []> {
     private _handlers;
     private _childRoutes;
+    private _options?;
+    constructor(options?: SocketRouterOptions);
     /**
      * Declare a server-to-client event (backend emits, frontend listens).
-     * Type-only — no handler needed. The actual push happens via `wsManager.pushToUser()`.
+     * Type-only - no handler needed. The actual push happens via `wsEmit.toUser()`.
      *
      * Uses curried generics so `Topic` is inferred as a literal from the argument
      * and `Payload` is specified explicitly in the second call:
@@ -35,7 +48,7 @@ export declare class SocketRouter<Schema extends {
         emitters: Schema["emitters"];
     }, Routes>;
     /**
-     * Mount a child SocketRouter under a prefix — mirrors Hono's `app.route(prefix, routes)`.
+     * Mount a child SocketRouter under a prefix - mirrors Hono's `app.route(prefix, routes)`.
      *
      * ```ts
      * new SocketRouter()
@@ -58,11 +71,11 @@ export declare class SocketRouter<Schema extends {
             };
         };
     }, "/", "/">;
-    /** @hype-stack — used by parent routers to collect handlers */
+    /** @hype-stack - used by parent routers to collect handlers */
     _getHandlers(): ReadonlyMap<string, WsHandlerEntry>;
 }
 type StripLeadingSlash<S extends string> = S extends `/${infer Rest}` ? Rest : S;
-export declare const createSocketRouter: () => SocketRouter<{
+export declare const createSocketRouter: (options?: SocketRouterOptions) => SocketRouter<{
     listeners: {};
     emitters: {};
 }, readonly []>;

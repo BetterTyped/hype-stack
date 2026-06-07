@@ -1,4 +1,7 @@
+import { type ConnectionManager } from "./connection-manager";
 export declare class TypedEmitter<Emitters extends Record<string, any>> {
+    private readonly manager;
+    constructor(manager?: ConnectionManager);
     toUser<T extends keyof Emitters & string>(params: {
         userId: string;
         topic: T;

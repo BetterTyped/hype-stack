@@ -1,4 +1,4 @@
-export { wsManager } from "./connection-manager";
+export { appWsManager, adminWsManager, ConnectionManager } from "./connection-manager";
 export { createWsRoutes } from "./ws-route";
 export { createSocketRouter, SocketRouter } from "./socket-router";
 export { TypedEmitter } from "./typed-emitter";

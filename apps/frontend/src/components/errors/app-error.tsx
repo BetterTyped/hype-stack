@@ -3,8 +3,9 @@ import { Link } from "@tanstack/react-router";
 import { ErrorComponentProps } from "@tanstack/router-core";
 import { RefreshCw, AlertTriangle, ArrowLeft } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Meteors } from "@/components/magicui/meteors";
+import { Button } from "@/components/ui/button";
+import { appConfig } from "@/config";
 
 export const AppError = ({ error, info, reset }: ErrorComponentProps) => {
   useDidMount(() => {
@@ -49,7 +50,7 @@ export const AppError = ({ error, info, reset }: ErrorComponentProps) => {
         <p className="text-sm text-zinc-500 text-center">
           If the problem persists, please fill the bug report{" "}
           <a
-            href="https://github.com/BetterTyped/hype-stack/issues"
+            href={`https://github.com/${appConfig.repository.owner}/${appConfig.repository.name}/issues`}
             target="_blank"
             className="text-blue-500 hover:text-blue-400 transition-colors"
             rel="noreferrer"

@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { wsManager } from "./connection-manager";
+import { appWsManager, type ConnectionManager } from "./connection-manager";
 
 export class TypedEmitter<Emitters extends Record<string, any>> {
+  constructor(private readonly manager: ConnectionManager = appWsManager) {}
+
   toUser<T extends keyof Emitters & string>(params: { userId: string; topic: T; data: Emitters[T] }): void {
-    wsManager.pushToUser(params.userId, { topic: params.topic, data: params.data });
+    this.manager.pushToUser(params.userId, { topic: params.topic, data: params.data });
   }
 
   toUsers<T extends keyof Emitters & string>(params: { userIds: string[]; topic: T; data: Emitters[T] }): void {
-    wsManager.pushToUsers(params.userIds, { topic: params.topic, data: params.data });
+    this.manager.pushToUsers(params.userIds, { topic: params.topic, data: params.data });
   }
 
   toOrganization<T extends keyof Emitters & string>(params: {
@@ -15,10 +17,10 @@ export class TypedEmitter<Emitters extends Record<string, any>> {
     topic: T;
     data: Emitters[T];
   }): void {
-    wsManager.pushToOrganization(params.organizationId, { topic: params.topic, data: params.data });
+    this.manager.pushToOrganization(params.organizationId, { topic: params.topic, data: params.data });
   }
 
   broadcast<T extends keyof Emitters & string>(params: { topic: T; data: Emitters[T] }): void {
-    wsManager.broadcast({ topic: params.topic, data: params.data });
+    this.manager.broadcast({ topic: params.topic, data: params.data });
   }
 }

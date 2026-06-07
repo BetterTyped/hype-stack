@@ -15,8 +15,7 @@ Hype Stack is an open-source full-stack template. The backend lives in `apps/bac
 3. ORM: **Prisma**
 4. Query Builder: **Kysely**
 5. Cache: **Redis**
-6. Auth: **WorkOS**
-7. Requests: **HyperFetch**
+6. Requests: **HyperFetch**
 
 ## General Rules
 

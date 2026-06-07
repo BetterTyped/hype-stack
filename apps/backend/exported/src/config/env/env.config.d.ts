@@ -1,6 +1,8 @@
 import { z } from "zod";
 export declare const envSchema: z.ZodObject<{
     FRONTEND_URL: z.ZodString;
+    ADMIN_URL: z.ZodString;
+    SERVER_URL: z.ZodString;
     DATABASE_URL: z.ZodString;
     POSTGRES_USER: z.ZodOptional<z.ZodString>;
     POSTGRES_PASSWORD: z.ZodOptional<z.ZodString>;
@@ -10,8 +12,6 @@ export declare const envSchema: z.ZodObject<{
     RUSTFS_ENDPOINT: z.ZodString;
     RUSTFS_ACCESS_KEY: z.ZodString;
     RUSTFS_SECRET_KEY: z.ZodString;
-    WORKOS_COOKIE_PASSWORD: z.ZodString;
-    WORKOS_GOOGLE_OAUTH_CALLBACK: z.ZodString;
     RESEND_API_KEY: z.ZodString;
     SENTRY_DSN: z.ZodString;
 }, z.core.$strip>;
