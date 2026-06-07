@@ -21,16 +21,19 @@ RUN pnpm --filter @hype-stack/backend run generate
 # Build backend (uses Nx target)
 RUN npm run backend:build
 
+# We need to set CI=true to limit node_modules to production dependencies.
+RUN CI=true pnpm prune --prod
+
 FROM node:${NODE_VERSION} AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Copy runtime artifacts
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/apps/backend/package.json ./apps/backend/package.json
-COPY --from=builder /app/apps/backend/dist ./apps/backend/dist
-COPY --from=builder /app/apps/backend/src/assets ./apps/backend/src/assets
+# Copy the whole workspace. In a pnpm monorepo the backend's deps are symlinks
+# in apps/backend/node_modules pointing into the root .pnpm store, and workspace
+# packages (e.g. @hype-stack/enums) resolve to their built dist in packages/. The
+# build externalizes every dependency, so all of these must exist at runtime.
+# pnpm prune --prod already trimmed node_modules to production deps in builder.
+COPY --from=builder /app ./
 
 EXPOSE 2138
 
