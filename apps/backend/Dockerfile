@@ -21,9 +21,6 @@ RUN pnpm --filter @hype-stack/backend run generate
 # Build backend (uses Nx target)
 RUN npm run backend:build
 
-# We need to set CI=true to limit node_modules to production dependencies.
-RUN CI=true pnpm prune --prod
-
 FROM node:${NODE_VERSION} AS runner
 WORKDIR /app
 ENV NODE_ENV=production
