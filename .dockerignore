@@ -1,0 +1,11 @@
+node_modules
+**/node_modules
+dist
+**/dist
+.git
+.nx
+**/.vite
+**/test-output
+**/coverage
+**/.sandboxes
+*.log

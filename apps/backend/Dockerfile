@@ -1,42 +1,48 @@
 # syntax=docker/dockerfile:1
 
-ARG NODE_VERSION=20-alpine
+ARG NODE_VERSION=24-alpine
 
 FROM node:${NODE_VERSION} AS builder
 WORKDIR /app
 
-# Install dependencies (root workspace)
-COPY package.json package-lock.json nx.json tsconfig.base.json ./
+RUN corepack enable && corepack prepare pnpm@10 --activate
+
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.base.json ./
 COPY apps ./apps
-COPY libs ./libs
+COPY packages ./packages
 
-RUN npm ci
-
+RUN pnpm install --frozen-lockfile
 
 # Generate the Prisma client and prisma-kysely types before the build.
 # Without this, "@prisma/client" has no PrismaClient export and the Kysely
 # query-builder types are missing, so the backend build fails to typecheck.
 RUN pnpm --filter @hype-stack/backend run generate
 
-# Build backend (uses Nx target)
-RUN npm run backend:build
+RUN pnpm nx build backend
 
-# We need to set CI=true to limit node_modules to production dependencies.
-RUN CI=true pnpm prune --prod
+# Drop the dev toolchain (nx, vite, etc.) but keep every workspace project's
+# prod deps. Do NOT use `pnpm prune --prod` here: run from the repo root it
+# only inspects the root package and deletes each workspace's node_modules,
+# including the backend's @hono/node-server, which breaks the runtime require.
+# `pnpm install --prod` is workspace-aware and keeps those deps. CI=true skips
+# the no-TTY confirmation pnpm shows before purging modules.
+RUN CI=true pnpm install --prod --frozen-lockfile --ignore-scripts
 
 FROM node:${NODE_VERSION} AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Copy the whole workspace. In a pnpm monorepo the backend's deps are symlinks
-# in apps/backend/node_modules pointing into the root .pnpm store, and workspace
-# packages (e.g. @hype-stack/enums) resolve to their built dist in packages/. The
-# build externalizes every dependency, so all of these must exist at runtime.
-# pnpm prune --prod already trimmed node_modules to production deps in builder.
-COPY --from=builder /app ./
+# In a pnpm monorepo the backend's deps are symlinks in apps/backend/node_modules
+# pointing into the root .pnpm store, and workspace packages (e.g. @internal/enums)
+# resolve to their built dist in packages/. The build externalizes every
+# dependency, so all three must be present at runtime: the root node_modules
+# store, the packages/ workspace libs, and the backend itself. Other apps
+# (admin, frontend, worker) are never reached at runtime, so we skip them.
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/packages ./packages
+COPY --from=builder /app/apps/backend ./apps/backend
 
-EXPOSE 2138
+EXPOSE 3000
 
 CMD ["node", "apps/backend/dist/main.js"]
-
-
