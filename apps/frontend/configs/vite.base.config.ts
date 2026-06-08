@@ -1,15 +1,12 @@
 import { sentryVitePlugin } from "@sentry/vite-plugin";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
-import dotenv from "dotenv";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import type { UserConfigFnObject } from "vite";
+import { loadEnv, type UserConfigFnObject } from "vite";
 
 import { validateEnv } from "../src/env/env.config";
 
-const externalDependencies = ["@hype-stack/enums", "@hype-stack/ui"];
+const externalDependencies = ["@internal/enums", "@hype-stack/ui"];
 
 const getFrontendRoot = () => {
   const cwd = process.cwd();
@@ -23,33 +20,13 @@ const getFrontendRoot = () => {
 
 const frontendRoot = getFrontendRoot();
 
-const getEnvFiles = (mode: string) => [".env", ".env.local", `.env.${mode}`, `.env.${mode}.local`];
-
-const validateEnvFile = (mode: string) => {
-  const hasEnvFile = getEnvFiles(mode).some((file) => existsSync(path.join(frontendRoot, file)));
-
-  if (!hasEnvFile) {
-    throw new Error(`Missing frontend environment file. Create apps/frontend/.env from apps/frontend/.env.example.`);
-  }
-};
-
-const loadFrontendEnv = (mode: string) => {
-  const envFromFiles = getEnvFiles(mode).reduce<Record<string, string>>((acc, file) => {
-    const envPath = path.join(frontendRoot, file);
-    if (!existsSync(envPath)) return acc;
-
-    return Object.assign(acc, dotenv.config({ path: envPath, processEnv: {} }).parsed);
-  }, {});
-
-  return {
-    ...envFromFiles,
-    ...process.env,
-  };
-};
-
 export const config: UserConfigFnObject = ({ mode }) => {
-  validateEnvFile(mode);
-  const env = validateEnv(loadFrontendEnv(mode));
+  // Env can come from a local file (dev) or purely from process.env (CI, Railway,
+  // Pages). validateEnv throws a precise error listing any missing VITE_* vars.
+  const env = validateEnv({
+    ...loadEnv(mode, frontendRoot, ""),
+    ...process.env,
+  });
   const packageJson = JSON.parse(readFileSync(path.resolve(frontendRoot, "package.json"), "utf-8")) as {
     version?: string;
   };
@@ -60,7 +37,7 @@ export const config: UserConfigFnObject = ({ mode }) => {
     // with the frontend project so our `rimraf node_modules/.vite` scripts
     // always clear the right directory.
     cacheDir: path.resolve(__dirname, "../node_modules/.vite"),
-    server: { allowedHosts: ["workflows.hype-stack.co"] },
+    server: { allowedHosts: ["workflows.hype-stack.dev"] },
     define: {
       __APP_VERSION__: JSON.stringify(appVersion),
     },
