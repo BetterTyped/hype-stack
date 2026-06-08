@@ -16,7 +16,7 @@ RUN pnpm install --frozen-lockfile
 # Generate the Prisma client and prisma-kysely types before the build.
 # Without this, "@prisma/client" has no PrismaClient export and the Kysely
 # query-builder types are missing, so the backend build fails to typecheck.
-RUN pnpm --filter @hype-stack/backend run generate
+RUN pnpm --filter @internal/backend run generate
 
 RUN pnpm nx build backend
 
@@ -32,12 +32,16 @@ FROM node:${NODE_VERSION} AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
+RUN corepack enable && corepack prepare pnpm@10 --activate
+
 # In a pnpm monorepo the backend's deps are symlinks in apps/backend/node_modules
-# pointing into the root .pnpm store, and workspace packages (e.g. @hype-stack/enums)
+# pointing into the root .pnpm store, and workspace packages (e.g. @internal/enums)
 # resolve to their built dist in packages/. The build externalizes every
 # dependency, so all three must be present at runtime: the root node_modules
 # store, the packages/ workspace libs, and the backend itself. Other apps
 # (admin, frontend, worker) are never reached at runtime, so we skip them.
+COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
