@@ -14,8 +14,10 @@
     "paths": {
       "@/assets/*": ["./assets/*"],
       "@/*": ["./src/*"],
-      "@internal/backend": ["../backend/exported/index.ts"],
-      "@internal/backend/*": ["../backend/exported/*"]
+      "@hype-stack/backend": ["../backend/exported/index.ts"],
+      "@hype-stack/backend/*": ["../backend/exported/*"],
+      "@hype-stack/enums": ["../../packages/enums/src/index.ts"],
+      "@hype-stack/enums/*": ["../../packages/enums/src/*"]
     }
   },
   "exclude": [
@@ -29,13 +31,7 @@
     "vite.config.mts",
     "vitest.config.mts"
   ],
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.json",
-    "../backend/exported/**/*.ts",
-    "../backend/global.d.ts"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "../backend/exported/**/*.ts", "../backend/global.d.ts"],
   "references": [
     {
       "path": "../../packages/enums/tsconfig.lib.json"

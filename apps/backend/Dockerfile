@@ -33,7 +33,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 # In a pnpm monorepo the backend's deps are symlinks in apps/backend/node_modules
-# pointing into the root .pnpm store, and workspace packages (e.g. @internal/enums)
+# pointing into the root .pnpm store, and workspace packages (e.g. @hype-stack/enums)
 # resolve to their built dist in packages/. The build externalizes every
 # dependency, so all three must be present at runtime: the root node_modules
 # store, the packages/ workspace libs, and the backend itself. Other apps

@@ -11,7 +11,9 @@
       "@/assets/*": ["./assets/*"],
       "@/*": ["./src/*"],
       "@hype-stack/backend": ["../backend/exported/index.ts"],
-      "@hype-stack/backend/*": ["../backend/exported/*"]
+      "@hype-stack/backend/*": ["../backend/exported/*"],
+      "@hype-stack/enums": ["../../packages/enums/src/index.ts"],
+      "@hype-stack/enums/*": ["../../packages/enums/src/*"]
     }
   },
   "files": [],

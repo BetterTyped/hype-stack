@@ -96,8 +96,8 @@
                 "message": "Do not import from @backend/ in frontend code. Use shared types/contracts or the frontend API client instead."
               },
               {
-                "group": ["@internal/registry", "@internal/registry/*"],
-                "message": "Do not import from @internal/registry in frontend code. Use @internal/enums for shared config like pricing."
+                "group": ["@hype-stack/enums", "@hype-stack/enums/*"],
+                "message": "Do not import from @hype-stack/enums in frontend code. Use @hype-stack/enums for shared config like pricing."
               }
             ]
           }
@@ -112,8 +112,8 @@
           {
             "patterns": [
               {
-                "group": ["@internal/registry", "@internal/registry/*"],
-                "message": "CLI must not import from @internal/registry. The CLI is a standalone package."
+                "group": ["@hype-stack/enums", "@hype-stack/enums/*"],
+                "message": "CLI must not import from @hype-stack/enums. The CLI is a standalone package."
               }
             ]
           }
@@ -135,8 +135,8 @@
                 "message": "Pack files must NEVER import from apps/. Use @backend/* or @/* aliases."
               },
               {
-                "group": ["@internal/*"],
-                "message": "Pack files must NEVER import from @internal/* packages. These are internal to this repo. Packs are built for hype-stack, not for this monorepo."
+                "group": ["@hype-stack/enums", "@hype-stack/enums/*"],
+                "message": "Pack files must NEVER import from @hype-stack/enums packages. These are internal to this repo. Packs are built for hype-stack, not for this monorepo."
               },
               {
                 "group": ["../setup/*", "../setup/**", "../../setup/*", "../../setup/**"],
