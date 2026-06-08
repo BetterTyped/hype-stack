@@ -87,15 +87,15 @@ The template ships with **zero features** and **everything you need to build the
 
 Need features? Add them with a single command. Each pack installs production-grade, fully-typed code directly into your project.
 
-| Pack | What it adds |
-| ---- | ------------ |
-| **Auth** | Email/password, OAuth, email verification, password reset, sessions |
-| **Organizations** | Multi-org support, invitations, org switching |
-| **RBAC** | Role-based access control, permission gates on routes and UI |
-| **Realtime** | Typed WebSocket events, live notifications |
-| **Storage** | S3-compatible file uploads with validation |
-| **Desktop** | macOS signing, Windows installers, Linux packages, auto-update |
-| **Observability** | Sentry error tracking, PostHog analytics, structured logging |
+| Pack              | What it adds                                                        |
+| ----------------- | ------------------------------------------------------------------- |
+| **Auth**          | Email/password, OAuth, email verification, password reset, sessions |
+| **Organizations** | Multi-org support, invitations, org switching                       |
+| **RBAC**          | Role-based access control, permission gates on routes and UI        |
+| **Realtime**      | Typed WebSocket events, live notifications                          |
+| **Storage**       | S3-compatible file uploads with validation                          |
+| **Desktop**       | macOS signing, Windows installers, Linux packages, auto-update      |
+| **Observability** | Sentry error tracking, analytics, structured logging                |
 
 > Packs are purchased separately. Run `npx @hype-stack/cli packs` to browse what's available.
 
@@ -175,14 +175,14 @@ Same React app runs as a web SPA and an Electron desktop app. One `VITE_APP_TYPE
 
 ## Tech Stack
 
-| Layer      | Technology                                                |
-| ---------- | --------------------------------------------------------- |
-| Frontend   | React 19, TanStack Router, Tailwind v4, shadcn/ui, Motion |
-| Backend    | Hono, Prisma, Kysely, Zod                                 |
-| Desktop    | Electron Forge (macOS, Windows, Linux)                    |
-| Database   | PostgreSQL 17 + pgvector                                  |
-| Cache      | Valkey (Redis-compatible)                                 |
-| Tooling    | Nx, Vite 8, OXC, pnpm, TypeScript 6                       |
+| Layer    | Technology                                                |
+| -------- | --------------------------------------------------------- |
+| Frontend | React 19, TanStack Router, Tailwind v4, shadcn/ui, Motion |
+| Backend  | Hono, Prisma, Kysely, Zod                                 |
+| Desktop  | Electron Forge (macOS, Windows, Linux)                    |
+| Database | PostgreSQL 17 + pgvector                                  |
+| Cache    | Valkey (Redis-compatible)                                 |
+| Tooling  | Nx, Vite 8, OXC, pnpm, TypeScript 6                       |
 
 &nbsp;
 

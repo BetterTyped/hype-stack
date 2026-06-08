@@ -9,8 +9,6 @@ export const frontendEnvSchema = z.object({
   VITE_API_BASE_URL: z.url(),
   VITE_APP_TYPE: z.enum(["web", "app"]),
   VITE_ENVIRONMENT: z.string().min(1),
-  VITE_PUBLIC_POSTHOG_HOST: optionalString,
-  VITE_PUBLIC_POSTHOG_KEY: optionalString,
   VITE_SENTRY_AUTH_TOKEN: optionalString,
   VITE_SENTRY_DNS: optionalString,
 });

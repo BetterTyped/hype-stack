@@ -1,6 +1,0 @@
-import { z } from "zod";
-export declare const validate: <T extends "form" | "json" | "query" | "param" | "header", S extends z.ZodSchema>(target: T, schema: S) => import("hono").MiddlewareHandler<any, string, {
-    in: { [K in T]: K extends "json" ? z.TypeOf<S> extends infer T_1 ? T_1 extends z.TypeOf<S> ? T_1 extends Response | import("hono").TypedResponse<any, any, any> ? never : T_1 : never : never : import("hono/validator").InferInput<z.TypeOf<S> extends infer T_2 ? T_2 extends z.TypeOf<S> ? T_2 extends Response | import("hono").TypedResponse<any, any, any> ? never : T_2 : never : never, K, import("hono/types").FormValue>; };
-    out: { [K in T]: z.TypeOf<S> extends infer T_2 ? T_2 extends z.TypeOf<S> ? T_2 extends Response | import("hono").TypedResponse<any, any, any> ? never : T_2 : never : never; };
-}, z.TypeOf<S> extends infer T_1 ? T_1 extends z.TypeOf<S> ? T_1 extends import("hono").TypedResponse<infer T_2, infer S_1 extends import("hono/utils/http-status").StatusCode, infer F extends string> ? import("hono").TypedResponse<T_2, S_1, F> : T_1 extends Response ? T_1 : T_1 extends undefined ? never : never : never : never>;
-//# sourceMappingURL=validate.d.ts.map
