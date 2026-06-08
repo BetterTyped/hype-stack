@@ -6,7 +6,7 @@ import { loadEnv, type UserConfigFnObject } from "vite";
 
 import { validateEnv } from "../src/env/env.config";
 
-const externalDependencies = ["@hype-stack/enums", "@hype-stack/ui"];
+const externalDependencies = ["@hype-stack/enums"];
 
 const getFrontendRoot = () => {
   const cwd = process.cwd();
