@@ -20,7 +20,7 @@
     }
   },
   "scripts": {
-    "generate": "prisma generate",
+    "generate": "prisma generate && tsgo -p tsconfig.app.json --emitDeclarationOnly",
     "migration:create": "prisma migrate dev",
     "migration:latest": "prisma migrate deploy",
     "migration:down": "prisma migrate resolve --rolled-back",

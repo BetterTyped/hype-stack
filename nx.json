@@ -67,6 +67,9 @@
     "build": {
       "dependsOn": ["^build"]
     },
+    "typecheck": {
+      "dependsOn": ["^generate"]
+    },
     "test": {
       "dependsOn": ["^build"]
     },
