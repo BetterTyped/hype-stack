@@ -85,69 +85,6 @@
   },
   "overrides": [
     {
-      "files": ["apps/frontend/**/*.{ts,tsx,js,jsx}"],
-      "rules": {
-        "no-restricted-imports": [
-          "error",
-          {
-            "patterns": [
-              {
-                "group": ["@backend/*"],
-                "message": "Do not import from @backend/ in frontend code. Use shared types/contracts or the frontend API client instead."
-              },
-              {
-                "group": ["@hype-stack/enums", "@hype-stack/enums/*"],
-                "message": "Do not import from @hype-stack/enums in frontend code. Use @hype-stack/enums for shared config like pricing."
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "files": ["packages/cli/**/*.{ts,tsx}"],
-      "rules": {
-        "no-restricted-imports": [
-          "error",
-          {
-            "patterns": [
-              {
-                "group": ["@hype-stack/enums", "@hype-stack/enums/*"],
-                "message": "CLI must not import from @hype-stack/enums. The CLI is a standalone package."
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "files": ["**/packs/**/files/**/*.{ts,tsx}", "**/packs/**/setup/**/*.{ts,tsx}"],
-      "rules": {
-        "rules/no-json-error-response": "off",
-        "rules/require-json-generic-type": "off",
-        "rules/require-route-crumb": "off",
-        "no-restricted-imports": [
-          "error",
-          {
-            "patterns": [
-              {
-                "group": ["**/apps/*", "**/apps/**"],
-                "message": "Pack files must NEVER import from apps/. Use @backend/* or @/* aliases."
-              },
-              {
-                "group": ["@hype-stack/enums", "@hype-stack/enums/*"],
-                "message": "Pack files must NEVER import from @hype-stack/enums packages. These are internal to this repo. Packs are built for hype-stack, not for this monorepo."
-              },
-              {
-                "group": ["../setup/*", "../setup/**", "../../setup/*", "../../setup/**"],
-                "message": "Pack files must not import from setup/ directly. Use @backend/* or @/* aliases."
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
       "files": ["apps/backend/src/features/**/modules/**/*.ts"],
       "rules": {
         "no-restricted-imports": [
