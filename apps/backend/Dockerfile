@@ -13,10 +13,10 @@ COPY packages ./packages
 
 RUN pnpm install --frozen-lockfile
 
-# Generate the Prisma client and prisma-kysely types before the build.
-# Without this, "@prisma/client" has no PrismaClient export and the Kysely
-# query-builder types are missing, so the backend build fails to typecheck.
-RUN pnpm --filter @hype-stack/backend run generate
+# Generate the Prisma client, backend exported types, and enum declarations
+# before the build. Use the nx target so @hype-stack/enums:build runs first;
+# `pnpm --filter @hype-stack/backend run generate` skips that dependency graph.
+RUN pnpm generate
 
 RUN pnpm nx build backend
 
