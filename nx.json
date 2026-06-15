@@ -75,7 +75,7 @@
     },
     "serve": {
       "continuous": true,
-      "dependsOn": ["build", "build-deps", "^build"]
+      "dependsOn": ["build", "build-deps", "^build", "^generate"]
     },
     "dev": {
       "dependsOn": ["build-deps", "^build"]
