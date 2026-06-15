@@ -67,6 +67,9 @@
     "build": {
       "dependsOn": ["^build"]
     },
+    "generate": {
+      "dependsOn": ["^generate"]
+    },
     "typecheck": {
       "dependsOn": ["^generate"]
     },

@@ -104,6 +104,20 @@
           }
         }
       },
+      "generate": {
+        "executor": "nx:run-commands",
+        "dependsOn": [
+          "@internal/enums:generate"
+        ],
+        "options": {
+          "command": "pnpm run generate",
+          "cwd": "apps/backend"
+        },
+        "outputs": [
+          "{projectRoot}/exported",
+          "{projectRoot}/src/db/postgres/generated"
+        ]
+      },
       "test": {
         "options": {
           "passWithNoTests": true
