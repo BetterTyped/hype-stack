@@ -17,6 +17,7 @@ export default defineConfig({
       VITE_APP_TYPE: "web",
       VITE_ENVIRONMENT: "test",
     },
+    passWithNoTests: true,
     setupFiles: [path.resolve(__dirname, "src/testing/setup/setup.ts")],
     include: ["{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
     reporters: ["default"],
