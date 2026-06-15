@@ -107,7 +107,7 @@
       "generate": {
         "executor": "nx:run-commands",
         "dependsOn": [
-          "@internal/enums:generate"
+          "@hype-stack/enums:build"
         ],
         "options": {
           "command": "pnpm run generate",

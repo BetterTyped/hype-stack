@@ -9,22 +9,10 @@
     "build": "vite build",
     "format": "pnpm --dir ../.. exec oxfmt --write packages/enums",
     "typecheck": "tsgo --noEmit",
-    "lint": "pnpm --dir ../.. exec oxlint --fix packages/enums",
-    "generate": "pnpm exec tsgo -b tsconfig.lib.json"
+    "lint": "pnpm --dir ../.. exec oxlint --fix packages/enums"
   },
   "nx": {
     "targets": {
-      "generate": {
-        "executor": "nx:run-commands",
-        "cache": false,
-        "options": {
-          "command": "pnpm run generate",
-          "cwd": "packages/enums"
-        },
-        "outputs": [
-          "{projectRoot}/dist"
-        ]
-      },
       "test": {
         "options": {
           "passWithNoTests": true
