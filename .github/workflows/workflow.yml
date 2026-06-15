@@ -87,6 +87,8 @@ jobs:
       - name: Install node_modules on cache miss
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
+      - name: Generate Prisma client
+        run: pnpm run generate
       - name: Build
         run: pnpm run build
       - name: Lint
