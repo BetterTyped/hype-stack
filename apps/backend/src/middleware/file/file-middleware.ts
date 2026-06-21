@@ -84,12 +84,18 @@ function createIncomingMessage(honoReq: Request): IncomingMessage & {
       req.push(chunk);
     });
     nodeStream.on("end", () => {
+      // Mark the message complete BEFORE signalling EOF. Node's IncomingMessage
+      // emits a spurious `aborted` event when it is destroyed while `complete`
+      // is still falsy, and multer v2 turns that event into an
+      // `Error("Request aborted")` that surfaces to the client as a 400.
+      req.complete = true;
       req.push(null);
     });
     nodeStream.on("error", (err) => {
       req.destroy(err);
     });
   } else {
+    req.complete = true;
     req.push(null);
   }
 
