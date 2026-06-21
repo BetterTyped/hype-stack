@@ -6,7 +6,7 @@ alwaysApply: true
 
 # Backend
 
-Hype Stack is an open-source full-stack template. The backend lives in `apps/backend`.
+This is an full-stack monorepo. The backend lives in `apps/backend`.
 
 ## Tech Stack
 

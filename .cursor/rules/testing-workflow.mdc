@@ -7,7 +7,7 @@ alwaysApply: true
 
 ## When Building Features
 
-When implementing or modifying a feature — frontend, backend, or packages — **add tests where possible**. Follow the backend and frontend testing guidelines for conventions.
+When implementing or modifying a feature - frontend, backend, or packages - **add tests where possible**. Follow the backend and frontend testing guidelines for conventions.
 
 ## Avoid Trivial Tests
 
@@ -26,4 +26,4 @@ If you finish feature work that **could reasonably be tested** but you decided n
 
 > "I didn't add tests for this change because [reason]. Would you like me to add any?"
 
-**Don't ask** when the change is inherently untestable or trivial — styles, enums, constants, config files, re-exports, type definitions, static assets. Just skip silently.
+**Don't ask** when the change is inherently untestable or trivial - styles, enums, constants, config files, re-exports, type definitions, static assets. Just skip silently.

@@ -11,7 +11,10 @@ When backend code needs to build a URL pointing to the frontend (email links, OA
 ```ts
 import { frontendUrl } from "@backend/utils/frontend-url/frontend-url";
 
-const url = frontendUrl({ path: "/login", search: { invitation_token: token } });
+const url = frontendUrl({
+  path: "/login",
+  search: { invitation_token: token },
+});
 ```
 
 ## Rules

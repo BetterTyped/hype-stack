@@ -63,22 +63,22 @@ src/features/example/
   constants/
   cron/
   webhooks/
-  ws/
+  websockets/
   __tests__/
 ```
 
 This shape is a starting point, not a requirement. Use only the folders a domain actually needs. Small domains might
 only need a `schemas.ts` file or one module folder. Infrastructure-style domains might not need a `db` folder.
 
-### WebSocket (`ws/`)
+### WebSocket (`websockets/`)
 
-When a domain needs real-time capabilities, add a `ws/` folder inside the feature. This mirrors the `db/` pattern:
+When a domain needs real-time capabilities, add a `websockets/` folder inside the feature. This mirrors the `db/` pattern:
 
-- `ws/emitters.ts` -- functions to push data to connected users via the global `wsManager` from
-  `@backend/libs/websocket`.
-- `ws/handlers.ts` -- incoming WebSocket message handlers for domain-specific topics.
+- `websockets/emitters.ts` -- functions to push data to connected users via `wsEmit` from
+  `@backend/sockets/emit`.
+- `websockets/handlers.ts` -- incoming WebSocket message handlers for domain-specific topics.
 
-Feature `ws/` code should only import from `@backend/libs/websocket` -- never use raw WebSocket internals directly.
+Feature `websockets/` code should only import from `@backend/sockets/emit` or `@backend/libs/websocket` -- never use raw WebSocket internals directly.
 
 ## Modules
 

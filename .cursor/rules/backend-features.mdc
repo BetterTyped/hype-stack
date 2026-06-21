@@ -13,7 +13,7 @@ Read `apps/backend/src/features/README.md` for the full feature guidelines befor
 - Use `modules/<module>/index.ts` for domain use cases and capabilities.
 - Put module supporting files in clear-purpose folders such as `schemas/`, `types/`, `helpers/`, `mappers/`, `emails/`, or `constants/`.
 - Keep email templates (React Email) in the module's `emails/` folder, colocated with the feature that sends them.
-- Keep real-time WebSocket emitters in the domain's `ws/emitters.ts` folder for server-side push logic via `wsManager.pushToUser()`. Socket event definitions (schemas, types, handlers) live in `src/sockets/<domain>/index.ts` using `SocketRouter`.
+- Keep real-time WebSocket emitters in the domain's `websockets/emitters.ts` folder for server-side push logic via `wsEmit.toUser()`. Socket event definitions (schemas, types, handlers) live in `src/sockets/<domain>/index.ts` using `SocketRouter`.
 - Keep routes thin: validate request input, read context, call module functions, and return responses.
 - Keep database reads in `db/queries` and writes/state changes in `db/mutations`.
 - Avoid cross-feature imports into incidental internals; call clear public modules instead.
@@ -46,7 +46,7 @@ src/features/<domain>/
   constants/
   cron/
   webhooks/
-  ws/
+  websockets/
     emitters.ts
   __tests__/
 ```
@@ -64,7 +64,7 @@ src/sockets/<domain>/
 
 Use `createSocketRouter()` to define events:
 
-- **`.emitter(topic)<Payload>()`** declares a server-to-client event (backend pushes, frontend listens). Type-only — the actual push happens via `wsManager.pushToUser()` in the feature's `ws/emitters.ts`.
+- **`.emitter(topic)<Payload>()`** declares a server-to-client event (backend pushes, frontend listens). Type-only - the actual push happens via `wsEmit.toUser()` in the feature's `websockets/emitters.ts`.
 - **`.listener(topic, handler)`** declares a client-to-server event with an inline handler (backend listens, frontend emits). Use `wsValidate(schema)` middleware for Zod validation.
 
 ```ts
@@ -82,7 +82,7 @@ export const notificationSockets = createSocketRouter()
   });
 ```
 
-Register socket routers in `src/sockets/index.ts` with `.socket(prefix, router)` — mirroring Hono's `app.route()`:
+Register socket routers in `src/sockets/index.ts` with `.socket(prefix, router)` - mirroring Hono's `app.route()`:
 
 ```ts
 const sockets = new SocketRouter()
@@ -107,9 +107,9 @@ wsEmit.toOrganization({ organizationId, topic: "invitation/new", data: invitatio
 wsEmit.broadcast({ topic: "notification/count", data: { unreadCount: 0 } });
 ```
 
-Do **not** use `wsManager.pushToUser()` directly for application messages — always use `wsEmit` so topics and payloads are type-checked.
+Do **not** use `wsManager.pushToUser()` directly for application messages - always use `wsEmit` so topics and payloads are type-checked.
 
-Do **not** use the old `registerWsHandler()` pattern — all WebSocket event handling goes through `SocketRouter`.
+Do **not** use the old `registerWsHandler()` pattern - all WebSocket event handling goes through `SocketRouter`.
 
 ## Routes
 

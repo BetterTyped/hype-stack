@@ -1,14 +1,14 @@
 ---
-description: Backend errors should flow through centralized middleware — NEVER use try/catch to swallow errors
+description: Backend errors should flow through centralized middleware - NEVER use try/catch to swallow errors
 globs: apps/backend/src/**/*.ts
 alwaysApply: true
 ---
 
-# Backend Error Handling — No try/catch
+# Backend Error Handling - No try/catch
 
 Backend errors are handled centrally by `apps/backend/src/middleware/error/error-middleware.ts`.
 
-**NEVER wrap logic in `try/catch` blocks.** This is the single most important backend rule. The centralized error middleware handles all error formatting, logging, HTTP responses, and **Sentry reporting**. Local `try/catch` blocks hide bugs, create inconsistent error responses, and — most critically — **bypass Sentry**, destroying error visibility. Every swallowed error is an error we never see in production.
+**NEVER wrap logic in `try/catch` blocks.** This is the single most important backend rule. The centralized error middleware handles all error formatting, logging, HTTP responses, and **Sentry reporting**. Local `try/catch` blocks hide bugs, create inconsistent error responses, and - most critically - **bypass Sentry**, destroying error visibility. Every swallowed error is an error we never see in production.
 
 ## Why this matters
 
@@ -33,17 +33,17 @@ When you catch and swallow an error, none of that happens. The error is invisibl
 
 Only these patterns are acceptable:
 
-1. **Cleanup with rethrow** — `catch` block does local cleanup (delete temp file, remove cookie) then **rethrows**. The catch block **must** rethrow.
+1. **Cleanup with rethrow** - `catch` block does local cleanup (delete temp file, remove cookie) then **rethrows**. The catch block **must** rethrow.
 
-2. **WorkOS / third-party business logic** — When a third-party SDK error IS the expected business logic (e.g., WorkOS `email_verification_required` during signup, WorkOS session auth returning failure for WebSocket upgrades). In these cases the error is a **data signal**, not a failure. Use `.catch(() => null)` or check error codes and rethrow for anything unexpected.
+2. **WorkOS / third-party business logic** - When a third-party SDK error IS the expected business logic (e.g., WorkOS `email_verification_required` during signup, WorkOS session auth returning failure for WebSocket upgrades). In these cases the error is a **data signal**, not a failure. Use `.catch(() => null)` or check error codes and rethrow for anything unexpected.
 
-3. **Infrastructure resilience** — Cache (Valkey) read/write failures where the operation must degrade gracefully instead of failing the request. WebSocket message parsing where malformed input shouldn't crash the connection.
+3. **Infrastructure resilience** - Cache (Valkey) read/write failures where the operation must degrade gracefully instead of failing the request. WebSocket message parsing where malformed input shouldn't crash the connection.
 
-4. **Redirect-based flows** — OAuth callbacks where the response MUST be a redirect regardless of success/failure (e.g., Google OAuth callback).
+4. **Redirect-based flows** - OAuth callbacks where the response MUST be a redirect regardless of success/failure (e.g., Google OAuth callback).
 
 If your `catch` block does `logger.error(...)` and nothing else, it is **wrong**. That error should flow through the middleware.
 
-## Bad — swallowing errors
+## Bad - swallowing errors
 
 ```ts
 try {
@@ -53,7 +53,7 @@ try {
 }
 ```
 
-## Bad — catching to return error response
+## Bad - catching to return error response
 
 ```ts
 app.get("/:projectId", async (c) => {
@@ -68,7 +68,7 @@ app.get("/:projectId", async (c) => {
 });
 ```
 
-## Good — let errors bubble up
+## Good - let errors bubble up
 
 ```ts
 app.get("/:projectId", async (c) => {
@@ -86,7 +86,7 @@ app.get("/:projectId", async (c) => {
 });
 ```
 
-## Good — cleanup with rethrow
+## Good - cleanup with rethrow
 
 ```ts
 const tempFile = await createTempFile();
@@ -98,7 +98,7 @@ try {
 }
 ```
 
-## Good — WorkOS business logic (error as data signal)
+## Good - WorkOS business logic (error as data signal)
 
 ```ts
 const passwordReset = await workos.userManagement

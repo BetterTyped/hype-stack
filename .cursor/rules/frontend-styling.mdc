@@ -19,7 +19,7 @@ Style all frontend UI with **Tailwind CSS** utility classes and **shadcn/ui** co
 
 All pages rendered inside the app layout (`<Outlet />`) must follow the same structural pattern:
 
-- **Full width.** Pages use `w-full` — never constrain with `max-w-*` or `mx-auto` at the page level. The layout wrapper already handles padding (`p-4`).
+- **Full width.** Pages use `w-full` - never constrain with `max-w-*` or `mx-auto` at the page level. The layout wrapper already handles padding (`p-4`).
 - **Page header:** icon + `h1` title + description paragraph, matching the settings page pattern:
   ```
   <div className="w-full space-y-8">
@@ -33,5 +33,5 @@ All pages rendered inside the app layout (`<Outlet />`) must follow the same str
     {/* page content */}
   </div>
   ```
-- **No extra Card wrappers for top-level page content.** Card is for distinct sections within a page (e.g., profile card, organization card inside settings). Don't wrap an entire feature's content in a Card just because it's a page — use the page header pattern above instead.
-- **Do NOT add page-level padding** (`p-6`, `p-8`, etc.) in route components — the layout already provides it.
+- **No extra Card wrappers for top-level page content.** Card is for distinct sections within a page (e.g., profile card, organization card inside settings). Don't wrap an entire feature's content in a Card just because it's a page - use the page header pattern above instead.
+- **Do NOT add page-level padding** (`p-6`, `p-8`, etc.) in route components - the layout already provides it.

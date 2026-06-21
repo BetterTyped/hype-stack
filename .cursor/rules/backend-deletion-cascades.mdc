@@ -18,9 +18,16 @@ Example:
 ```ts
 import { postgres } from "@backend/context";
 
-export const deleteProjectMutation = async ({ projectId }: { projectId: string }) => {
+export const deleteProjectMutation = async ({
+  projectId,
+}: {
+  projectId: string;
+}) => {
   await postgres.qb.transaction().execute(async (trx) => {
-    await trx.deleteFrom("document").where("projectId", "=", projectId).execute();
+    await trx
+      .deleteFrom("document")
+      .where("projectId", "=", projectId)
+      .execute();
     await trx.deleteFrom("project").where("id", "=", projectId).execute();
   });
 
