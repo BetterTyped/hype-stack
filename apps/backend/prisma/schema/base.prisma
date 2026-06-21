@@ -1,0 +1,18 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../src/db/postgres/generated/client"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [vector]
+}
+
+generator kysely {
+  provider     = "prisma-kysely"
+  output       = "../../src/db/postgres/types"
+  fileName     = "types.ts"
+  enumFileName = "enums.ts"
+  camelCase    = true
+}
