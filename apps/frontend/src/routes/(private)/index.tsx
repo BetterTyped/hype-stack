@@ -62,7 +62,7 @@ function LandingPage() {
 
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
             <Button size="lg" className="gap-2 px-8 text-base" asChild>
-              <a href="https://hypestack.bettertyped.com/" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.hype-stack.dev/docs/getting-started/" target="_blank" rel="noopener noreferrer">
                 Get Started
                 <ArrowRight className="size-4" />
               </a>
@@ -127,7 +127,7 @@ function LandingPage() {
             Every integration is production-grade and typed end-to-end. No glue code, no guesswork.
           </p>
           <Button size="lg" className="mt-8 gap-2 px-8 text-base" asChild>
-            <a href="https://hypestack.bettertyped.com/" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.hype-stack.dev/packs/" target="_blank" rel="noopener noreferrer">
               Explore the modules
               <ArrowRight className="size-4" />
             </a>
@@ -136,12 +136,12 @@ function LandingPage() {
 
         <footer className="mt-16 pb-8 text-center text-xs text-muted-foreground/50">
           <a
-            href="https://hypestack.bettertyped.com/"
+            href="https://www.hype-stack.dev/"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-muted-foreground"
           >
-            hypestack.bettertyped.com
+            www.hype-stack.dev
           </a>
         </footer>
       </div>
