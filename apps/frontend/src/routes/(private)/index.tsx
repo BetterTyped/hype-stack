@@ -37,7 +37,7 @@ const modules = [
 
 function LandingPage() {
   return (
-    <div className="relative flex min-h-screen flex-col items-center overflow-hidden bg-page-background">
+    <div className="relative flex min-h-screen flex-col items-center overflow-hidden">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-[40%] left-1/2 h-[800px] w-[800px] -translate-x-1/2 rounded-full bg-primary/5 blur-3xl" />
         <div className="absolute -bottom-[20%] right-[10%] h-[600px] w-[600px] rounded-full bg-primary/3 blur-3xl" />
