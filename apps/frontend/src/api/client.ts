@@ -18,13 +18,6 @@ client.adapter.setRequestDefaults((request) => {
   };
 });
 
-client.onError((response, request) => {
-  if (response.status === 401 && !request.endpoint.startsWith("/auth/")) {
-    window.location.href = "/login";
-  }
-  return response;
-});
-
 const wsProtocol = API_BASE_URL.startsWith("https") ? "wss" : "ws";
 const wsHost = API_BASE_URL.replace(/^https?:\/\//, "");
 
