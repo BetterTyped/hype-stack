@@ -5,7 +5,7 @@ import { loadEnv } from "vite";
 const env = loadEnv("", fileURLToPath(new URL(".", import.meta.url)), "");
 
 export default defineConfig({
-  schema: "prisma/schema.prisma",
+  schema: "prisma/schema",
   migrations: {
     path: "prisma/migrations",
   },
