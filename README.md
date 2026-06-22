@@ -62,41 +62,24 @@ No lock-in. No runtime dependency. Just code in your repo.
 
 ## Preview
 
-<details open>
-<summary><b>SaaS</b></summary>
-
+<table>
+<tr>
+<td width="50%" align="center">
+<a href="https://www.hype-stack.dev/packs/saas-starter-workos">
+<img src="https://www.hype-stack.dev/assets/signup-DwyOfEZQ.png" alt="SaaS Starter" />
+</a>
 <br/>
-
-<video src="https://github.com/BetterTyped/hype-stack/raw/main/.github/demos/saas-demo.mp4" controls width="100%">
-  Your browser does not support video playback.
-  <a href="https://github.com/BetterTyped/hype-stack/raw/main/.github/demos/saas-demo.mp4">Download the video</a> to watch.
-</video>
-
-</details>
-
-<details>
-<summary><b>Billing</b></summary>
-
+<a href="https://www.hype-stack.dev/packs/saas-starter-workos"><b>SaaS Starter</b></a>
+</td>
+<td width="50%" align="center">
+<a href="https://www.hype-stack.dev/packs/pack-notifications">
+<img src="https://www.hype-stack.dev/assets/notifications-CBrXiWNk.png" alt="Notifications" />
+</a>
 <br/>
-
-<video src="https://github.com/BetterTyped/hype-stack/raw/main/.github/demos/billing-demo.mp4" controls width="100%">
-  Your browser does not support video playback.
-  <a href="https://github.com/BetterTyped/hype-stack/raw/main/.github/demos/billing-demo.mp4">Download the video</a> to watch.
-</video>
-
-</details>
-
-<details>
-<summary><b>Notifications</b></summary>
-
-<br/>
-
-<video src="https://github.com/BetterTyped/hype-stack/raw/main/.github/demos/notifications-demo.mp4" controls width="100%">
-  Your browser does not support video playback.
-  <a href="https://github.com/BetterTyped/hype-stack/raw/main/.github/demos/notifications-demo.mp4">Download the video</a> to watch.
-</video>
-
-</details>
+<a href="https://www.hype-stack.dev/packs/pack-notifications"><b>Notifications</b></a>
+</td>
+</tr>
+</table>
 
 &nbsp;
 
