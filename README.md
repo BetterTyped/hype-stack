@@ -62,7 +62,41 @@ No lock-in. No runtime dependency. Just code in your repo.
 
 ## Preview
 
-![App Preview](./.github/assets/preview.png)
+<details open>
+<summary><b>SaaS</b></summary>
+
+<br/>
+
+<video src="https://github.com/BetterTyped/hype-stack/raw/main/.github/demos/saas-demo.mp4" controls width="100%">
+  Your browser does not support video playback.
+  <a href="https://github.com/BetterTyped/hype-stack/raw/main/.github/demos/saas-demo.mp4">Download the video</a> to watch.
+</video>
+
+</details>
+
+<details>
+<summary><b>Billing</b></summary>
+
+<br/>
+
+<video src="https://github.com/BetterTyped/hype-stack/raw/main/.github/demos/billing-demo.mp4" controls width="100%">
+  Your browser does not support video playback.
+  <a href="https://github.com/BetterTyped/hype-stack/raw/main/.github/demos/billing-demo.mp4">Download the video</a> to watch.
+</video>
+
+</details>
+
+<details>
+<summary><b>Notifications</b></summary>
+
+<br/>
+
+<video src="https://github.com/BetterTyped/hype-stack/raw/main/.github/demos/notifications-demo.mp4" controls width="100%">
+  Your browser does not support video playback.
+  <a href="https://github.com/BetterTyped/hype-stack/raw/main/.github/demos/notifications-demo.mp4">Download the video</a> to watch.
+</video>
+
+</details>
 
 &nbsp;
 
