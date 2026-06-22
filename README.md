@@ -1,14 +1,24 @@
 <h1 align="center">
 
-<img src="./.github/assets/header.png" alt="Hype Stack" />
+<img src="./.github/assets/header3.png" alt="Hype Stack" />
 
 </h1>
 
-<h3 align="center">The starting point for web + desktop apps.<br/>Fully typed. AI-ready. Production-grade architecture.</h3>
+<h3 align="center">The starting point for web and desktop apps.<br/>Fully typed. AI-ready. Production-grade architecture.</h3>
 
 <p align="center">
 A clean, empty full-stack template.<br/>
-Add features as you need them — one command at a time.
+Add the features you need, one command at a time.
+</p>
+
+<p align="center">
+<a href="https://github.com/BetterTyped/hype-stack/blob/main/License.md"><img src="https://img.shields.io/badge/license-MIT-22c55e.svg?style=flat-square" alt="MIT License" /></a>
+<a href="https://www.npmjs.com/package/@hype-stack/cli"><img src="https://img.shields.io/badge/cli-npx%20%40hype--stack%2Fcli-000000.svg?style=flat-square" alt="CLI" /></a>
+<img src="https://img.shields.io/badge/React-19-149eca.svg?style=flat-square&logo=react&logoColor=white" alt="React 19" />
+<img src="https://img.shields.io/badge/TypeScript-6-3178c6.svg?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript 6" />
+<img src="https://img.shields.io/badge/Vite-8-646cff.svg?style=flat-square&logo=vite&logoColor=white" alt="Vite 8" />
+<img src="https://img.shields.io/badge/Electron-41-47848f.svg?style=flat-square&logo=electron&logoColor=white" alt="Electron 41" />
+<a href="https://github.com/BetterTyped/hype-stack/stargazers"><img src="https://img.shields.io/github/stars/BetterTyped/hype-stack?style=flat-square&color=eab308" alt="Stars" /></a>
 </p>
 
 <h3 align="center">Get started:</h3>
@@ -21,7 +31,7 @@ npx @hype-stack/cli create
 
 ## What Is Hype Stack?
 
-Hype Stack is a **modern full-stack template** — not a boilerplate packed with someone else's opinions. You get a clean, empty project with rock-solid architecture and tooling already wired up. No demo features to rip out. No dead code to clean up.
+Hype Stack is a **modern full-stack template**, not a boilerplate stuffed with someone else's opinions. You get a clean, empty project with the architecture and tooling already wired up. No demo features to rip out. No dead code to clean up.
 
 Build whatever you want from day one.
 
@@ -29,16 +39,21 @@ Build whatever you want from day one.
 
 ## How It Works
 
-Hype Stack follows the same model as [shadcn/ui](https://ui.shadcn.com) — but for full-stack features.
+Hype Stack follows the same model as [shadcn/ui](https://ui.shadcn.com), but for full-stack features.
 
-1. **Scaffold** your project with the CLI
-2. **Add packs** when you need them — auth, orgs, realtime, storage, desktop, and more
-3. Each pack drops production-ready code **into your codebase** — you own it, you modify it
+1. **Scaffold** your project with the CLI.
+2. **Compose** packs when you need them: auth, billing, realtime, teams, desktop layouts, and more.
+3. Each pack drops production-ready code **into your codebase**. You own it, you modify it.
 
 ```bash
-npx @hype-stack/cli create          # Create a new project
-npx @hype-stack/cli add auth        # Add authentication pack
-npx @hype-stack/cli add orgs        # Add organizations & RBAC pack
+npx @hype-stack/cli create     # Create a new project
+npx @hype-stack/cli compose    # Pick packs to add (interactive)
+```
+
+Want to script it? Skip the prompts and pass the packs directly:
+
+```bash
+npx @hype-stack/cli compose --packs starter-saas-workos,pack-collaboration
 ```
 
 No lock-in. No runtime dependency. Just code in your repo.
@@ -46,9 +61,6 @@ No lock-in. No runtime dependency. Just code in your repo.
 &nbsp;
 
 ## Preview
-
-<!-- TODO: Add a GIF or screenshot of the running app here -->
-<!-- Suggested: dashboard view, login screen, or desktop app window -->
 
 ![App Preview](./.github/assets/preview.png)
 
@@ -74,30 +86,31 @@ No lock-in. No runtime dependency. Just code in your repo.
 
 The template ships with **zero features** and **everything you need to build them**:
 
-- **Monorepo** — frontend, backend, and shared packages in one repo
-- **End-to-end types** — frontend imports backend contracts directly, no codegen
-- **Rust-powered tooling** — OXC linting, formatting, Vite 8 HMR in milliseconds
-- **AI-native structure** — vertical architecture with Cursor rules and agent skills
-- **Desktop-ready** — Electron Forge pre-configured for macOS, Windows, and Linux
-- **Testing setup** — Vitest, React Testing Library, Playwright E2E ready to go
+- **Monorepo**: frontend, backend, and shared packages in one repo.
+- **End-to-end types**: the frontend imports backend contracts directly. No codegen.
+- **Rust-powered tooling**: OXC lint and format, Vite 8 HMR in milliseconds.
+- **AI-native structure**: vertical architecture with bundled Cursor rules and agent skills.
+- **Desktop-ready**: Electron Forge pre-configured for macOS, Windows, and Linux.
+- **Testing setup**: Vitest, React Testing Library, and Playwright E2E ready to go.
 
 &nbsp;
 
 ## Available Packs
 
-Need features? Add them with a single command. Each pack installs production-grade, fully-typed code directly into your project.
+Need features? Add them with `npx @hype-stack/cli compose`. Each pack installs production-grade, fully-typed code straight into your project. Start with a starter, pick one layout, then stack on the features you want.
 
-| Pack              | What it adds                                                        |
-| ----------------- | ------------------------------------------------------------------- |
-| **Auth**          | Email/password, OAuth, email verification, password reset, sessions |
-| **Organizations** | Multi-org support, invitations, org switching                       |
-| **RBAC**          | Role-based access control, permission gates on routes and UI        |
-| **Realtime**      | Typed WebSocket events, live notifications                          |
-| **Storage**       | S3-compatible file uploads with validation                          |
-| **Desktop**       | macOS signing, Windows installers, Linux packages, auto-update      |
-| **Observability** | Sentry error tracking, analytics, structured logging                |
+| Pack                      | Category | What it adds                                                                   |
+| ------------------------- | -------- | ------------------------------------------------------------------------------ |
+| **SaaS Starter (WorkOS)** | Starter  | Auth, organizations, roles, and sessions. Social and SSO login via WorkOS.     |
+| **Basic** _(free)_        | Layout   | Classic dashboard shell: collapsible sidebar, org switcher, breadcrumb header. |
+| **Native App Shell**      | Layout   | One layout for web and Electron, with mobile drawer and native window chrome.  |
+| **Monetization**          | Feature  | Stripe checkout, the billing portal, subscriptions, and signed webhooks.       |
+| **Collaboration**         | Feature  | Teams, projects, email invitations, and realtime presence.                     |
+| **Notifications**         | Feature  | WebSocket push, an in-app inbox, and email fallback through Resend.            |
 
-> Packs are purchased separately. Run `npx @hype-stack/cli packs` to browse what's available.
+Navigation is pack-driven: install a feature pack and its links show up in the sidebar on their own.
+
+> Premium packs need a license. Run `npx @hype-stack/cli login` to install the ones your organization owns, or pass a key with `--license-key`. The base template and free packs are open source forever.
 
 &nbsp;
 
@@ -119,21 +132,21 @@ Need features? Add them with a single command. Each pack installs production-gra
 
 ## Why Hype Stack?
 
-### Clean Slate, Not a Gutting Job
+### Clean slate, not a gutting job
 
-Most templates give you a demo app and expect you to delete half of it. Hype Stack gives you an empty project with the hard parts already solved — monorepo wiring, type bridges, tooling, CI.
+Most templates hand you a demo app and expect you to delete half of it. Hype Stack gives you an empty project with the hard parts already solved: monorepo wiring, type bridges, tooling, and CI.
 
-### Built for AI Agents
+### Built for AI agents
 
-The codebase follows a [vertical architecture](https://tkdodo.eu/blog/the-vertical-codebase) — each feature owns its routes, UI, data access, types, and tests. Bundled Cursor rules and agent skills teach LLMs exactly how to add features and follow conventions. Fast tooling gives agents sub-second feedback loops.
+The codebase follows a [vertical architecture](https://tkdodo.eu/blog/the-vertical-codebase). Each feature owns its routes, UI, data access, types, and tests. Bundled Cursor rules and agent skills teach LLMs exactly how to add features and follow the conventions. Fast tooling gives agents sub-second feedback loops.
 
-### Zero-Codegen Type Safety
+### Zero-codegen type safety
 
-No OpenAPI specs. No code generators. The frontend imports `@hype-stack/backend` as a workspace dependency. HTTP routes and WebSocket events flow through a typed bridge — change a backend response, and TypeScript catches every mismatched consumer instantly.
+No OpenAPI specs. No code generators. The frontend imports `@internal/backend` as a workspace dependency. HTTP routes and WebSocket events flow through a typed bridge, so when you change a backend response, TypeScript flags every mismatched consumer instantly.
 
-### One Codebase, Every Platform
+### One codebase, every platform
 
-Same React app runs as a web SPA and an Electron desktop app. One `VITE_APP_TYPE` flag controls the split. Desktop builds are ready when you are.
+The same React app runs as a web SPA and an Electron desktop app. A single `VITE_APP_TYPE` flag controls the split. Desktop builds are ready when you are.
 
 &nbsp;
 
@@ -157,17 +170,17 @@ Same React app runs as a web SPA and an Electron desktop app. One `VITE_APP_TYPE
 
 ```
 ┌─────────────────────────────────────────────────┐
-│                   pnpm monorepo                  │
-├─────────────────┬───────────────────────────────┤
-│  apps/frontend  │  apps/backend                 │
-│  ─────────────  │  ────────────                 │
-│  React 19       │  Hono                         │
-│  TanStack Router│  Prisma + Kysely              │
-│  HyperFetch SDK │  Zod validation               │
-│  Electron Forge │  Typed WebSockets             │
-│  shadcn/ui      │                               │
-├─────────────────┴───────────────────────────────┤
-│  packages/enums — shared permissions & config   │
+│                   pnpm monorepo                   │
+├─────────────────┬─────────────────────────────────┤
+│  apps/frontend  │  apps/backend                   │
+│  ─────────────  │  ────────────                   │
+│  React 19       │  Hono                           │
+│  TanStack Router│  Prisma + Kysely                │
+│  HyperFetch SDK │  Zod validation                 │
+│  Electron Forge │  Typed WebSockets               │
+│  shadcn/ui      │  WorkOS auth                    │
+├─────────────────┴─────────────────────────────────┤
+│  packages/enums: shared permissions and config    │
 └─────────────────────────────────────────────────┘
 ```
 
@@ -175,14 +188,16 @@ Same React app runs as a web SPA and an Electron desktop app. One `VITE_APP_TYPE
 
 ## Tech Stack
 
-| Layer    | Technology                                                |
-| -------- | --------------------------------------------------------- |
-| Frontend | React 19, TanStack Router, Tailwind v4, shadcn/ui, Motion |
-| Backend  | Hono, Prisma, Kysely, Zod                                 |
-| Desktop  | Electron Forge (macOS, Windows, Linux)                    |
-| Database | PostgreSQL 17 + pgvector                                  |
-| Cache    | Valkey (Redis-compatible)                                 |
-| Tooling  | Nx, Vite 8, OXC, pnpm, TypeScript 6                       |
+| Layer      | Technology                                                |
+| ---------- | --------------------------------------------------------- |
+| Frontend   | React 19, TanStack Router, Tailwind v4, shadcn/ui, Motion |
+| Backend    | Hono, Prisma 7, Kysely, Zod                               |
+| Data layer | HyperFetch SDK, typed HTTP and WebSocket bridge           |
+| Desktop    | Electron Forge (macOS, Windows, Linux)                    |
+| Database   | PostgreSQL 17 + pgvector                                  |
+| Cache      | Valkey (Redis-compatible)                                 |
+| Tooling    | Nx, Vite 8, OXC, pnpm, TypeScript 6                       |
+| Monitoring | Sentry                                                    |
 
 &nbsp;
 
@@ -203,7 +218,7 @@ pnpm --filter backend exec prisma generate
 pnpm dev
 ```
 
-> Web app runs on Vite. Backend on Hono. Both hot-reload instantly.
+> The web app runs on Vite. The backend runs on Hono. Both hot-reload instantly.
 
 &nbsp;
 
@@ -259,7 +274,7 @@ pnpm test:clean       # Tear down test infrastructure
 
 <p align="center">
 <strong>Start empty. Add what you need. Ship fast.</strong><br/><br/>
-Hype Stack gives you the architecture — you choose the features.
+Hype Stack gives you the architecture. You choose the features.
 </p>
 
 ## License
