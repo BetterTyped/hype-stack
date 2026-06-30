@@ -4,7 +4,7 @@ name: hype-stack-backend
 services:
   postgres:
     image: pgvector/pgvector:pg17 # PostgreSQL with pgvector support
-    container_name: backend-postgres
+    container_name: hype-stack-backend-postgres
     ports:
       - "5436:5432"
     environment:
@@ -23,7 +23,7 @@ services:
 
   valkey:
     image: valkey/valkey:latest
-    container_name: backend-valkey
+    container_name: hype-stack-backend-valkey
     command: ["valkey-server", "--appendonly", "yes", "--requirepass", "${VALKEY_PASSWORD}"]
     ports:
       - "6381:6379"
@@ -40,7 +40,7 @@ services:
 
   rustfs:
     image: rustfs/rustfs:latest
-    container_name: backend-rustfs
+    container_name: hype-stack-backend-rustfs
     ports:
       - "9000:9000"
       - "9001:9001"
