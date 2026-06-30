@@ -17,7 +17,7 @@ import {
 import logoSrc from "@/assets/images/logo.png";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/(default)/")({
+export const Route = createFileRoute("/(private)/")({
   loader: () => ({ crumb: "Home" }),
   component: LandingPage,
 });
