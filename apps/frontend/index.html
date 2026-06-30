@@ -8,9 +8,37 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/assets/images/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/assets/images/favicon-16x16.png"
+    />
     <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png" />
+
+    <script>
+      // Set the theme before first paint to avoid a flash of the wrong colors.
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var theme =
+            stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          var root = document.documentElement;
+          root.classList.toggle("dark", theme === "dark");
+          root.style.colorScheme = theme;
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

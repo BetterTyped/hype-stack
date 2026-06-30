@@ -21,6 +21,25 @@
       href="/assets/images/favicon-16x16.png"
     />
     <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png" />
+
+    <script>
+      // Set the theme before first paint to avoid a flash of the wrong colors.
+      // Mirrors the logic in src/hooks/use-theme.ts.
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var theme =
+            stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          var root = document.documentElement;
+          root.classList.toggle("dark", theme === "dark");
+          root.style.colorScheme = theme;
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

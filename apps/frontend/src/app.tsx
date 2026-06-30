@@ -1,5 +1,7 @@
 import { RouterProvider, createMemoryHistory, createRouter } from "@tanstack/react-router";
 
+import { useTheme } from "@/hooks/use-theme";
+
 import { isElectronApp } from "./lib/electron";
 import { routeTree } from "./routeTree.gen";
 
@@ -14,6 +16,9 @@ declare module "@tanstack/react-router" {
 }
 
 export function App() {
+  // Centralized theme controller - applies, persists, and syncs the theme for the whole app.
+  useTheme();
+
   return (
     <RouterProvider
       router={router}
