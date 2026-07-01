@@ -66,7 +66,7 @@ export const config: UserConfigFnObject = ({ mode }) => {
       }),
       tanstackRouter({
         target: "react",
-        autoCodeSplitting: true,
+        autoCodeSplitting: false,
         routesDirectory: path.join(__dirname, "../src/routes"),
         generatedRouteTree: path.join(__dirname, "../src/routeTree.gen.ts"),
         quoteStyle: "double",
