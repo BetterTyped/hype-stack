@@ -57,7 +57,8 @@ export function DevServerBanner() {
   const Icon = state.kind === "unreachable" ? Unplug : ServerCrash;
   const title = state.kind === "unreachable" ? "Backend not reachable" : "Backend failed to start";
   const message = state.kind === "unreachable" ? "The dev server isn't responding. Is it running?" : state.message;
-  const hint = state.kind === "error" ? state.hint : undefined;
+  const hint =
+    state.kind === "error" ? state.hint : state.kind === "unreachable" ? "Failed to reach the server API." : undefined;
 
   return (
     <div className="animate-in fade-in slide-in-from-top-2 w-full z-9999 border-b border-red-500/25 bg-linear-to-r from-red-950/95 to-red-900/90 px-4 py-3 text-red-50 shadow-lg shadow-red-950/40 ring-1 ring-inset ring-white/5 backdrop-blur-md duration-300">
@@ -77,7 +78,9 @@ export function DevServerBanner() {
               dev
             </span>
           </div>
-          {hint ? <p className="text-xs leading-snug text-red-200/60">{hint || "Server failed to start."}</p> : null}
+          {hint ? (
+            <p className="text-xs leading-snug text-red-200/60">{hint || "Failed to reach the server API."}</p>
+          ) : null}
         </div>
 
         <button
