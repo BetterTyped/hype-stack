@@ -1,6 +1,6 @@
 <h1 align="center">
 
-<img src="./.github/assets/header3.png" alt="Hype Stack" />
+<img src="./.github/assets/header3.png" alt="Hype Stack!" />
 
 </h1>
 
