@@ -17,7 +17,7 @@ They create real data via `db/mutations/` functions, query it back, and verify t
 
 Currently mocked third-party services:
 
-- WorkOS (external SaaS -- auth, organizations, memberships, invitations)
+- Auth (external SaaS -- auth, organizations, memberships, invitations)
 - Resend (external SaaS -- email sending)
 
 When a new third-party integration needs mocking, **build a reusable helper in `src/testing/helpers/`** so every test file can import a single function instead of duplicating setup. Keep mock helpers focused, typed, and documented so future tests get mocking for free.
@@ -61,13 +61,13 @@ beforeEach(async () => {
 1. **NEVER import vitest** -- globals are available.
 2. **NEVER mock DB, Valkey, or S3** -- they run in Docker.
 3. **Create real data** -- use `db/mutations/` to insert, `db/queries/` to verify.
-4. **Mock only third-party services unavailable in Docker** (WorkOS, Resend, etc.) -- build reusable mock helpers in `src/testing/helpers/` so every test reuses the same setup.
+4. **Mock only third-party services unavailable in Docker** (Resend, etc.) -- build reusable mock helpers in `src/testing/helpers/` so every test reuses the same setup.
 5. **No `try/catch` for error assertions** -- use `expect().rejects`.
 6. **No `any` types** -- use `vi.fn<(args) => ReturnType>()`.
 7. **Tests must be independent** -- each test creates its own data, `flushAll()` in `beforeEach`.
 8. **Every test MUST use `// Arrange`, `// Act`, `// Assert` comments** to clearly separate setup, execution, and verification. Skip `// Arrange` only when there is no setup.
 
-## WorkOS Mock Pattern
+## Example 3rd Party Mock Pattern
 
 Create reusable mocks in `src/testing/helpers/workos.mock.ts`:
 

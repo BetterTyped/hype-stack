@@ -47,13 +47,8 @@ Hype Stack follows the same model as [shadcn/ui](https://ui.shadcn.com), but for
 
 ```bash
 npx @hype-stack/cli create     # Create a new project
-npx @hype-stack/cli compose    # Pick packs to add (interactive)
-```
-
-Want to script it? Skip the prompts and pass the packs directly:
-
-```bash
-npx @hype-stack/cli compose --packs starter-saas-workos,pack-collaboration
+npx @hype-stack/cli template    # Pick template to start with (interactive)
+npx @hype-stack/cli compose    # Create custom project with full functionality (interactive)
 ```
 
 No lock-in. No runtime dependency. Just code in your repo.
@@ -116,14 +111,14 @@ The template ships with **zero features** and **everything you need to build the
 
 Need features? Add them with `npx @hype-stack/cli compose`. Each pack installs production-grade, fully-typed code straight into your project. Start with a starter, pick one layout, then stack on the features you want.
 
-| Pack                      | Category | What it adds                                                                   |
-| ------------------------- | -------- | ------------------------------------------------------------------------------ |
-| **SaaS Starter (WorkOS)** | Starter  | Auth, organizations, roles, and sessions. Social and SSO login via WorkOS.     |
-| **Basic** _(free)_        | Layout   | Classic dashboard shell: collapsible sidebar, org switcher, breadcrumb header. |
-| **Native App Shell**      | Layout   | One layout for web and Electron, with mobile drawer and native window chrome.  |
-| **Monetization**          | Feature  | Stripe checkout, the billing portal, subscriptions, and signed webhooks.       |
-| **Collaboration**         | Feature  | Teams, projects, email invitations, and realtime presence.                     |
-| **Notifications**         | Feature  | WebSocket push, an in-app inbox, and email fallback through Resend.            |
+| Pack                 | Category | What it adds                                                                   |
+| -------------------- | -------- | ------------------------------------------------------------------------------ |
+| **SaaS Starter**     | Starter  | Auth, organizations, roles, and sessions. Social and SSO login via auth.       |
+| **Basic** _(free)_   | Layout   | Classic dashboard shell: collapsible sidebar, org switcher, breadcrumb header. |
+| **Native App Shell** | Layout   | One layout for web and Electron, with mobile drawer and native window chrome.  |
+| **Monetization**     | Feature  | Stripe checkout, the billing portal, subscriptions, and signed webhooks.       |
+| **Collaboration**    | Feature  | Teams, projects, email invitations, and realtime presence.                     |
+| **Notifications**    | Feature  | WebSocket push, an in-app inbox, and email fallback through Resend.            |
 
 Navigation is pack-driven: install a feature pack and its links show up in the sidebar on their own.
 
@@ -195,7 +190,7 @@ The same React app runs as a web SPA and an Electron desktop app. A single `VITE
 │  TanStack Router│  Prisma + Kysely                │
 │  HyperFetch SDK │  Zod validation                 │
 │  Electron Forge │  Typed WebSockets               │
-│  shadcn/ui      │  WorkOS auth                    │
+│  shadcn/ui      │  Auth                    │
 ├─────────────────┴─────────────────────────────────┤
 │  packages/enums: shared permissions and config    │
 └─────────────────────────────────────────────────┘

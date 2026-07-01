@@ -1,7 +1,8 @@
+import type { Hono } from "hono";
+
 import { appWsManager, adminWsManager } from "@backend/libs/websocket/connection-manager";
 import { SocketRouter } from "@backend/libs/websocket/socket-router";
 import type { SocketRoutesToSdk, ServerEmitterMap } from "@backend/types/hono/hono-ws-converter";
-import type { Hono } from "hono";
 
 /* -------------------------------------------------------------------------------------------------
  * Socket route definitions — mirrors routes/index.ts
@@ -10,7 +11,7 @@ import type { Hono } from "hono";
 const sockets = new SocketRouter({
   manager: appWsManager,
   authenticate: async (_headers) => {
-    // TODO: Implement WebSocket authentication (e.g. validate session cookie via WorkOS)
+    // TODO: Implement WebSocket authentication (e.g. validate session cookie via auth of your choice)
     return null;
   },
 });
@@ -18,7 +19,7 @@ const sockets = new SocketRouter({
 const adminSockets = new SocketRouter({
   manager: adminWsManager,
   authenticate: async (_headers) => {
-    // TODO: Implement WebSocket authentication (e.g. validate session cookie via WorkOS)
+    // TODO: Implement WebSocket authentication (e.g. validate session cookie via auth of your choice)
     return null;
   },
 });

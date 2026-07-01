@@ -423,9 +423,6 @@ importers:
       '@prisma/client':
         specifier: ^7.8.0
         version: 7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(magicast@0.5.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.9.3))(typescript@5.9.3)
-      '@workos-inc/node':
-        specifier: ^9.1.1
-        version: 9.1.1
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
@@ -5834,10 +5831,6 @@ packages:
 
   '@webgpu/types@0.1.70':
     resolution: {integrity: sha512-LFiNHHKMvmAEvwVew3JLJmTdShhbdwRFSImUshGhE2mGE8ybQzIo63l5uRp+YKnNx+8Qno8Kf6gN+DKMreIJCA==}
-
-  '@workos-inc/node@9.1.1':
-    resolution: {integrity: sha512-4LxJ5t1KVkUcylrECo8c1Y4vbCeIvwmgB07xn88Pq/gluklOcK6PloKw8asfBhf78JuyuksEqmD2w2A2wNpW0w==}
-    engines: {node: '>=22.11.0'}
 
   '@xmldom/xmldom@0.9.10':
     resolution: {integrity: sha512-A9gOqLdi6cV4ibazAjcQufGj0B1y/vDqYrcuP6d/6x8P27gRS8643Dj9o1dEKtB6O7fwxb2FgBmJS2mX7gpvdw==}
@@ -17693,10 +17686,6 @@ snapshots:
       '@xtuc/long': 4.2.2
 
   '@webgpu/types@0.1.70': {}
-
-  '@workos-inc/node@9.1.1':
-    dependencies:
-      eventemitter3: 5.0.4
 
   '@xmldom/xmldom@0.9.10': {}
 

@@ -43,7 +43,6 @@
     "@hype-stack/enums": "workspace:*",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
-    "@workos-inc/node": "^9.1.1",
     "dotenv": "^17.4.2",
     "dotenv-expand": "^13.0.0",
     "hono": "^4.12.15",
