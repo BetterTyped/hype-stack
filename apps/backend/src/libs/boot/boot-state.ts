@@ -16,7 +16,7 @@ const BOOT_ERRORS: Record<BootStage, { message: string; hint: string }> = {
   },
   context: {
     message: "Backend services failed to initialize.",
-    hint: "You may be missing or have misconfigured env variables (database, cache, storage, billing).",
+    hint: "You may be missing or have misconfigured env variables (database, cache, storage, billing). Use 'npx @hype-stack/cli onboard' to set it up.",
   },
   server: {
     message: "Backend server failed to start.",
