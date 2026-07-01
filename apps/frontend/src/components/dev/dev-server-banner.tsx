@@ -60,7 +60,7 @@ export function DevServerBanner() {
   const hint = state.kind === "error" ? state.hint : undefined;
 
   return (
-    <div className="animate-in fade-in slide-in-from-top-2 fixed inset-x-0 top-0 z-9999 border-b border-red-500/25 bg-linear-to-r from-red-950/95 to-red-900/90 px-4 py-3 text-red-50 shadow-lg shadow-red-950/40 ring-1 ring-inset ring-white/5 backdrop-blur-md duration-300">
+    <div className="animate-in fade-in slide-in-from-top-2 w-full z-9999 border-b border-red-500/25 bg-linear-to-r from-red-950/95 to-red-900/90 px-4 py-3 text-red-50 shadow-lg shadow-red-950/40 ring-1 ring-inset ring-white/5 backdrop-blur-md duration-300">
       <div className="mx-auto flex w-full max-w-xl items-start gap-3.5">
         <div className="relative mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-red-500/15 text-red-300">
           <Icon className="size-5" strokeWidth={2.25} />
