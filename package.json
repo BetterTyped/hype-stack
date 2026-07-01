@@ -31,7 +31,9 @@
     "react-dom": "^19.2.5",
     "vite-plugin-dts": "^4.5.4",
     "vite-plugin-svgr": "^5.2.0",
-    "zod": "^4.1.5"
+    "zod": "^4.1.5",
+    "@hookform/resolvers": "^5.4.0",
+    "react-hook-form": "^7.80.0"
   },
   "devDependencies": {
     "@nx/devkit": "22.3.3",

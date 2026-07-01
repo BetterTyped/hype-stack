@@ -14,6 +14,9 @@ importers:
       '@casl/react':
         specifier: ^6.0.0
         version: 6.0.0(@casl/ability@6.8.1)(react@19.2.5)
+      '@hookform/resolvers':
+        specifier: ^5.4.0
+        version: 5.4.0(react-hook-form@7.80.0(react@19.2.5))
       '@hyper-fetch/core':
         specifier: ^8.1.1
         version: 8.1.1
@@ -47,6 +50,9 @@ importers:
       react-dom:
         specifier: ^19.2.5
         version: 19.2.5(react@19.2.5)
+      react-hook-form:
+        specifier: ^7.80.0
+        version: 7.80.0(react@19.2.5)
       vite-plugin-dts:
         specifier: ^4.5.4
         version: 4.5.4(@types/node@25.6.0)(rollup@4.60.2)(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(terser@5.46.2)(yaml@2.8.3))
@@ -9725,6 +9731,12 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
 
+  react-hook-form@7.80.0:
+    resolution: {integrity: sha512-4P+fk6oXsxY+6xSj7Euhc2sumQD8zQqCuVHoJwoyp9EchP+IUW9OESB7uHFJOKsIBQ4MQqYE84INJFqUCYNoOg==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+
   react-is@17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
 
@@ -13240,6 +13252,11 @@ snapshots:
     dependencies:
       '@standard-schema/utils': 0.3.0
       react-hook-form: 7.74.0(react@19.2.5)
+
+  '@hookform/resolvers@5.4.0(react-hook-form@7.80.0(react@19.2.5))':
+    dependencies:
+      '@standard-schema/utils': 0.3.0
+      react-hook-form: 7.80.0(react@19.2.5)
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -22214,6 +22231,10 @@ snapshots:
       scheduler: 0.27.0
 
   react-hook-form@7.74.0(react@19.2.5):
+    dependencies:
+      react: 19.2.5
+
+  react-hook-form@7.80.0(react@19.2.5):
     dependencies:
       react: 19.2.5
 
