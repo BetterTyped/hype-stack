@@ -1,6 +1,6 @@
 export type BootState = { status: "ok" } | { status: "error"; message: string; hint: string };
 
-type BootErrorReason = "env" | "context";
+export type BootStage = "env" | "context" | "server";
 
 /**
  * Predefined, safe-to-expose messages per boot failure reason.
@@ -9,7 +9,7 @@ type BootErrorReason = "env" | "context";
  * raw errors can leak secrets, connection strings, or internals. Keep it generic and
  * actionable; the real error is logged server-side.
  */
-const BOOT_ERRORS: Record<BootErrorReason, { message: string; hint: string }> = {
+const BOOT_ERRORS: Record<BootStage, { message: string; hint: string }> = {
   env: {
     message: "Invalid backend environment configuration.",
     hint: "Some env variables are missing or misconfigured. Compare apps/backend/.env with .env.example.",
@@ -18,24 +18,20 @@ const BOOT_ERRORS: Record<BootErrorReason, { message: string; hint: string }> = 
     message: "Backend services failed to initialize.",
     hint: "You may be missing or have misconfigured env variables (database, cache, storage, WorkOS).",
   },
+  server: {
+    message: "Backend server failed to start.",
+    hint: "An unexpected error occurred during server initialization. Check the server logs for details.",
+  },
 };
 
 let bootState: BootState = { status: "ok" };
 
 export const getBootState = (): BootState => bootState;
 
-export const setBootError = (message: string, hint: string) => {
-  bootState = { status: "error", message, hint };
-};
-
 /**
- * Classifies a boot failure into a predefined, safe message + hint.
- * Never returns the raw error - that is only logged server-side.
+ * Records a boot failure using the safe, predefined message for the given reason.
+ * The caller decides the reason based on which stage of boot failed.
  */
-export const describeBootError = (error: unknown): { message: string; hint: string } => {
-  const raw = error instanceof Error ? error.message : String(error);
-
-  // Env validation throws a "...environment variables..." message; everything else
-  // (setupContext: db/cache/storage/WorkOS) is treated as a services/context failure.
-  return raw.includes("environment variables") ? BOOT_ERRORS.env : BOOT_ERRORS.context;
+export const setBootError = (reason: BootStage) => {
+  bootState = { status: "error", ...BOOT_ERRORS[reason] };
 };

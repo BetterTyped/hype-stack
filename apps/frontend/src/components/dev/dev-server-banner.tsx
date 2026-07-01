@@ -77,7 +77,7 @@ export function DevServerBanner() {
               dev
             </span>
           </div>
-          {hint ? <p className="text-xs leading-snug text-red-200/60">{hint}</p> : null}
+          {hint ? <p className="text-xs leading-snug text-red-200/60">{hint || "Server failed to start."}</p> : null}
         </div>
 
         <button

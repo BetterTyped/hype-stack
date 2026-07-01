@@ -7,7 +7,7 @@ import { cors } from "hono/cors";
 
 import { Env, validateEnv } from "./config/env/env.config";
 import { setupContext } from "./context";
-import { BootState, describeBootError, getBootState, setBootError } from "./libs/boot/boot-state";
+import { BootState, BootStage, getBootState, setBootError } from "./libs/boot/boot-state";
 import { logger } from "./libs/logger/logger";
 import { ApplicationError, AuthorizationError, DatabaseError, ValidationError } from "./middleware/error";
 import { AuthError } from "./middleware/error/auth-error/types";
@@ -16,6 +16,8 @@ import { registerRoutes } from "./routes";
 import { registerSockets } from "./sockets";
 import { freePort } from "./utils/misc/free-port";
 import { initWebSocket, serveWebsockets } from "./utils/misc/websocket";
+
+let bootStage: BootStage = "env";
 
 /**
  * Heavy initialization that can fail (env, DB, cache, storage, routes).
@@ -26,15 +28,18 @@ const initialize = async (app: Hono, server: ReturnType<typeof serve>) => {
   /* -------------------------------------------------------------------------------------------------
    * Initialize
    * -----------------------------------------------------------------------------------------------*/
+  bootStage = "env";
   validateEnv();
   logger.info(`FRONTEND_URL configured as: ${process.env.FRONTEND_URL}`);
 
+  bootStage = "context";
   await setupContext(app);
   await initWebSocket(app);
 
   /* -------------------------------------------------------------------------------------------------
    * Global middlewares
    * -----------------------------------------------------------------------------------------------*/
+  bootStage = "server";
   app.use(
     cors({
       origin: [process.env.FRONTEND_URL, process.env.ADMIN_URL],
@@ -113,8 +118,7 @@ const startServer = async () => {
    * Initialize - on failure keep the server alive in dev to surface the reason, exit in prod
    * -----------------------------------------------------------------------------------------------*/
   await initialize(app, server).catch((error: unknown) => {
-    const { message, hint } = describeBootError(error);
-    setBootError(message, hint);
+    setBootError(bootStage);
     logger.fatal({ err: error }, "Server failed to initialize");
 
     if (process.env.NODE_ENV !== "development") {
