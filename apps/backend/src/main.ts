@@ -7,6 +7,7 @@ import { cors } from "hono/cors";
 
 import { Env, validateEnv } from "./config/env/env.config";
 import { setupContext } from "./context";
+import { BootState, describeBootError, getBootState, setBootError } from "./libs/boot/boot-state";
 import { logger } from "./libs/logger/logger";
 import { ApplicationError, AuthorizationError, DatabaseError, ValidationError } from "./middleware/error";
 import { AuthError } from "./middleware/error/auth-error/types";
@@ -16,10 +17,12 @@ import { registerSockets } from "./sockets";
 import { freePort } from "./utils/misc/free-port";
 import { initWebSocket, serveWebsockets } from "./utils/misc/websocket";
 
-const startServer = async () => {
-  logger.info("Starting server");
-  const app = new Hono();
-
+/**
+ * Heavy initialization that can fail (env, DB, cache, storage, routes).
+ * Kept separate so a failure here doesn't take the whole process down in dev -
+ * the server stays up serving /health so the frontend can show a boot banner.
+ */
+const initialize = async (app: Hono, server: ReturnType<typeof serve>) => {
   /* -------------------------------------------------------------------------------------------------
    * Initialize
    * -----------------------------------------------------------------------------------------------*/
@@ -28,6 +31,7 @@ const startServer = async () => {
 
   await setupContext(app);
   await initWebSocket(app);
+
   /* -------------------------------------------------------------------------------------------------
    * Global middlewares
    * -----------------------------------------------------------------------------------------------*/
@@ -38,16 +42,16 @@ const startServer = async () => {
     }),
   );
   app.use(errorMiddleware);
+
   /* -------------------------------------------------------------------------------------------------
    * Registering
    * -----------------------------------------------------------------------------------------------*/
-
-  // Checking health of the server
   app.get("/ping/*", (c) => {
     return c.json<{ message: string; success: boolean }>({ message: "Pong", success: true });
   });
   registerSockets(app);
   registerRoutes(app);
+
   /* -------------------------------------------------------------------------------------------------
    * Handlers
    * -----------------------------------------------------------------------------------------------*/
@@ -59,8 +63,27 @@ const startServer = async () => {
       error.statusCode,
     );
   });
+
+  serveWebsockets(server);
+};
+
+const startServer = async () => {
+  logger.info("Starting server");
+  const app = new Hono();
+
   /* -------------------------------------------------------------------------------------------------
-   * Serve
+   * Boot diagnostics - registered first so /health responds even if init fails below
+   * -----------------------------------------------------------------------------------------------*/
+  app.use(
+    cors({
+      origin: [process.env.FRONTEND_URL ?? "*", process.env.ADMIN_URL ?? "*"],
+      credentials: true,
+    }),
+  );
+  app.get("/health", (c) => c.json<BootState>(getBootState()));
+
+  /* -------------------------------------------------------------------------------------------------
+   * Serve - start listening before heavy init so a broken boot is still observable
    * -----------------------------------------------------------------------------------------------*/
   const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
   await freePort(port);
@@ -73,7 +96,6 @@ const startServer = async () => {
       logger.info(`Server is running on http://localhost:${info.port}`);
     },
   );
-  serveWebsockets(server);
 
   /* -------------------------------------------------------------------------------------------------
    * Graceful shutdown
@@ -86,6 +108,19 @@ const startServer = async () => {
 
   process.on("SIGINT", shutdown);
   process.on("SIGTERM", shutdown);
+
+  /* -------------------------------------------------------------------------------------------------
+   * Initialize - on failure keep the server alive in dev to surface the reason, exit in prod
+   * -----------------------------------------------------------------------------------------------*/
+  await initialize(app, server).catch((error: unknown) => {
+    const { message, hint } = describeBootError(error);
+    setBootError(message, hint);
+    logger.fatal({ err: error }, "Server failed to initialize");
+
+    if (process.env.NODE_ENV !== "development") {
+      process.exit(1);
+    }
+  });
 };
 
 process.on("uncaughtException", (error) => {

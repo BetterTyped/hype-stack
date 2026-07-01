@@ -8,50 +8,52 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as defaultIndexRouteImport } from "./routes/(private)/index";
-import { Route as rootRouteImport } from "./routes/__root";
+import { Route as rootRouteImport } from "./routes/__root"
+import { Route as privateIndexRouteImport } from "./routes/(private)/index"
 
-const defaultIndexRoute = defaultIndexRouteImport.update({
+const privateIndexRoute = privateIndexRouteImport.update({
   id: "/(private)/",
   path: "/",
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof defaultIndexRoute;
+  "/": typeof privateIndexRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof defaultIndexRoute;
+  "/": typeof privateIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/(private)/": typeof defaultIndexRoute;
+  __root__: typeof rootRouteImport
+  "/(private)/": typeof privateIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/";
-  id: "__root__" | "/(private)/";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: "/"
+  fileRoutesByTo: FileRoutesByTo
+  to: "/"
+  id: "__root__" | "/(private)/"
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  defaultIndexRoute: typeof defaultIndexRoute;
+  privateIndexRoute: typeof privateIndexRoute
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
     "/(private)/": {
-      id: "/(private)/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof defaultIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: "/(private)/"
+      path: "/"
+      fullPath: "/"
+      preLoaderRoute: typeof privateIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  defaultIndexRoute: defaultIndexRoute,
-};
-export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
+  privateIndexRoute: privateIndexRoute,
+}
+export const routeTree = rootRouteImport
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()

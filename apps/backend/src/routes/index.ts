@@ -1,7 +1,8 @@
-import { ApplicationError, AuthError, DatabaseError, ValidationError } from "@backend/middleware/error";
-import { HonoAppToHyperFetch } from "@backend/types/hono/hono-hf-converter";
 import { Client, HttpAdapterType } from "@hyper-fetch/core";
 import { Hono } from "hono";
+
+import { ApplicationError, AuthError, DatabaseError, ValidationError } from "@backend/middleware/error";
+import { HonoAppToHyperFetch } from "@backend/types/hono/hono-hf-converter";
 
 export const registerRoutes = (app: Hono) => {
   return app;
