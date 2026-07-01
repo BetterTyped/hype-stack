@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
 import { cn } from "@/lib/utils";
+import { setStoredTheme } from "@/hooks/use-theme";
 
 export type TransitionVariant = "circle" | "square" | "triangle" | "diamond" | "hexagon" | "rectangle" | "star";
 
@@ -155,7 +156,7 @@ export const AnimatedThemeToggler = ({
       const newTheme = !isDark;
       setIsDark(newTheme);
       document.documentElement.classList.toggle("dark");
-      localStorage.setItem("theme", newTheme ? "dark" : "light");
+      setStoredTheme(newTheme ? "dark" : "light");
     };
 
     if (typeof document.startViewTransition !== "function") {

@@ -24,15 +24,11 @@
 
     <script>
       // Set the theme before first paint to avoid a flash of the wrong colors.
+      // Mirrors src/hooks/use-theme.ts (APP_NAME:THEME_STORAGE_KEY, defaultTheme).
       (function () {
         try {
-          var stored = localStorage.getItem("theme");
-          var theme =
-            stored === "light" || stored === "dark"
-              ? stored
-              : window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
+          var stored = localStorage.getItem("hype-stack:theme");
+          var theme = stored === "light" || stored === "dark" ? stored : "dark";
           var root = document.documentElement;
           root.classList.toggle("dark", theme === "dark");
           root.style.colorScheme = theme;

@@ -1,28 +1,40 @@
 import { useCallback, useEffect, useState } from "react";
 
-export type Theme = "light" | "dark" | "system";
+export type Theme = "light" | "dark";
 
-export const defaultTheme = "system";
+/** Per-app namespace so theme preference doesn't collide with other apps on the same origin. */
+export const APP_NAME = "hype-stack-admin";
 export const THEME_STORAGE_KEY = "theme";
+const STORAGE_KEY = `${APP_NAME}:${THEME_STORAGE_KEY}`;
 
-function getSystemTheme(): Theme {
-  if (typeof window === "undefined" || !window.matchMedia) return "light";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-}
+/**
+ * Theme applied when the user hasn't made an explicit choice yet.
+ * Change this to switch the out-of-the-box appearance; the user's pick
+ * is then persisted and wins from then on.
+ */
+export const defaultTheme: Theme = "dark";
 
 export function getStoredTheme(): Theme | null {
   try {
-    const stored = localStorage.getItem(THEME_STORAGE_KEY) || defaultTheme;
+    const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === "light" || stored === "dark") return stored;
   } catch {
-    // localStorage unavailable (private mode, etc.) - fall back to system.
+    // localStorage unavailable (private mode, etc.) - fall back to defaultTheme.
   }
   return null;
 }
 
-/** Resolve the theme that should be active right now: saved preference or system default. */
+export function setStoredTheme(theme: Theme) {
+  try {
+    localStorage.setItem(STORAGE_KEY, theme);
+  } catch {
+    // Persistence best-effort.
+  }
+}
+
+/** Resolve the theme that should be active right now: saved preference or the configured default. */
 export function resolveTheme(): Theme {
-  return getStoredTheme() ?? getSystemTheme();
+  return getStoredTheme() ?? defaultTheme;
 }
 
 /** Apply a theme to the document root. Idempotent - safe to call repeatedly. */
@@ -34,7 +46,7 @@ export function applyTheme(theme: Theme) {
 
 /**
  * Centralized theme controller. Mount once at the app root so the theme is
- * applied, persisted, and kept in sync across tabs and OS preference changes.
+ * applied, persisted, and kept in sync across tabs.
  *
  * The pre-paint inline script in `index.html` sets the initial class to avoid
  * a flash; this hook picks up from there and owns the runtime state.
@@ -42,7 +54,6 @@ export function applyTheme(theme: Theme) {
 export function useTheme() {
   const [theme, setThemeState] = useState<Theme>(resolveTheme);
 
-  // Apply whenever the resolved theme changes.
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
@@ -50,41 +61,23 @@ export function useTheme() {
   // Cross-tab sync: another tab writing to localStorage updates this one.
   useEffect(() => {
     const onStorage = (event: StorageEvent) => {
-      if (event.key !== THEME_STORAGE_KEY) return;
-      const next = event.newValue === "light" || event.newValue === "dark" ? event.newValue : getSystemTheme();
+      if (event.key !== STORAGE_KEY) return;
+      const next = event.newValue === "light" || event.newValue === "dark" ? event.newValue : defaultTheme;
       setThemeState(next as Theme);
     };
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
   }, []);
 
-  // Follow the OS preference until the user makes an explicit choice.
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const onChange = () => {
-      if (getStoredTheme() === null) setThemeState(getSystemTheme());
-    };
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
-
   const setTheme = useCallback((next: Theme) => {
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, next);
-    } catch {
-      // Persistence best-effort; still apply in-memory below.
-    }
+    setStoredTheme(next);
     setThemeState(next);
   }, []);
 
   const toggleTheme = useCallback(() => {
     setThemeState((current) => {
       const next = current === "dark" ? "light" : "dark";
-      try {
-        localStorage.setItem(THEME_STORAGE_KEY, next);
-      } catch {
-        // ignore
-      }
+      setStoredTheme(next);
       return next;
     });
   }, []);
