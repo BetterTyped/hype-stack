@@ -7,7 +7,7 @@ services:
   # Exposed on 8201 to avoid clashing with the non-test compose.
   vault-test:
     image: hashicorp/vault:1.16
-    container_name: backend-vault-test
+    container_name: hype-stack-vault-test
     ports:
       - "8201:8200"
     environment:
@@ -20,7 +20,7 @@ services:
 
   postgres-test:
     image: pgvector/pgvector:pg17
-    container_name: backend-postgres-test
+    container_name: hype-stack-postgres-test
     env_file:
       - .env.test
     ports:
@@ -42,7 +42,7 @@ services:
 
   valkey-test:
     image: valkey/valkey:latest
-    container_name: backend-valkey-test
+    container_name: hype-stack-valkey-test
     env_file:
       - .env.test
     command: ["valkey-server", "--appendonly", "yes"]
@@ -59,7 +59,7 @@ services:
 
   rustfs-test:
     image: rustfs/rustfs:latest
-    container_name: backend-rustfs-test
+    container_name: hype-stack-rustfs-test
     ports:
       - "9002:9000"
       - "9003:9001"
