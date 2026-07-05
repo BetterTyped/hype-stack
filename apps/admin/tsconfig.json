@@ -5,6 +5,7 @@
     "emitDeclarationOnly": false,
     "strict": true,
     "jsx": "react-jsx",
+    "lib": ["es2023", "dom"],
     "outDir": "dist",
     "rootDir": "../..",
     "paths": {
@@ -12,12 +13,9 @@
       "@/*": ["./src/*"],
       "@hype-stack/backend": ["../backend/exported/index.ts"],
       "@hype-stack/backend/*": ["../backend/exported/*"],
-      "@hype-stack/enums": ["../../packages/enums/dist/index.ts"],
-      "@hype-stack/enums/*": ["../../packages/enums/dist/*"]
+      "@backend/*": ["../backend/src/*"],
+      "@prisma/client": ["../backend/src/db/postgres/generated/client"]
     }
   },
-  "files": [],
-  "include": [],
-  "extends": "../../tsconfig.base.json",
-  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.spec.json" }]
+  "extends": "../../tsconfig.base.json"
 }

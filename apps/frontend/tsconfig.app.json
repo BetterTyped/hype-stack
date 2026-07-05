@@ -4,7 +4,7 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
     "jsx": "react-jsx",
-    "lib": ["es2023", "dom"],
+    "lib": ["es2023", "dom", "dom.iterable"],
     "types": ["node", "vite/client"],
     "rootDir": "../..",
     "strict": true,
@@ -15,8 +15,8 @@
       "@/*": ["./src/*"],
       "@hype-stack/backend": ["../backend/exported/index.ts"],
       "@hype-stack/backend/*": ["../backend/exported/*"],
-      "@hype-stack/enums": ["../../packages/enums/dist/index.d.ts"],
-      "@hype-stack/enums/*": ["../../packages/enums/dist/*"],
+      "@hype-stack/enums": ["../../packages/enums/src/index.ts"],
+      "@hype-stack/enums/*": ["../../packages/enums/src/*"],
       "@backend/*": ["../backend/src/*"],
       "@prisma/client": ["../backend/src/db/postgres/generated/client"]
     }
