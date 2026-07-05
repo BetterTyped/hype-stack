@@ -5,7 +5,7 @@
     "emitDeclarationOnly": false,
     "strict": true,
     "jsx": "react-jsx",
-    "lib": ["es2022", "dom"],
+    "lib": ["es2023", "dom"],
     "outDir": "dist",
     "rootDir": "../..",
     "paths": {

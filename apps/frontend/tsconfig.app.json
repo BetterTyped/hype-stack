@@ -4,7 +4,7 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
     "jsx": "react-jsx",
-    "lib": ["dom"],
+    "lib": ["es2023", "dom"],
     "types": ["node", "vite/client"],
     "rootDir": "../..",
     "strict": true,

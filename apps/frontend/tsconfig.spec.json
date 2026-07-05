@@ -9,7 +9,7 @@
     "composite": false,
     "declarationMap": false,
     "emitDeclarationOnly": false,
-    "lib": ["es2022", "dom"],
+    "lib": ["es2023", "dom"],
     "paths": {
       "@/assets/*": ["./assets/*"],
       "@/*": ["./src/*"],

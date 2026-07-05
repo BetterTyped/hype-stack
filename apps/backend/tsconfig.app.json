@@ -5,7 +5,7 @@
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
     "moduleResolution": "Bundler",
     "jsx": "react-jsx",
-    "lib": ["es2022"],
+    "lib": ["es2023"],
     "types": ["node"],
     "declaration": true,
     "declarationMap": true,
