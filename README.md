@@ -31,7 +31,7 @@ npx @hype-stack/cli create
 
 ## What Is Hype Stack?
 
-Hype Stack is a **modern full-stack template**, not a boilerplate stuffed with someone else's opinions. You get a clean, empty project with the architecture and tooling already wired up. No demo features to rip out. No dead code to clean up.
+Hype Stack is a **modern full-stack template**. You get a clean, empty project with the architecture and tooling already wired up. No demo features to rip out. No dead code to clean up.
 
 Build whatever you want from day one.
 
@@ -55,24 +55,17 @@ No lock-in. No runtime dependency. Just code in your repo.
 
 &nbsp;
 
-## Preview
+## Start From Our Project Templates
 
 <table>
 <tr>
 <td width="50%" align="center">
-<a href="https://www.hype-stack.dev/packs/saas-starter-workos">
-<img src="https://www.hype-stack.dev/assets/signup-DwyOfEZQ.png" alt="SaaS Starter" />
+<a href="https://www.hype-stack.dev/templates/better-studio">
+<img src="https://www.hype-stack.dev/assets/01-landing-hero-DCPjCKO2.png" alt="Better Studio" />
 </a>
 <br/>
-<a href="https://www.hype-stack.dev/packs/saas-starter-workos"><b>SaaS Starter</b></a>
-</td>
-<td width="50%" align="center">
-<a href="https://www.hype-stack.dev/packs/pack-notifications">
-<img src="https://www.hype-stack.dev/assets/notifications-CBrXiWNk.png" alt="Notifications" />
-</a>
-<br/>
-<a href="https://www.hype-stack.dev/packs/pack-notifications"><b>Notifications</b></a>
-</td>
+<a href="https://www.hype-stack.dev/templates/better-studio"><b>Better</b></a>
+Studio</td>
 </tr>
 </table>
 
@@ -107,9 +100,9 @@ The template ships with **zero features** and **everything you need to build the
 
 &nbsp;
 
-## Available Packs
+## Feature-Rich Starter Packs
 
-Need features? Add them with `npx @hype-stack/cli compose`. Each pack installs production-grade, fully-typed code straight into your project. Start with a starter, pick one layout, then stack on the features you want.
+Hype Stack offers feature-rich starter packs you can compose into a production-ready app. Run `npx @hype-stack/cli compose` to install fully-typed code straight into your project. Start with a starter pack, pick one layout, then stack on the features you want.
 
 | Pack                 | Category | What it adds                                                                   |
 | -------------------- | -------- | ------------------------------------------------------------------------------ |
