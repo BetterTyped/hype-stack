@@ -64,8 +64,8 @@ No lock-in. No runtime dependency. Just code in your repo.
 <img src="https://www.hype-stack.dev/assets/01-landing-hero-DCPjCKO2.png" alt="Better Studio" />
 </a>
 <br/>
-<a href="https://www.hype-stack.dev/templates/better-studio"><b>Better</b></a>
-Studio</td>
+<a href="https://www.hype-stack.dev/templates/better-studio"><b>Better Studio</b></a>
+</td>
 </tr>
 </table>
 
