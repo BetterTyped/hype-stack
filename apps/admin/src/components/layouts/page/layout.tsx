@@ -2,7 +2,6 @@ import { Link, Outlet, useRouterState, type LinkProps } from "@tanstack/react-ro
 import { BlocksIcon, LucideIcon } from "lucide-react";
 
 import brandIcon from "@/assets/images/icon.png";
-import { LayoutActionsSlot, LayoutBreadcrumbsSlot } from "@/components/layouts/page/page-shell";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import {
   Sidebar,
@@ -79,8 +78,6 @@ export function PageLayout() {
       <SidebarInset>
         <header className="flex min-h-11 shrink-0 items-center gap-2 px-4 pt-4">
           <SidebarTrigger />
-          <LayoutBreadcrumbsSlot />
-          <LayoutActionsSlot />
         </header>
         <main className="flex-1 overflow-auto p-4 md:p-6">
           <Outlet />
