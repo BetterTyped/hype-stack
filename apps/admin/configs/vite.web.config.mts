@@ -21,7 +21,7 @@ export default defineConfig((props) => {
     },
     server: {
       ...baseConfig.server,
-      port: 4000,
+      port: 4100,
       host: "localhost",
     },
     preview: {
