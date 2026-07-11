@@ -2,7 +2,6 @@ import { createRootRoute, Link } from "@tanstack/react-router";
 
 import { AppLoader } from "@/components/layouts/app-loader/app-loader";
 import { PageLayout } from "@/components/layouts/page/layout";
-import { LayoutSlotsProvider } from "@/components/layouts/page/page-shell";
 import { Button } from "@/components/ui/button";
 import { Providers } from "@/components/providers/providers";
 import { DateRangeProvider } from "@/contexts/date-range";
@@ -17,9 +16,7 @@ function Root() {
     <Providers>
       <AppLoader />
       <DateRangeProvider>
-        <LayoutSlotsProvider>
-          <PageLayout />
-        </LayoutSlotsProvider>
+        <PageLayout />
       </DateRangeProvider>
     </Providers>
   );
