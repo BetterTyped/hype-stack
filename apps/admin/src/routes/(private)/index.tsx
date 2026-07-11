@@ -23,7 +23,7 @@ export const Route = createFileRoute("/(private)/")({
 });
 
 const modules = [
-  { icon: KeyRound, label: "Authentication", detail: "Auth, SSO, MFA & email flows" },
+  { icon: KeyRound, label: "Authentication", detail: "Auth, MFA & email flows" },
   { icon: ShieldCheck, label: "RBAC & Permissions", detail: "Role-based access out of the box" },
   { icon: Users, label: "Organizations", detail: "Multi-tenant with invitations & settings" },
   { icon: FolderKanban, label: "Projects", detail: "Scoped workspaces per organization" },

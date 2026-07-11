@@ -41,33 +41,28 @@ Build whatever you want from day one.
 
 Hype Stack follows the same model as [shadcn/ui](https://ui.shadcn.com), but for full-stack features.
 
-1. **Scaffold** your project with the CLI.
-2. **Compose** packs when you need them: auth, billing, realtime, teams, desktop layouts, and more.
-3. Each pack drops production-ready code **into your codebase**. You own it, you modify it.
-
 ```bash
-npx @hype-stack/cli create     # Create a new project
-npx @hype-stack/cli template    # Pick template to start with (interactive)
-npx @hype-stack/cli compose    # Create custom project with full functionality (interactive)
+npx @hype-stack/cli create      # Create a new project
+
+# Additional commands
+npx @hype-stack/cli template    # Pick template to start with (wizard)
+npx @hype-stack/cli compose     # Create custom project with full functionality (wizard)
 ```
 
 No lock-in. No runtime dependency. Just code in your repo.
 
 &nbsp;
 
-## Start From Our Project Templates
+## What You Get Out of the Box
 
-<table>
-<tr>
-<td width="50%" align="center">
-<a href="https://www.hype-stack.dev/templates/better-studio">
-<img src="https://www.hype-stack.dev/assets/01-landing-hero-DCPjCKO2.png" alt="Better Studio" />
-</a>
-<br/>
-<a href="https://www.hype-stack.dev/templates/better-studio"><b>Better Studio</b></a>
-</td>
-</tr>
-</table>
+The template ships with **clean setup** and **everything you need to build them**:
+
+- **Monorepo**: frontend, backend, and shared packages in one repo.
+- **End-to-end types**: the frontend imports backend contracts directly. No codegen.
+- **Rust-powered tooling**: OXC lint and format, Vite 8 HMR in milliseconds.
+- **AI-native structure**: vertical architecture with bundled Cursor rules and agent skills.
+- **Desktop-ready**: Electron Forge pre-configured for macOS, Windows, and Linux.
+- **Testing setup**: Vitest, React Testing Library, and Playwright E2E ready to go.
 
 &nbsp;
 
@@ -87,35 +82,45 @@ No lock-in. No runtime dependency. Just code in your repo.
 	</a>
 </p>
 
-## What You Get Out of the Box
+## Start From Our Project Templates
 
-The template ships with **zero features** and **everything you need to build them**:
-
-- **Monorepo**: frontend, backend, and shared packages in one repo.
-- **End-to-end types**: the frontend imports backend contracts directly. No codegen.
-- **Rust-powered tooling**: OXC lint and format, Vite 8 HMR in milliseconds.
-- **AI-native structure**: vertical architecture with bundled Cursor rules and agent skills.
-- **Desktop-ready**: Electron Forge pre-configured for macOS, Windows, and Linux.
-- **Testing setup**: Vitest, React Testing Library, and Playwright E2E ready to go.
+<table>
+<tr>
+<td width="50%" align="center">
+<a href="https://www.hype-stack.dev/templates/better-studio">
+<img src="https://www.hype-stack.dev/assets/01-landing-hero-DCPjCKO2.png" alt="Better Studio" />
+</a>
+<br/>
+<a href="https://www.hype-stack.dev/templates/better-studio"><b>Better Studio</b></a>
+</td>
+</tr>
+</table>
 
 &nbsp;
 
-## Feature-Rich Starter Packs
+## Skip Months of Undifferentiated Work
 
-Hype Stack offers feature-rich starter packs you can compose into a production-ready app. Run `npx @hype-stack/cli compose` to install fully-typed code straight into your project. Start with a starter pack, pick one layout, then stack on the features you want.
+Every SaaS reinvents the same plumbing — auth, billing, teams, notifications. It's weeks of work that earns you **zero** competitive advantage and a long tail of security and edge-case bugs. Hype Stack ships that plumbing as production-ready code you own outright.
 
-| Pack                 | Category | What it adds                                                                   |
-| -------------------- | -------- | ------------------------------------------------------------------------------ |
-| **SaaS Starter**     | Starter  | Auth, organizations, roles, and sessions. Social and SSO login via auth.       |
-| **Basic** _(free)_   | Layout   | Classic dashboard shell: collapsible sidebar, org switcher, breadcrumb header. |
-| **Native App Shell** | Layout   | One layout for web and Electron, with mobile drawer and native window chrome.  |
-| **Monetization**     | Feature  | Stripe checkout, the billing portal, subscriptions, and signed webhooks.       |
-| **Collaboration**    | Feature  | Teams, projects, email invitations, and realtime presence.                     |
-| **Notifications**    | Feature  | WebSocket push, an in-app inbox, and email fallback through Resend.            |
+<p align="center">
+<b>One command installs it. You skip the build, keep the code, and start on the features that actually make you money.</b>
+</p>
 
-Navigation is pack-driven: install a feature pack and its links show up in the sidebar on their own.
+| What you'd otherwise build                                                        | Pack                 | You save   | Why it pays off                                                                                    |
+| --------------------------------------------------------------------------------- | -------------------- | ---------- | -------------------------------------------------------------------------------------------------- |
+| Auth, orgs, roles, sessions and admin panels for managing users and organizations | **SaaS Starter**     | ~4–6 weeks | Weeks of boilerplate, manual testing, and setup already done — focus straight on business features |
+| Many polished, responsive layout shells                                           | **Layouts** _(free)_ | ~1 week    | Collapsible sidebar, org switcher, breadcrumbs — amazing UI and UX                                 |
+| Payments, subscriptions & webhooks, and admin panels for managing subscriptions   | **Monetization**     | ~3–5 weeks | Start charging from day one — Stripe checkout, billing portal, signed webhooks                     |
+| Teams, projects & realtime presence                                               | **Collaboration**    | ~3–4 weeks | Turn a single-player app into a team product without the WebSocket headache                        |
+| Push, in-app inbox, email fallback, and admin campaigns functionality             | **Notifications**    | ~2–3 weeks | Re-engage users out of the box via WebSocket push + Resend email                                   |
 
-> Premium packs need a license. Run `npx @hype-stack/cli login` to install the ones your organization owns, or pass a key with `--license-key`. The base template and free packs are open source forever.
+<p align="center">
+<b>That's 15+ engineer-weeks — often $50k+ in salaried build cost — off your roadmap before you write a line of product code.</b>
+</p>
+
+Composable, not a monolith: `npx @hype-stack/cli compose` drops fully-typed code straight into your repo. Pick a starter, add one layout, stack on the features you need — and navigation wires itself up as each pack lands in the sidebar.
+
+> Premium packs need a license. Run `npx @hype-stack/cli login` to install the ones your organization owns. The base repository template and free packs are open source forever.
 
 &nbsp;
 
@@ -137,19 +142,19 @@ Navigation is pack-driven: install a feature pack and its links show up in the s
 
 ## Why Hype Stack?
 
-### Clean slate, not a gutting job
+### 🧹 Clean slate, not a gutting job
 
 Most templates hand you a demo app and expect you to delete half of it. Hype Stack gives you an empty project with the hard parts already solved: monorepo wiring, type bridges, tooling, and CI.
 
-### Built for AI agents
+### 🤖 Built for AI agents
 
 The codebase follows a [vertical architecture](https://tkdodo.eu/blog/the-vertical-codebase). Each feature owns its routes, UI, data access, types, and tests. Bundled Cursor rules and agent skills teach LLMs exactly how to add features and follow the conventions. Fast tooling gives agents sub-second feedback loops.
 
-### Zero-codegen type safety
+### 🛡️ Zero-codegen type safety
 
 No OpenAPI specs. No code generators. The frontend imports `@internal/backend` as a workspace dependency. HTTP routes and WebSocket events flow through a typed bridge, so when you change a backend response, TypeScript flags every mismatched consumer instantly.
 
-### One codebase, every platform
+### 🌍 One codebase, every platform
 
 The same React app runs as a web SPA and an Electron desktop app. A single `VITE_APP_TYPE` flag controls the split. Desktop builds are ready when you are.
 
