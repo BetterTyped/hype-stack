@@ -98,29 +98,65 @@ The template ships with **clean setup** and **everything you need to build them*
 
 &nbsp;
 
-## Skip Months of Undifferentiated Work
-
-Every SaaS reinvents the same plumbing — auth, billing, teams, notifications. It's weeks of work that earns you **zero** competitive advantage and a long tail of security and edge-case bugs. Hype Stack ships that plumbing as production-ready code you own outright.
+## 🚀 Skip Months of Undifferentiated Work
 
 <p align="center">
-<b>One command installs it. You skip the build, keep the code, and start on the features that actually make you money.</b>
+<b>Every SaaS rebuilds the same plumbing.</b> &nbsp;Hype Stack ships it as code you own —<br/>
+so you start on the features that actually make you money. 💸
 </p>
 
-| What you'd otherwise build                                                        | Pack                 | You save   | Why it pays off                                                                                    |
-| --------------------------------------------------------------------------------- | -------------------- | ---------- | -------------------------------------------------------------------------------------------------- |
-| Auth, orgs, roles, sessions and admin panels for managing users and organizations | **SaaS Starter**     | ~4–6 weeks | Weeks of boilerplate, manual testing, and setup already done — focus straight on business features |
-| Many polished, responsive layout shells                                           | **Layouts** _(free)_ | ~1 week    | Collapsible sidebar, org switcher, breadcrumbs — amazing UI and UX                                 |
-| Payments, subscriptions & webhooks, and admin panels for managing subscriptions   | **Monetization**     | ~3–5 weeks | Start charging from day one — Stripe checkout, billing portal, signed webhooks                     |
-| Teams, projects & realtime presence                                               | **Collaboration**    | ~3–4 weeks | Turn a single-player app into a team product without the WebSocket headache                        |
-| Push, in-app inbox, email fallback, and admin campaigns functionality             | **Notifications**    | ~2–3 weeks | Re-engage users out of the box via WebSocket push + Resend email                                   |
+<table>
+<tr>
+<td width="50%" valign="top">
 
-<p align="center">
-<b>That's 15+ engineer-weeks — often $50k+ in salaried build cost — off your roadmap before you write a line of product code.</b>
-</p>
+### 🔐 SaaS Starter
 
-Composable, not a monolith: `npx @hype-stack/cli compose` drops fully-typed code straight into your repo. Pick a starter, add one layout, stack on the features you need — and navigation wires itself up as each pack lands in the sidebar.
+Auth, orgs, roles, sessions, and admin panels. The boilerplate, testing, and setup are **done** — go straight to business features.
 
-> Premium packs need a license. Run `npx @hype-stack/cli login` to install the ones your organization owns. The base repository template and free packs are open source forever.
+</td>
+<td width="50%" valign="top">
+
+### 🎨 Layouts
+
+Polished, responsive shells with collapsible sidebar, org switcher, and breadcrumbs. **Amazing UI & UX, zero design debt.**
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 💳 Monetization
+
+Stripe checkout, billing portal, signed webhooks, and subscription admin. **Start charging from day one.**
+
+</td>
+<td width="50%" valign="top">
+
+### 👥 Collaboration
+
+Teams, projects, and realtime presence. Turn a single-player app into a **team product** — no WebSocket headache.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 🔔 Notifications
+
+WebSocket push, in-app inbox, email fallback, and admin campaigns. **Re-engage users** out of the box.
+
+</td>
+<td width="50%" valign="top">
+
+### ⚡ Composable, not a monolith
+
+`npx @hype-stack/cli compose` drops **fully-typed code** into your repo. Stack what you need — navigation wires itself up as each pack lands.
+
+</td>
+</tr>
+</table>
+
+> 🔑 Premium packs need a license. Run `npx @hype-stack/cli login` to install the ones your organization owns. The base repository template and free packs are open source forever.
 
 &nbsp;
 
