@@ -1,56 +1,45 @@
+import { useFetch } from "@hyper-fetch/react";
 import { ServerCrash, Unplug, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { API_BASE_URL } from "@/api/client";
+import { client } from "@/api/client";
 
 /**
  * Dev-only diagnostic. Polls the backend /health endpoint (which stays alive even
  * when boot fails) and shows a banner when the server is broken or unreachable.
  *
- * Uses raw fetch on purpose: /health is not part of the typed SDK and must work
- * precisely when the server/SDK is broken.
+ * /health is registered outside the typed route tree so it responds even when boot
+ * fails, which means it isn't exposed on the SDK. We still go through the HyperFetch
+ * client so credentials and adapter defaults stay consistent with every other request.
  */
 type BootState = { status: "ok" } | { status: "error"; message: string; hint?: string };
 
 type BannerState = { kind: "hidden" } | { kind: "unreachable" } | { kind: "error"; message: string; hint?: string };
 
+const getHealth = client.createRequest<{ response: BootState }>()({
+  endpoint: "/health",
+  method: "GET",
+});
+
 export function DevServerBanner() {
-  const [state, setState] = useState<BannerState>({ kind: "hidden" });
   const [dismissed, setDismissed] = useState(false);
 
-  useEffect(() => {
-    if (!import.meta.env.DEV) return;
+  const { data, error, onSuccess } = useFetch(getHealth, {
+    disabled: !import.meta.env.DEV,
+    refresh: true,
+    refreshTime: 3000,
+    refetchOnFocus: false,
+  });
 
-    let active = true;
+  onSuccess(({ response }) => {
+    if (response.data?.status === "ok") setDismissed(false);
+  });
 
-    const check = async () => {
-      const res = await fetch(`${API_BASE_URL}/health`).catch(() => null);
-      if (!active) return;
-
-      if (!res?.ok) {
-        setState({ kind: "unreachable" });
-        return;
-      }
-
-      const boot = (await res.json().catch(() => null)) as BootState | null;
-      if (!active) return;
-
-      if (boot?.status === "error") {
-        setState({ kind: "error", message: boot.message, hint: boot.hint });
-      } else {
-        setState({ kind: "hidden" });
-        setDismissed(false);
-      }
-    };
-
-    void check();
-    const interval = setInterval(check, 3000);
-
-    return () => {
-      active = false;
-      clearInterval(interval);
-    };
-  }, []);
+  const state: BannerState = error
+    ? { kind: "unreachable" }
+    : data?.status === "error"
+      ? { kind: "error", message: data.message, hint: data.hint }
+      : { kind: "hidden" };
 
   if (state.kind === "hidden" || dismissed) return null;
 
