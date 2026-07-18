@@ -20,13 +20,13 @@
     }
   },
   "scripts": {
-    "generate": "prisma generate && tsgo -p tsconfig.app.json --emitDeclarationOnly",
+    "generate": "prisma generate && tsc -p tsconfig.app.json --emitDeclarationOnly",
     "migration:create": "prisma migrate dev",
     "migration:latest": "prisma migrate deploy",
     "migration:down": "prisma migrate resolve --rolled-back",
     "migration:reset": "prisma migrate reset",
     "rebuild-db": "./scripts/rebuild-db.sh",
-    "typecheck": "prisma generate && tsgo -p tsconfig.app.json --noEmit && tsgo -p tsconfig.spec.json --noEmit",
+    "typecheck": "prisma generate && tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:services": "docker compose -f docker-compose.test.yml up -d && sleep 10",

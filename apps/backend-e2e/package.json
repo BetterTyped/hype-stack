@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "format": "pnpm --dir ../.. exec oxfmt --write apps/backend-e2e",
-    "typecheck": "tsgo --noEmit",
+    "typecheck": "tsc --noEmit",
     "lint": "pnpm --dir ../.. exec oxlint --fix apps/backend-e2e"
   },
   "dependencies": {

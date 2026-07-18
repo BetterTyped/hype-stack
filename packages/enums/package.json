@@ -15,7 +15,7 @@
   "scripts": {
     "build": "vite build",
     "format": "pnpm --dir ../.. exec oxfmt --write packages/enums",
-    "typecheck": "tsgo --noEmit",
+    "typecheck": "tsc --noEmit",
     "lint": "pnpm --dir ../.. exec oxlint --fix packages/enums"
   },
   "nx": {

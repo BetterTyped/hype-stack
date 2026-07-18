@@ -13,7 +13,7 @@
     "make:app": "electron-forge make",
     "publish:app": "update:version && electron-forge publish",
     "format": "pnpm --dir ../.. exec oxfmt --write apps/frontend",
-    "typecheck": "tsgo -p tsconfig.app.json --noEmit && tsgo -p tsconfig.spec.json --noEmit",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit",
     "lint": "pnpm --dir ../.. exec oxlint --fix apps/frontend",
     "test": "vitest run --config ./vitest.config.mts"
   },

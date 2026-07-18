@@ -2,9 +2,10 @@
   "name": "@hype-stack/frontend-e2e",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "scripts": {
     "format": "pnpm --dir ../.. exec oxfmt --write apps/frontend-e2e",
-    "typecheck": "tsgo --noEmit",
+    "typecheck": "tsc --noEmit",
     "lint": "pnpm --dir ../.. exec oxlint --fix apps/frontend-e2e"
   },
   "nx": {
