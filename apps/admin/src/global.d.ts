@@ -9,10 +9,10 @@ declare global {
     electron?: unknown;
     api?: unknown;
   }
-}
 
-// Injected at build time from Vite config
-declare const __APP_VERSION__: string;
+  // Injected at build time from Vite config
+  const __APP_VERSION__: string;
+}
 
 interface ImportMetaEnv extends Readonly<FullEnv> {}
 

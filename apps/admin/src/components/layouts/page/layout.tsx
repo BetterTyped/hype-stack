@@ -18,7 +18,7 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { APP_CONFIG } from "@/config";
+import { appConfig } from "@hype-stack/enums";
 
 const NAV_GROUPS = [
   {
@@ -45,7 +45,7 @@ export function PageLayout() {
         <SidebarHeader>
           <div className="flex items-center gap-2 px-2 py-1.5">
             <img src={brandIcon} alt="" className="size-7 shrink-0" />
-            <span className="font-semibold">{APP_CONFIG.shortName}</span>
+            <span className="font-semibold">{appConfig.name} Admin</span>
             <AnimatedThemeToggler className="ml-auto group-data-[collapsible=icon]:hidden" />
           </div>
         </SidebarHeader>

@@ -1,11 +1,39 @@
+# Installed and generated output - rebuilt inside the image
 node_modules
 **/node_modules
 dist
 **/dist
-.git
-.nx
+.output
+**/.output
+**/.nitro
 **/.vite
+test-output
 **/test-output
-**/coverage
-**/.sandboxes
-*.log
+*.tsbuildinfo
+
+# Local secrets. Vite reads .env at build time, so keeping these out of the
+# build context forces values to come from --build-arg instead.
+.env
+.env.*
+!.env.example
+
+# VCS, tooling and editor state
+.git
+.gitignore
+.nx
+.cursor
+.vscode
+.idea
+.DS_Store
+**/.DS_Store
+
+# Native app artifacts, irrelevant to the SSR server image
+out
+**/out
+**/*.dmg
+**/*.app
+
+# Docs and CI
+*.md
+!README.md
+.github

@@ -1,6 +1,11 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
+import tailwindcss from "@tailwindcss/vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
+import react from "@vitejs/plugin-react";
+import { nitro } from "nitro/vite";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { loadEnv, type UserConfigFnObject } from "vite";
@@ -21,8 +26,8 @@ const getAdminRoot = () => {
 
 const adminRoot = getAdminRoot();
 
-export const config: UserConfigFnObject = ({ mode }) => {
-  validateEnv({
+export const config: UserConfigFnObject & { isSsrBuild?: boolean } = ({ mode, isSsrBuild }) => {
+  const env = validateEnv({
     ...loadEnv(mode, adminRoot, ""),
     ...process.env,
   });
@@ -30,6 +35,42 @@ export const config: UserConfigFnObject = ({ mode }) => {
     version?: string;
   };
   const appVersion = packageJson.version ?? "0.0.0";
+
+  const plugins = isSsrBuild
+    ? [
+        tailwindcss(),
+        tanstackStart({
+          router: {
+            routesDirectory: path.join(__dirname, "../src/routes"),
+            generatedRouteTree: path.join(__dirname, "../src/routeTree.gen.ts"),
+            quoteStyle: "double",
+          },
+        }),
+        react(),
+        nitro(),
+      ]
+    : [
+        tailwindcss(),
+        tanstackRouter({
+          target: "react",
+          autoCodeSplitting: false,
+          routesDirectory: path.join(__dirname, "../src/routes"),
+          generatedRouteTree: path.join(__dirname, "../src/routeTree.gen.ts"),
+          quoteStyle: "double",
+        }),
+        react(),
+      ];
+
+  if (env.VITE_SENTRY_AUTH_TOKEN) {
+    plugins.unshift(
+      sentryVitePlugin({
+        authToken: env.VITE_SENTRY_AUTH_TOKEN,
+        org: "better-typed",
+        project: "hype-stack",
+        telemetry: false,
+      }),
+    );
+  }
 
   return {
     // Nx can run tasks from the workspace root; keep Vite cache colocated
@@ -46,8 +87,14 @@ export const config: UserConfigFnObject = ({ mode }) => {
     },
     build: {
       sourcemap: true, // Source map generation must be turned on
-      outDir: "./dist",
-      emptyOutDir: true,
+      // SPA builds to ./dist. SSR/Nitro manages its own output (.output);
+      // pointing outDir at ./dist makes Nitro serve stale SPA index.html in dev.
+      ...(isSsrBuild
+        ? {}
+        : {
+            outDir: "./dist",
+            emptyOutDir: true,
+          }),
       reportCompressedSize: true,
       commonjsOptions: {
         transformMixedEsModules: true,
@@ -55,19 +102,11 @@ export const config: UserConfigFnObject = ({ mode }) => {
       rollupOptions: {},
     },
     envDir: adminRoot,
-    plugins: [
-      tanstackRouter({
-        target: "react",
-        autoCodeSplitting: false,
-        routesDirectory: path.join(__dirname, "../src/routes"),
-        generatedRouteTree: path.join(__dirname, "../src/routeTree.gen.ts"),
-        quoteStyle: "double",
-      }),
-    ],
+    plugins,
     resolve: {
       tsconfigPaths: true,
       alias: {
-        "@/assets": path.resolve(__dirname, "../assets"),
+        "@/assets": path.resolve(__dirname, "../src/assets"),
         "@": path.resolve(__dirname, "../src"),
       },
     },

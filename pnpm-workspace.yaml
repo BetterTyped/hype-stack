@@ -3,3 +3,8 @@ packages:
   - "packages/*"
   - "shared/*"
   - "libs/*"
+
+# pnpm blocks lifecycle scripts by default. Electron's postinstall downloads the
+# platform binary, without it `electron-forge start` cannot find an executable.
+onlyBuiltDependencies:
+  - electron

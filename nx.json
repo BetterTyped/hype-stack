@@ -47,7 +47,6 @@
     {
       "plugin": "@nx/vite/plugin",
       "exclude": [
-        "apps/worker",
         "apps/backend"
       ],
       "options": {

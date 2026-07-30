@@ -5,7 +5,7 @@ import { ErrorInfo } from "react";
 
 import { Meteors } from "@/components/magicui/meteors";
 import { Button } from "@/components/ui/button";
-import { appConfig } from "@/config";
+import { appConfig } from "@hype-stack/enums";
 
 const handleRefresh = () => {
   window.location.reload();

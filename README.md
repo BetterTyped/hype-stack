@@ -88,10 +88,33 @@ The template ships with **clean setup** and **everything you need to build them*
 <tr>
 <td width="50%" align="center">
 <a href="https://www.hype-stack.dev/templates/better-studio">
-<img src="https://www.hype-stack.dev/assets/01-landing-hero-DCPjCKO2.png" alt="Better Studio" />
+<img src="https://www.hype-stack.dev/assets/01-landing-hero-ibMNtXGR.png" alt="Better Studio" />
 </a>
 <br/>
 <a href="https://www.hype-stack.dev/templates/better-studio"><b>Better Studio</b></a>
+</td>
+<td width="50%" align="center">
+<a href="https://www.hype-stack.dev/templates/open-calendar">
+<img src="https://www.hype-stack.dev/assets/01-landing-hero-DA_84olZ.png" alt="Open Calendar" />
+</a>
+<br/>
+<a href="https://www.hype-stack.dev/templates/open-calendar"><b>Open Calendar</b></a>
+</td>
+</tr>
+<tr>
+<td width="50%" align="center">
+<a href="https://www.hype-stack.dev/templates/aether">
+<img src="https://www.hype-stack.dev/assets/01-landing-hero-Dvj6F2Ww.png" alt="Aether" />
+</a>
+<br/>
+<a href="https://www.hype-stack.dev/templates/aether"><b>Aether</b></a>
+</td>
+<td width="50%" align="center">
+<a href="https://www.hype-stack.dev/templates/vault">
+<img src="https://www.hype-stack.dev/assets/01-landing-hero-B84fUloC.png" alt="Vault" />
+</a>
+<br/>
+<a href="https://www.hype-stack.dev/templates/vault"><b>Vault</b></a>
 </td>
 </tr>
 </table>

@@ -11,7 +11,7 @@
     "emitDeclarationOnly": false,
     "lib": ["es2023", "dom"],
     "paths": {
-      "@/assets/*": ["./assets/*"],
+      "@/assets/*": ["./src/assets/*"],
       "@/*": ["./src/*"],
       "@hype-stack/backend": ["../backend/exported/index.ts"],
       "@hype-stack/backend/*": ["../backend/exported/*"],

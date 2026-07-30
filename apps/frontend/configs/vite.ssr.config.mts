@@ -1,9 +1,12 @@
 import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { reactCompilerPreset } from "@vitejs/plugin-react";
 import react from "@vitejs/plugin-react";
 import { existsSync } from "fs";
-import path from "path";
+import { nitro } from "nitro/vite";
+import path from "node:path";
 import { defineConfig, loadEnv, type UserConfigFnObject } from "vite";
 import svgr from "vite-plugin-svgr";
 
@@ -32,7 +35,7 @@ export default defineConfig((props) => {
     ...loadEnv(props.mode, frontendRoot, ""),
     ...process.env,
   });
-  const baseConfig = config(props);
+  const baseConfig = config({ ...props, isSsrBuild: true });
 
   return {
     ...baseConfig,
@@ -57,6 +60,7 @@ export default defineConfig((props) => {
       tailwindcss(),
       ...(baseConfig.plugins || []),
       react(),
+      nitro(),
       babel({ presets: [reactCompilerPreset()] }),
       svgr(),
     ],

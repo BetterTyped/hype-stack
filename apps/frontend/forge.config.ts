@@ -7,9 +7,9 @@ import { FusesPlugin } from "@electron-forge/plugin-fuses";
 import { VitePlugin } from "@electron-forge/plugin-vite";
 import { PublisherGithub } from "@electron-forge/publisher-github";
 import { FuseV1Options, FuseVersion } from "@electron/fuses";
+import { appConfig } from "@hype-stack/enums";
 import dotenv from "dotenv";
 
-import { appConfig } from "./src/config";
 import { validateForgeEnv } from "./src/env/env.config";
 
 dotenv.config();

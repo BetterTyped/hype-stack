@@ -1,6 +1,6 @@
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 
-import { appConfig } from "@/config";
+import { appConfig } from "@hype-stack/enums";
 
 /**
  * Your app will check for updates at startup, then every ten minutes. This interval is configurable.

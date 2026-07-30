@@ -5,7 +5,7 @@ import { RefreshCw, AlertTriangle, ArrowLeft } from "lucide-react";
 
 import { Meteors } from "@/components/magicui/meteors";
 import { Button } from "@/components/ui/button";
-import { appConfig } from "@/config";
+import { appConfig } from "@hype-stack/enums";
 
 export const AppError = ({ error, info, reset }: ErrorComponentProps) => {
   useDidMount(() => {

@@ -1,5 +1,7 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 
+// oxlint-disable-next-line import/no-unassigned-import
+import "@/assets/styles.css";
 import { AppError } from "@/components/errors/app-error";
 import { NotFound } from "@/components/errors/not-found";
 import { Providers } from "@/components/providers/providers";

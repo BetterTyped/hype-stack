@@ -9,7 +9,7 @@
     "outDir": "dist",
     "rootDir": "../..",
     "paths": {
-      "@/assets/*": ["./assets/*"],
+      "@/assets/*": ["./src/assets/*"],
       "@/*": ["./src/*"],
       "@hype-stack/backend": ["../backend/exported/index.ts"],
       "@hype-stack/backend/*": ["../backend/exported/*"],

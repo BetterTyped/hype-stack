@@ -11,7 +11,7 @@
     "composite": true,
     "resolveJsonModule": true,
     "paths": {
-      "@/assets/*": ["./assets/*"],
+      "@/assets/*": ["./src/assets/*"],
       "@/*": ["./src/*"],
       "@hype-stack/backend": ["../backend/exported/index.ts"],
       "@hype-stack/backend/*": ["../backend/exported/*"],
@@ -46,7 +46,6 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.json",
-    "src/config.ts",
     "../backend/exported/**/*.ts",
     "../backend/global.d.ts"
   ],

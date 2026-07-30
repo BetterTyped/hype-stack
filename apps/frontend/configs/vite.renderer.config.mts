@@ -13,6 +13,6 @@ export default defineConfig((props) => {
   const options = config(props);
   return {
     ...options,
-    plugins: [...(options.plugins || []), react(), babel({ presets: [reactCompilerPreset()] }), tailwindcss(), svgr()],
+    plugins: [tailwindcss(), ...(options.plugins || []), react(), babel({ presets: [reactCompilerPreset()] }), svgr()],
   } as ReturnType<UserConfigFnObject>;
 });

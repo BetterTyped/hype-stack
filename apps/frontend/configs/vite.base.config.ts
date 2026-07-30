@@ -1,4 +1,7 @@
 import { sentryVitePlugin } from "@sentry/vite-plugin";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
@@ -20,7 +23,7 @@ const getFrontendRoot = () => {
 
 const frontendRoot = getFrontendRoot();
 
-export const config: UserConfigFnObject = ({ mode }) => {
+export const config: UserConfigFnObject & { isSsrBuild?: boolean } = ({ mode, isSsrBuild }) => {
   // Env can come from a local file (dev) or purely from process.env (CI, Railway,
   // Pages). validateEnv throws a precise error listing any missing VITE_* vars.
   const env = validateEnv({
@@ -32,12 +35,43 @@ export const config: UserConfigFnObject = ({ mode }) => {
   };
   const appVersion = packageJson.version ?? "0.0.0";
 
+  const plugins = isSsrBuild
+    ? [
+        tanstackStart({
+          router: {
+            routesDirectory: path.join(__dirname, "../src/routes"),
+            generatedRouteTree: path.join(__dirname, "../src/routeTree.gen.ts"),
+            quoteStyle: "double",
+          },
+        }),
+      ]
+    : [
+        tanstackRouter({
+          target: "react",
+          autoCodeSplitting: false,
+          routesDirectory: path.join(__dirname, "../src/routes"),
+          generatedRouteTree: path.join(__dirname, "../src/routeTree.gen.ts"),
+          quoteStyle: "double",
+        }),
+      ];
+
+  if (env.VITE_SENTRY_AUTH_TOKEN) {
+    plugins.unshift(
+      sentryVitePlugin({
+        authToken: env.VITE_SENTRY_AUTH_TOKEN,
+        org: "better-typed",
+        project: "hype-stack",
+        telemetry: false,
+      }),
+    );
+  }
+
   return {
     // Nx can run tasks from the workspace root; keep Vite cache colocated
     // with the frontend project so our `rimraf node_modules/.vite` scripts
     // always clear the right directory.
     cacheDir: path.resolve(__dirname, "../node_modules/.vite"),
-    server: { allowedHosts: ["workflows.hype-stack.dev"] },
+    server: { allowedHosts: ["hype-stack.dev"] },
     define: {
       __APP_VERSION__: JSON.stringify(appVersion),
     },
@@ -48,8 +82,14 @@ export const config: UserConfigFnObject = ({ mode }) => {
     },
     build: {
       sourcemap: true, // Source map generation must be turned on
-      outDir: "./dist",
-      emptyOutDir: true,
+      // SPA builds to ./dist. SSR/Nitro manages its own output (.output);
+      // pointing outDir at ./dist makes Nitro serve stale SPA index.html in dev.
+      ...(isSsrBuild
+        ? {}
+        : {
+            outDir: "./dist",
+            emptyOutDir: true,
+          }),
       reportCompressedSize: true,
       commonjsOptions: {
         transformMixedEsModules: true,
@@ -57,25 +97,11 @@ export const config: UserConfigFnObject = ({ mode }) => {
       rollupOptions: {},
     },
     envDir: frontendRoot,
-    plugins: [
-      sentryVitePlugin({
-        authToken: env.VITE_SENTRY_AUTH_TOKEN,
-        org: "better-typed",
-        project: "hype-stack",
-        telemetry: false,
-      }),
-      tanstackRouter({
-        target: "react",
-        autoCodeSplitting: false,
-        routesDirectory: path.join(__dirname, "../src/routes"),
-        generatedRouteTree: path.join(__dirname, "../src/routeTree.gen.ts"),
-        quoteStyle: "double",
-      }),
-    ],
+    plugins,
     resolve: {
       tsconfigPaths: true,
       alias: {
-        "@/assets": path.resolve(__dirname, "../assets"),
+        "@/assets": path.resolve(__dirname, "../src/assets"),
         "@": path.resolve(__dirname, "../src"),
       },
     },

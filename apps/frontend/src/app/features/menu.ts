@@ -1,6 +1,6 @@
 import { app, clipboard, Menu } from "electron";
 
-import { appConfig } from "@/config";
+import { appConfig } from "@hype-stack/enums";
 
 export const isMac = process.platform === "darwin";
 

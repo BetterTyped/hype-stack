@@ -7,7 +7,7 @@ import { config } from "./vite.base.config.js";
 
 // eslint-disable-next-line import/no-default-export
 export default defineConfig((props) => {
-  const baseConfig = config(props);
+  const baseConfig = config({ ...props, isSsrBuild: true });
 
   return {
     ...baseConfig,
