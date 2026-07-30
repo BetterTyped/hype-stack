@@ -12,6 +12,9 @@ declare global {
 
   // Injected at build time from Vite config
   const __APP_VERSION__: string;
+
+  // True only in the SSR build, where __root renders the document wrapper.
+  const __SSR_SHELL__: boolean;
 }
 
 interface ImportMetaEnv extends Readonly<FullEnv> {}

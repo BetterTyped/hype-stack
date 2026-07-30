@@ -1,42 +1,13 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Deliberately bare. Title, description, icons and manifest come from
+         src/routes/__root.tsx, and the pre-paint theme script is injected from
+         src/lib/theme.ts by a Vite plugin, so SSR and CSR both share one
+         definition of each. Only parsing directives belong here. -->
     <meta charset="utf-8" />
-    <title>Admin Dashboard</title>
-    <meta name="description" content="Admin dashboard for Hype Stack" />
-    <base href="/" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/assets/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/assets/favicon-16x16.png"
-    />
-    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#14110e" />
-
-    <script>
-      // Set the theme before first paint to avoid a flash of the wrong colors.
-      // Mirrors src/hooks/use-theme.ts (APP_NAME:THEME_STORAGE_KEY, defaultTheme).
-      (function () {
-        try {
-          var stored = localStorage.getItem("hype-stack-admin:theme");
-          var theme = stored === "light" || stored === "dark" ? stored : "dark";
-          var root = document.documentElement;
-          root.classList.toggle("dark", theme === "dark");
-          root.style.colorScheme = theme;
-        } catch (e) {}
-      })();
-    </script>
+    <base href="/" />
   </head>
   <body>
     <div id="root"></div>

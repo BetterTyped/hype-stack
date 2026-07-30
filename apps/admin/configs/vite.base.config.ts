@@ -8,9 +8,10 @@ import react from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { loadEnv, type UserConfigFnObject } from "vite";
+import { loadEnv, type Plugin, type UserConfigFnObject } from "vite";
 
 import { validateEnv } from "../src/env/env.config";
+import { themeBootstrapScript } from "../src/lib/theme";
 
 const externalDependencies = ["@hype-stack/enums"];
 
@@ -25,6 +26,23 @@ const getAdminRoot = () => {
 };
 
 const adminRoot = getAdminRoot();
+
+/**
+ * The theme has to be applied before first paint, which a bundled module cannot
+ * guarantee - so index.html needs it as a blocking inline script. Injecting it
+ * here keeps `@/lib/theme` the only definition; the SSR document head inlines
+ * the same string from the root route.
+ */
+const themeBootstrapPlugin: Plugin = {
+  name: "hype-stack:theme-bootstrap",
+  transformIndexHtml: () => [
+    {
+      tag: "script",
+      children: themeBootstrapScript,
+      injectTo: "head-prepend",
+    },
+  ],
+};
 
 export const config: UserConfigFnObject & { isSsrBuild?: boolean } = ({ mode, isSsrBuild }) => {
   const env = validateEnv({
@@ -47,7 +65,11 @@ export const config: UserConfigFnObject & { isSsrBuild?: boolean } = ({ mode, is
           },
         }),
         react(),
-        nitro(),
+        // Nitro registers any index.html at the Vite root as its catch-all
+        // renderer template, which preempts TanStack Start's SSR handler and
+        // serves that file raw. index.html has to stay at the root for the CSR
+        // build, so Nitro's renderer is what gives way.
+        nitro({ renderer: false }),
       ]
     : [
         tailwindcss(),
@@ -59,6 +81,7 @@ export const config: UserConfigFnObject & { isSsrBuild?: boolean } = ({ mode, is
           quoteStyle: "double",
         }),
         react(),
+        themeBootstrapPlugin,
       ];
 
   if (env.VITE_SENTRY_AUTH_TOKEN) {
@@ -79,6 +102,16 @@ export const config: UserConfigFnObject & { isSsrBuild?: boolean } = ({ mode, is
     cacheDir: path.resolve(__dirname, "../node_modules/.vite"),
     define: {
       __APP_VERSION__: JSON.stringify(appVersion),
+      // Under SSR, React emits the whole document, so __root renders the
+      // html/head/body wrapper. The CSR build gets that wrapper from index.html
+      // and mounts into #root, where a nested document would be invalid - so the
+      // wrapper is compiled out of that build.
+      __SSR_SHELL__: JSON.stringify(Boolean(isSsrBuild)),
+    },
+    server: {
+      // Build output lives inside the project, so watching it both wastes file
+      // descriptors and makes a production build retrigger the dev server.
+      watch: { ignored: ["**/.output/**", "**/dist/**", "**/.nitro/**"] },
     },
     optimizeDeps: {
       // These are local workspace packages (often symlinked). Pre-bundling them can cause

@@ -1,18 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 
-export type Theme = "light" | "dark";
+import { defaultTheme, STORAGE_KEY, type Theme } from "@/lib/theme";
 
-/** Per-app namespace so theme preference doesn't collide with other apps on the same origin. */
-export const APP_NAME = "hype-stack";
-export const THEME_STORAGE_KEY = "theme";
-const STORAGE_KEY = `${APP_NAME}:${THEME_STORAGE_KEY}`;
-
-/**
- * Theme applied when the user hasn't made an explicit choice yet.
- * Change this to switch the out-of-the-box appearance; the user's pick
- * is then persisted and wins from then on.
- */
-export const defaultTheme: Theme = "dark";
+export type { Theme };
+export { APP_NAME, defaultTheme, THEME_STORAGE_KEY } from "@/lib/theme";
 
 export function getStoredTheme(): Theme | null {
   try {
@@ -48,8 +39,8 @@ export function applyTheme(theme: Theme) {
  * Centralized theme controller. Mount once at the app root so the theme is
  * applied, persisted, and kept in sync across tabs.
  *
- * The pre-paint inline script in `index.html` sets the initial class to avoid
- * a flash; this hook picks up from there and owns the runtime state.
+ * The pre-paint inline script from `@/lib/theme` sets the initial class to
+ * avoid a flash; this hook picks up from there and owns the runtime state.
  */
 export function useTheme() {
   const [theme, setThemeState] = useState<Theme>(resolveTheme);

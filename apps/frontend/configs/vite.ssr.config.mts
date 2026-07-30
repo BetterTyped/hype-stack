@@ -60,7 +60,11 @@ export default defineConfig((props) => {
       tailwindcss(),
       ...(baseConfig.plugins || []),
       react(),
-      nitro(),
+      // Nitro registers any index.html at the Vite root as its catch-all
+      // renderer template, which preempts TanStack Start's SSR handler and
+      // serves that file raw. index.html has to stay at the root for the CSR
+      // and Electron builds, so Nitro's renderer is what gives way.
+      nitro({ renderer: false }),
       babel({ presets: [reactCompilerPreset()] }),
       svgr(),
     ],

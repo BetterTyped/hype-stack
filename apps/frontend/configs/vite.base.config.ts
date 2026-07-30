@@ -5,9 +5,10 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { loadEnv, type UserConfigFnObject } from "vite";
+import { loadEnv, type Plugin, type UserConfigFnObject } from "vite";
 
 import { validateEnv } from "../src/env/env.config";
+import { themeBootstrapScript } from "../src/lib/theme";
 
 const externalDependencies = ["@hype-stack/enums"];
 
@@ -22,6 +23,23 @@ const getFrontendRoot = () => {
 };
 
 const frontendRoot = getFrontendRoot();
+
+/**
+ * The theme has to be applied before first paint, which a bundled module cannot
+ * guarantee - so index.html needs it as a blocking inline script. Injecting it
+ * here keeps `@/lib/theme` the only definition; the SSR document head inlines
+ * the same string from the root route.
+ */
+const themeBootstrapPlugin: Plugin = {
+  name: "hype-stack:theme-bootstrap",
+  transformIndexHtml: () => [
+    {
+      tag: "script",
+      children: themeBootstrapScript,
+      injectTo: "head-prepend",
+    },
+  ],
+};
 
 export const config: UserConfigFnObject & { isSsrBuild?: boolean } = ({ mode, isSsrBuild }) => {
   // Env can come from a local file (dev) or purely from process.env (CI, Railway,
@@ -53,6 +71,7 @@ export const config: UserConfigFnObject & { isSsrBuild?: boolean } = ({ mode, is
           generatedRouteTree: path.join(__dirname, "../src/routeTree.gen.ts"),
           quoteStyle: "double",
         }),
+        themeBootstrapPlugin,
       ];
 
   if (env.VITE_SENTRY_AUTH_TOKEN) {
@@ -71,9 +90,19 @@ export const config: UserConfigFnObject & { isSsrBuild?: boolean } = ({ mode, is
     // with the frontend project so our `rimraf node_modules/.vite` scripts
     // always clear the right directory.
     cacheDir: path.resolve(__dirname, "../node_modules/.vite"),
-    server: { allowedHosts: ["hype-stack.dev"] },
+    server: {
+      allowedHosts: ["hype-stack.dev"],
+      // Build output lives inside the project, so watching it both wastes file
+      // descriptors and makes a production build retrigger the dev server.
+      watch: { ignored: ["**/.output/**", "**/dist/**", "**/.nitro/**", "**/out/**"] },
+    },
     define: {
       __APP_VERSION__: JSON.stringify(appVersion),
+      // Under SSR, React emits the whole document, so __root renders the
+      // html/head/body wrapper. The CSR and Electron builds get that wrapper
+      // from index.html and mount into #root, where a nested document would be
+      // invalid - so the wrapper is compiled out of those builds.
+      __SSR_SHELL__: JSON.stringify(Boolean(isSsrBuild)),
     },
     optimizeDeps: {
       // These are local workspace packages (often symlinked). Pre-bundling them can cause
