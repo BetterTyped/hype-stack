@@ -21,17 +21,17 @@ Add the features you need, one command at a time.
 <a href="https://github.com/BetterTyped/hype-stack/stargazers"><img src="https://img.shields.io/github/stars/BetterTyped/hype-stack?style=flat-square&color=eab308" alt="Stars" /></a>
 </p>
 
-<p align="center">
-<a href="https://discord.gg/DQXAJw36v">
-<img src="./.github/assets/discord-banner.png" alt="Join our Discord community" />
-</a>
-</p>
-
 <h3 align="center">Get started:</h3>
 
 ```bash
 npx @hype-stack/cli create
 ```
+
+<p align="center">
+<a href="https://discord.gg/DQXAJw36v">
+<img src="./.github/assets/discord.png" alt="Join our Discord community" />
+</a>
+</p>
 
 &nbsp;
 
@@ -110,7 +110,7 @@ The template ships with **clean setup** and **everything you need to build them*
 <tr>
 <td width="50%" align="center">
 <a href="https://www.hype-stack.dev/templates/aether">
-<img src="https://www.hype-stack.dev/assets/01-landing-hero-Dvj6F2Ww.png" alt="Aether" />
+<img src="./.github/assets/aether.png" alt="Aether" />
 </a>
 <br/>
 <a href="https://www.hype-stack.dev/templates/aether"><b>Aether</b></a>
@@ -124,6 +124,132 @@ The template ships with **clean setup** and **everything you need to build them*
 </td>
 </tr>
 </table>
+
+&nbsp;
+
+<p align="center">
+	<a href="https://github.com/sponsors/prc5?tier=Gold">
+		<picture>
+			<img width="830" src="https://raw.githubusercontent.com/prc5/sponsors/main/assets/Gold.png" alt="Gold sponsor banner"/>
+		</picture>
+	</a>
+</p>
+
+<p align="center">
+	<a href="https://github.com/sponsors/prc5?tier=Gold">
+		<picture>
+			<img width="830" src="https://raw.githubusercontent.com/prc5/sponsors/main/packages/gold/sponsorkit/sponsors.svg" alt="Gold sponsors"/>
+		</picture>
+	</a>
+</p>
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────┐
+│                   pnpm monorepo                   │
+├─────────────────┬─────────────────────────────────┤
+│  apps/frontend  │  apps/backend                   │
+│  ─────────────  │  ────────────                   │
+│  React 19       │  Hono                           │
+│  TanStack Router│  Prisma + Kysely                │
+│  HyperFetch SDK │  Zod validation                 │
+│  Electron Forge │  Typed WebSockets               │
+│  shadcn/ui      │  Auth                    │
+├─────────────────┴─────────────────────────────────┤
+│  packages/enums: shared permissions and config    │
+└─────────────────────────────────────────────────┘
+```
+
+&nbsp;
+
+## Tech Stack
+
+| Layer      | Technology                                                |
+| ---------- | --------------------------------------------------------- |
+| Frontend   | React 19, TanStack Router, Tailwind v4, shadcn/ui, Motion |
+| Backend    | Hono, Prisma 7, Kysely, Zod                               |
+| Data layer | HyperFetch SDK, typed HTTP and WebSocket bridge           |
+| Desktop    | Electron Forge (macOS, Windows, Linux)                    |
+| Database   | PostgreSQL 17 + pgvector                                  |
+| Cache      | Valkey (Redis-compatible)                                 |
+| Tooling    | Nx, Vite 8, OXC, pnpm, TypeScript 6                       |
+| Monitoring | Sentry                                                    |
+
+&nbsp;
+
+<p align="center">
+	<a href="https://github.com/sponsors/prc5?tier=Silver">
+		<picture>
+			<img width="830" src="https://raw.githubusercontent.com/prc5/sponsors/main/assets/Silver.png" alt="Silver sponsor banner"/>
+		</picture>
+	</a>
+</p>
+
+<p align="center">
+	<a href="https://github.com/sponsors/prc5?tier=Silver">
+		<picture>
+			<img width="830" src="https://raw.githubusercontent.com/prc5/sponsors/main/packages/silver/sponsorkit/sponsors.svg" alt="Silver sponsors"/>
+		</picture>
+	</a>
+</p>
+
+## Quick Start
+
+```bash
+# Create a new project
+npx @hype-stack/cli create
+
+# Start infrastructure
+cd apps/backend && docker compose up -d && cd ../..
+
+# Run migrations
+pnpm --filter backend exec prisma migrate deploy
+pnpm --filter backend exec prisma generate
+
+# Launch everything
+pnpm dev
+```
+
+> The web app runs on Vite. The backend runs on Hono. Both hot-reload instantly.
+
+&nbsp;
+
+## Development
+
+### Docker Services
+
+```bash
+cd apps/backend
+docker compose up -d
+```
+
+| Service        | Port | Purpose                             |
+| -------------- | ---- | ----------------------------------- |
+| Postgres       | 5436 | Database (PostgreSQL 17 + pgvector) |
+| Valkey         | 6381 | Cache                               |
+| RustFS         | 9000 | S3-compatible object storage        |
+| RustFS Console | 9001 | Storage web UI                      |
+
+### Commands
+
+```bash
+pnpm dev              # Start frontend + backend with hot-reload
+pnpm build            # Production build
+pnpm lint             # OXC linting
+pnpm format           # OXC formatting
+pnpm typecheck        # Full type checking
+pnpm test             # Run all tests
+```
+
+### Testing
+
+```bash
+cd apps/backend
+pnpm test:setup       # Start test containers + migrate + generate
+pnpm test             # Run tests
+pnpm test:clean       # Tear down test infrastructure
+```
 
 &nbsp;
 
@@ -189,22 +315,6 @@ WebSocket push, in-app inbox, email fallback, and admin campaigns. **Re-engage u
 
 &nbsp;
 
-<p align="center">
-	<a href="https://github.com/sponsors/prc5?tier=Gold">
-		<picture>
-			<img width="830" src="https://raw.githubusercontent.com/prc5/sponsors/main/assets/Gold.png" alt="Gold sponsor banner"/>
-		</picture>
-	</a>
-</p>
-
-<p align="center">
-	<a href="https://github.com/sponsors/prc5?tier=Gold">
-		<picture>
-			<img width="830" src="https://raw.githubusercontent.com/prc5/sponsors/main/packages/gold/sponsorkit/sponsors.svg" alt="Gold sponsors"/>
-		</picture>
-	</a>
-</p>
-
 ## Why Hype Stack?
 
 ### 🧹 Clean slate, not a gutting job
@@ -222,116 +332,6 @@ No OpenAPI specs. No code generators. The frontend imports `@internal/backend` a
 ### 🌍 One codebase, every platform
 
 The same React app runs as a web SPA and an Electron desktop app. A single `VITE_APP_TYPE` flag controls the split. Desktop builds are ready when you are.
-
-&nbsp;
-
-<p align="center">
-	<a href="https://github.com/sponsors/prc5?tier=Silver">
-		<picture>
-			<img width="830" src="https://raw.githubusercontent.com/prc5/sponsors/main/assets/Silver.png" alt="Silver sponsor banner"/>
-		</picture>
-	</a>
-</p>
-
-<p align="center">
-	<a href="https://github.com/sponsors/prc5?tier=Silver">
-		<picture>
-			<img width="830" src="https://raw.githubusercontent.com/prc5/sponsors/main/packages/silver/sponsorkit/sponsors.svg" alt="Silver sponsors"/>
-		</picture>
-	</a>
-</p>
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────┐
-│                   pnpm monorepo                   │
-├─────────────────┬─────────────────────────────────┤
-│  apps/frontend  │  apps/backend                   │
-│  ─────────────  │  ────────────                   │
-│  React 19       │  Hono                           │
-│  TanStack Router│  Prisma + Kysely                │
-│  HyperFetch SDK │  Zod validation                 │
-│  Electron Forge │  Typed WebSockets               │
-│  shadcn/ui      │  Auth                    │
-├─────────────────┴─────────────────────────────────┤
-│  packages/enums: shared permissions and config    │
-└─────────────────────────────────────────────────┘
-```
-
-&nbsp;
-
-## Tech Stack
-
-| Layer      | Technology                                                |
-| ---------- | --------------------------------------------------------- |
-| Frontend   | React 19, TanStack Router, Tailwind v4, shadcn/ui, Motion |
-| Backend    | Hono, Prisma 7, Kysely, Zod                               |
-| Data layer | HyperFetch SDK, typed HTTP and WebSocket bridge           |
-| Desktop    | Electron Forge (macOS, Windows, Linux)                    |
-| Database   | PostgreSQL 17 + pgvector                                  |
-| Cache      | Valkey (Redis-compatible)                                 |
-| Tooling    | Nx, Vite 8, OXC, pnpm, TypeScript 6                       |
-| Monitoring | Sentry                                                    |
-
-&nbsp;
-
-## Quick Start
-
-```bash
-# Create a new project
-npx @hype-stack/cli create
-
-# Start infrastructure
-cd apps/backend && docker compose up -d && cd ../..
-
-# Run migrations
-pnpm --filter backend exec prisma migrate deploy
-pnpm --filter backend exec prisma generate
-
-# Launch everything
-pnpm dev
-```
-
-> The web app runs on Vite. The backend runs on Hono. Both hot-reload instantly.
-
-&nbsp;
-
-## Development
-
-### Docker Services
-
-```bash
-cd apps/backend
-docker compose up -d
-```
-
-| Service        | Port | Purpose                             |
-| -------------- | ---- | ----------------------------------- |
-| Postgres       | 5436 | Database (PostgreSQL 17 + pgvector) |
-| Valkey         | 6381 | Cache                               |
-| RustFS         | 9000 | S3-compatible object storage        |
-| RustFS Console | 9001 | Storage web UI                      |
-
-### Commands
-
-```bash
-pnpm dev              # Start frontend + backend with hot-reload
-pnpm build            # Production build
-pnpm lint             # OXC linting
-pnpm format           # OXC formatting
-pnpm typecheck        # Full type checking
-pnpm test             # Run all tests
-```
-
-### Testing
-
-```bash
-cd apps/backend
-pnpm test:setup       # Start test containers + migrate + generate
-pnpm test             # Run tests
-pnpm test:clean       # Tear down test infrastructure
-```
 
 &nbsp;
 
