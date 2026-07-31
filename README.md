@@ -21,6 +21,12 @@ Add the features you need, one command at a time.
 <a href="https://github.com/BetterTyped/hype-stack/stargazers"><img src="https://img.shields.io/github/stars/BetterTyped/hype-stack?style=flat-square&color=eab308" alt="Stars" /></a>
 </p>
 
+<p align="center">
+<a href="https://discord.gg/DQXAJw36v">
+<img src="./.github/assets/discord-banner.png" alt="Join our Discord community" />
+</a>
+</p>
+
 <h3 align="center">Get started:</h3>
 
 ```bash
