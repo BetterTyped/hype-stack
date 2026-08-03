@@ -1,7 +1,13 @@
 import path from "node:path";
 import { defineConfig } from "vitest/config";
 
+import { paraglidePlugin } from "./configs/paraglide.config";
+
 export default defineConfig({
+  // Tests import messages like anything else, and `src/paraglide` is generated,
+  // so the compiler has to run here too. Without it a fresh clone cannot resolve
+  // `@/paraglide/*` until some other command happens to have written it.
+  plugins: [paraglidePlugin()],
   resolve: {
     alias: {
       "@/assets": path.resolve(__dirname, "src/assets"),
