@@ -34,5 +34,6 @@
     "src/**/*.spec.jsx",
     "src/**/*.d.ts",
     "../backend/global.d.ts"
-  ]
+  ],
+  "exclude": ["src/paraglide"]
 }

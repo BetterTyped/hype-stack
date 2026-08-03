@@ -9,6 +9,7 @@
     "build:web": "VITE_APP_TYPE=web vite build --config ./configs/vite.web.config.mts",
     "start:web": "VITE_APP_TYPE=web vite --config ./configs/vite.web.config.mts",
     "format": "pnpm --dir ../.. exec oxfmt --write apps/admin",
+    "generate": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --emit-ts-declarations --silent",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit",
     "lint": "pnpm --dir ../.. exec oxlint --fix apps/admin",
     "test": "vitest run --config ./vitest.config.mts"
@@ -117,6 +118,13 @@
         "continuous": true,
         "dependsOn": [
           "build-deps"
+        ]
+      },
+      "typecheck": {
+        "dependsOn": [
+          "generate",
+          "^generate",
+          "^build"
         ]
       }
     }

@@ -14,6 +14,7 @@
     "make:app": "electron-forge make",
     "publish:app": "update:version && electron-forge publish",
     "format": "pnpm --dir ../.. exec oxfmt --write apps/frontend",
+    "generate": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --emit-ts-declarations --silent",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit",
     "lint": "pnpm --dir ../.. exec oxlint --fix apps/frontend",
     "test": "vitest run --config ./vitest.config.mts"
@@ -125,6 +126,13 @@
       "start:web": {
         "dependsOn": [
           "build-deps"
+        ]
+      },
+      "typecheck": {
+        "dependsOn": [
+          "generate",
+          "^generate",
+          "^build"
         ]
       }
     }

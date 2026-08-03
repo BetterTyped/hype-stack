@@ -1,0 +1,5 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "app_title": "Admin Dashboard",
+  "app_description": "Admin dashboard for Hype Stack"
+}

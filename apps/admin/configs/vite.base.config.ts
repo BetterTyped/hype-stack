@@ -1,3 +1,4 @@
+import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
@@ -54,8 +55,23 @@ export const config: UserConfigFnObject & { isSsrBuild?: boolean } = ({ mode, is
   };
   const appVersion = packageJson.version ?? "0.0.0";
 
+  // Messages compile to ESM message functions, so both the SSR and the CSR
+  // build have to run the compiler before bundling. The locale is kept out of
+  // the URL, so routing stays entirely TanStack Router's concern.
+  const paraglide = paraglideVitePlugin({
+    project: path.join(__dirname, "../project.inlang"),
+    outdir: path.join(__dirname, "../src/paraglide"),
+    strategy: ["cookie", "preferredLanguage", "baseLocale"],
+    // Lets the bundler drop the server half of the runtime from client bundles.
+    isServer: "import.meta.env.SSR",
+    // The tsconfigs do not enable allowJs, so the emitted JS is typed through
+    // its declaration files instead of JSDoc inference.
+    emitTsDeclarations: true,
+  });
+
   const plugins = isSsrBuild
     ? [
+        paraglide,
         tailwindcss(),
         tanstackStart({
           router: {
@@ -72,6 +88,7 @@ export const config: UserConfigFnObject & { isSsrBuild?: boolean } = ({ mode, is
         nitro({ renderer: false }),
       ]
     : [
+        paraglide,
         tailwindcss(),
         tanstackRouter({
           target: "react",

@@ -7,6 +7,8 @@ import { AppError } from "@/components/errors/app-error";
 import { NotFound } from "@/components/errors/not-found";
 import { Providers } from "@/components/providers/providers";
 import { themeBootstrapScript } from "@/lib/theme";
+import { m } from "@/paraglide/messages.js";
+import { getLocale } from "@/paraglide/runtime.js";
 
 const themeBootstrapHtml = { __html: themeBootstrapScript };
 
@@ -17,8 +19,8 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Admin Dashboard" },
-      { name: "description", content: "Admin dashboard for Hype Stack" },
+      { title: m.app_title() },
+      { name: "description", content: m.app_description() },
       { name: "theme-color", content: "#14110e" },
     ],
     links: [
@@ -47,7 +49,7 @@ function DocumentShell({ children }: { children: ReactNode }) {
   return (
     // The theme script below mutates the class before React hydrates, which is
     // the point - suppressing lets that intentional difference through.
-    <html lang="en" suppressHydrationWarning>
+    <html lang={getLocale()} suppressHydrationWarning>
       <head>
         <HeadContent />
         {/* eslint-disable-next-line react/no-danger */}

@@ -1,3 +1,4 @@
+import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -53,8 +54,24 @@ export const config: UserConfigFnObject & { isSsrBuild?: boolean } = ({ mode, is
   };
   const appVersion = packageJson.version ?? "0.0.0";
 
+  // Messages compile to ESM message functions, so every variant - SSR, CSR and
+  // the Electron renderer - has to run the compiler before bundling. The locale
+  // is kept out of the URL, which also means the same resolution works under
+  // Electron, where the app is served from file://.
+  const paraglide = paraglideVitePlugin({
+    project: path.join(__dirname, "../project.inlang"),
+    outdir: path.join(__dirname, "../src/paraglide"),
+    strategy: ["cookie", "preferredLanguage", "baseLocale"],
+    // Lets the bundler drop the server half of the runtime from client bundles.
+    isServer: "import.meta.env.SSR",
+    // The tsconfigs do not enable allowJs, so the emitted JS is typed through
+    // its declaration files instead of JSDoc inference.
+    emitTsDeclarations: true,
+  });
+
   const plugins = isSsrBuild
     ? [
+        paraglide,
         tanstackStart({
           router: {
             routesDirectory: path.join(__dirname, "../src/routes"),
@@ -64,6 +81,7 @@ export const config: UserConfigFnObject & { isSsrBuild?: boolean } = ({ mode, is
         }),
       ]
     : [
+        paraglide,
         tanstackRouter({
           target: "react",
           autoCodeSplitting: false,
