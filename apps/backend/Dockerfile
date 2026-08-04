@@ -7,7 +7,10 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@10 --activate
 
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.base.json ./
+# .npmrc carries the public-hoist-pattern the workspace relies on. Without it
+# pnpm keeps every package isolated, so tsc cannot see types hoisted from other
+# workspace apps (e.g. @types/react, which the backend email templates need).
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.base.json .npmrc ./
 COPY apps ./apps
 COPY packages ./packages
 
