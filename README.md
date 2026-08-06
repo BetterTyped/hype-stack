@@ -28,6 +28,16 @@ npx @hype-stack/cli create
 ```
 
 <p align="center">
+Deploy the entire stack with one command:
+</p>
+
+```bash
+npx @hype-stack/cli deploy
+```
+
+Support for <a href="https://railway.app">Railway</a> and <a href="https://fly.io">Fly.io</a>
+
+<p align="center">
 <a href="https://discord.gg/DQXAJw36v">
 <img src="./.github/assets/discord.png" alt="Join our Discord community" />
 </a>
@@ -49,6 +59,7 @@ Hype Stack follows the same model as [shadcn/ui](https://ui.shadcn.com), but for
 
 ```bash
 npx @hype-stack/cli create      # Create a new project
+npx @hype-stack/cli deploy      # Deploy everything (Railway & Fly.io)
 
 # Additional commands
 npx @hype-stack/cli template    # Pick template to start with (wizard)
