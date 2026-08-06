@@ -45,6 +45,10 @@ Support for <a href="https://railway.app">Railway</a> and <a href="https://fly.i
 
 &nbsp;
 
+<p align="center">
+<img src="./.github/assets/hype-stack-logo.png" alt="Hype Stack" width="280" />
+</p>
+
 ## What Is Hype Stack?
 
 Hype Stack is a **modern full-stack template**. You get a clean, empty project with the architecture and tooling already wired up. No demo features to rip out. No dead code to clean up.
