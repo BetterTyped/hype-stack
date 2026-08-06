@@ -43,8 +43,6 @@ Support for <a href="https://railway.app">Railway</a> and <a href="https://fly.i
 </a>
 </p>
 
-&nbsp;
-
 <img src="./.github/assets/hype-stack-logo.png" alt="Hype Stack" width="160" />
 
 ## What Is Hype Stack?
