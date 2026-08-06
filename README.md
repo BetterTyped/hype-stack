@@ -53,6 +53,26 @@ Build whatever you want from day one.
 
 &nbsp;
 
+## What You Get Out of the Box
+
+The template ships clean — architecture and tooling ready, zero demo junk to rip out:
+
+- 🧩 **Monorepo** — frontend, backend, and shared packages in one workspace
+- 🔐 **End-to-end types** — frontend imports backend contracts directly. No codegen
+- 🌍 **i18n ready** — Paraglide wired in for type-safe translations from day one
+- 🔀 **CSR or SSR** — flip between client and server rendering with a simple script switch
+- 🚀 **One-command deploy** — ship the full stack to Railway or Fly.io
+- 🔌 **Typed WebSockets** — realtime events with the same end-to-end type safety
+- 🎨 **UI ready** — Tailwind v4 + shadcn/ui, ready to theme and ship
+- 🗄️ **Postgres + Prisma** — migrations, Kysely queries, production-ready data layer
+- 📡 **HyperFetch SDK** — typed HTTP client generated from your Hono routes
+- ⚡ **Rust-powered DX** — OXC lint/format + Vite 8 HMR in milliseconds
+- 🤖 **AI-native structure** — vertical features with Cursor rules and agent skills
+- 🖥️ **Desktop-ready** — Electron Forge for macOS, Windows, and Linux
+- 🧪 **Tests included** — Vitest, React Testing Library, and Playwright E2E
+
+&nbsp;
+
 ## How It Works
 
 Hype Stack follows the same model as [shadcn/ui](https://ui.shadcn.com), but for full-stack features.
@@ -67,19 +87,6 @@ npx @hype-stack/cli compose     # Create custom project with full functionality 
 ```
 
 No lock-in. No runtime dependency. Just code in your repo.
-
-&nbsp;
-
-## What You Get Out of the Box
-
-The template ships with **clean setup** and **everything you need to build them**:
-
-- **Monorepo**: frontend, backend, and shared packages in one repo.
-- **End-to-end types**: the frontend imports backend contracts directly. No codegen.
-- **Rust-powered tooling**: OXC lint and format, Vite 8 HMR in milliseconds.
-- **AI-native structure**: vertical architecture with bundled Cursor rules and agent skills.
-- **Desktop-ready**: Electron Forge pre-configured for macOS, Windows, and Linux.
-- **Testing setup**: Vitest, React Testing Library, and Playwright E2E ready to go.
 
 &nbsp;
 
