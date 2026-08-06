@@ -3,8 +3,13 @@
   "compilerOptions": {
     "composite": false,
     "declarationMap": false,
-    "emitDeclarationOnly": false
+    "emitDeclarationOnly": false,
+    "noEmit": true,
+    "types": ["node", "vitest/globals", "vitest/importMeta", "vitest"],
+    "paths": {
+      "@enums/*": ["./src/*"]
+    }
   },
-  "files": [],
-  "include": []
+  "include": ["src/**/*.ts", "vite.config.ts", "vitest.config.ts"],
+  "exclude": ["node_modules", "dist", "out-tsc"]
 }

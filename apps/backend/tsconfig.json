@@ -3,10 +3,16 @@
     "composite": false,
     "declarationMap": false,
     "emitDeclarationOnly": false,
+    "noEmit": true,
+    "moduleResolution": "Bundler",
+    "lib": ["es2023"],
+    "types": ["node", "vitest/globals", "vitest/importMeta", "vitest"],
     "paths": {
-      "@backend/*": ["./src/*"]
+      "@backend/*": ["./src/*"],
+      "@prisma/client": ["./src/db/postgres/generated/client"]
     }
   },
-  "include": ["./global.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "./global.d.ts", "vite.config.ts", "vitest.config.ts"],
+  "exclude": ["node_modules", "dist", "out-tsc", "exported"],
   "extends": "../../tsconfig.base.json"
 }
