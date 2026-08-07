@@ -114,10 +114,19 @@
           "^build"
         ]
       },
-      "serve": {
-        "continuous": true,
+      "start": {
         "dependsOn": [
-          "build-deps"
+          "generate",
+          "^build"
+        ]
+      },
+      "serve": {
+        "continuous": true
+      },
+      "start:web": {
+        "dependsOn": [
+          "generate",
+          "^build"
         ]
       },
       "typecheck": {

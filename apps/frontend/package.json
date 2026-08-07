@@ -114,18 +114,17 @@
       },
       "start": {
         "dependsOn": [
-          "build-deps"
+          "generate",
+          "^build"
         ]
       },
       "serve": {
-        "continuous": true,
-        "dependsOn": [
-          "build-deps"
-        ]
+        "continuous": true
       },
       "start:web": {
         "dependsOn": [
-          "build-deps"
+          "generate",
+          "^build"
         ]
       },
       "typecheck": {

@@ -95,6 +95,7 @@
       "dependsOn": [
         "build",
         "build-deps",
+        "generate",
         "^build",
         "^generate"
       ]
