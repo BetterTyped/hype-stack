@@ -1,4 +1,6 @@
 {
+  "extends": "../../tsconfig.base.json",
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.spec.json" }],
   "compilerOptions": {
     "composite": false,
     "declarationMap": false,
@@ -12,7 +14,6 @@
       "@prisma/client": ["./src/db/postgres/generated/client"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "./global.d.ts", "vite.config.ts", "vitest.config.ts"],
-  "exclude": ["node_modules", "dist", "out-tsc", "exported"],
-  "extends": "../../tsconfig.base.json"
+  "include": ["./global.d.ts"],
+  "exclude": ["node_modules", "dist", "out-tsc", "exported"]
 }

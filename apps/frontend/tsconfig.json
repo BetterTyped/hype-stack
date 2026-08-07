@@ -1,4 +1,6 @@
 {
+  "extends": "../../tsconfig.base.json",
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.spec.json" }],
   "compilerOptions": {
     "composite": false,
     "declarationMap": false,
@@ -17,5 +19,6 @@
       "@prisma/client": ["../backend/src/db/postgres/generated/client"]
     }
   },
-  "extends": "../../tsconfig.base.json"
+  "files": [],
+  "include": []
 }
