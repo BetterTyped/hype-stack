@@ -71,11 +71,18 @@ services:
     volumes:
       - rustfs_test_data:/data
     command: ["/data"]
+    # RustFS uses io_uring, which locks memory pages. The default memlock limit
+    # is charged per-user across ALL containers, so a second RustFS instance on
+    # the same machine fails disk formatting with ENOMEM (os error 12).
+    ulimits:
+      memlock: -1
     healthcheck:
-      test: ["CMD-SHELL", "nc -z localhost 9000"]
+      # Ready RustFS answers 403 (AccessDenied); during init it answers 503.
+      # A plain port probe (nc -z) reports healthy while the store is unusable.
+      test: ["CMD-SHELL", "test \"$$(curl -s -o /dev/null -w '%{http_code}' http://localhost:9000)\" = 403"]
       interval: 5s
       timeout: 3s
-      retries: 10
+      retries: 30
     restart: unless-stopped
 
 volumes:
