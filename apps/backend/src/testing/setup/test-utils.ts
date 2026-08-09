@@ -27,8 +27,10 @@ export class TestEnv {
     const tables = Prisma.dmmf.datamodel.models.map((model) => model.dbName).filter((table) => table);
 
     await this.postgres.$transaction([
+      // Identifiers must be quoted: better-auth maps its User model to a table literally named
+      // "user", which is a reserved word in Postgres and breaks an unquoted TRUNCATE.
       // oxlint-disable-next-line unicorn/no-useless-spread
-      ...tables.map((table) => this.postgres.$executeRawUnsafe(`TRUNCATE ${table} CASCADE;`)),
+      ...tables.map((table) => this.postgres.$executeRawUnsafe(`TRUNCATE "${table}" CASCADE;`)),
     ]);
   }
 
