@@ -1,0 +1,11 @@
+appId: com.hypestack.app
+name: App launch
+---
+- launchApp:
+    clearState: true
+- assertVisible: "Stop building boilerplate."
+- assertVisible:
+    id: "theme-toggle"
+- tapOn:
+    id: "theme-toggle"
+- assertVisible: "Start here"

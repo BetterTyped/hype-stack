@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Same palette as the web frontend (apps/frontend/src/assets/styles.css), converted
+ * from oklch to HSL channels because Nativewind v4 can only interpolate the
+ * `hsl(var(--token))` form. Keep both files in sync when a token changes.
+ */
+@layer base {
+  :root {
+    --page-background: 37.1 46.3% 95.4%;
+    --content-background: 37 74.8% 99.1%;
+    --background: 37 74.8% 99.1%;
+    --solid-background: 37 15.5% 98.6%;
+    --foreground: 34.1 29.6% 4.8%;
+    --card: 37 74.8% 99.1%;
+    --card-foreground: 34.1 29.6% 4.8%;
+    --popover: 37 74.8% 99.1%;
+    --popover-foreground: 34.6 33.2% 9.5%;
+    --primary: 21.1 100% 47.3%;
+    --primary-foreground: 180 0% 98%;
+    --secondary: 34 20% 94.5%;
+    --secondary-foreground: 34.2 8.4% 32.7%;
+    --muted: 34.1 31% 94.3%;
+    --muted-foreground: 34.1 6.6% 43.7%;
+    --accent: 34.1 31% 94.3%;
+    --accent-foreground: 34.2 15.4% 10%;
+    --destructive: 357.2 100% 45.3%;
+    --destructive-foreground: 357.2 100% 45.3%;
+    --border: 34.1 16.1% 89.1%;
+    --input: 34.1 16.1% 89.1%;
+    --ring: 34.1 12.4% 82.6%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.625rem;
+  }
+
+  .dark:root {
+    --page-background: 34.2 17.9% 6.6%;
+    --content-background: 34.1 9.1% 10.2%;
+    --background: 34.1 9.1% 10.2%;
+    --solid-background: 34.1 6.5% 6.8%;
+    --foreground: 180 0% 98%;
+    --card: 34.1 7% 11.1%;
+    --card-foreground: 180 0% 98%;
+    --popover: 34.1 9.1% 10.2%;
+    --popover-foreground: 180 0% 98%;
+    --primary: 31 100% 48.4%;
+    --primary-foreground: 180 0% 98%;
+    --secondary: 203.3 64.1% 15%;
+    --secondary-foreground: 203.9 85% 66.1%;
+    --muted: 34.1 7.5% 17.6%;
+    --muted-foreground: 34.1 4.6% 64.1%;
+    --accent: 34.1 7.5% 17.6%;
+    --accent-foreground: 180 0% 98%;
+    --destructive: 358.8 69.3% 30.1%;
+    --destructive-foreground: 356.9 95.9% 57.7%;
+    --border: 34.1 7.5% 17.6%;
+    --input: 34.1 7.5% 17.6%;
+    --ring: 34.2 9.2% 29.4%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}

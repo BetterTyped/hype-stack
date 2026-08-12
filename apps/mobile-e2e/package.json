@@ -1,0 +1,16 @@
+{
+  "name": "@hype-stack/mobile-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "e2e": "maestro test flows",
+    "e2e:ios": "maestro --platform ios test flows",
+    "e2e:android": "maestro --platform android test flows"
+  },
+  "nx": {
+    "implicitDependencies": [
+      "@hype-stack/mobile"
+    ]
+  }
+}

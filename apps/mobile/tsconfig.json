@@ -1,0 +1,21 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx",
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "types": ["node", "vitest/globals", "vitest-native/matchers"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@hype-stack/backend": ["../backend/exported/index.ts"],
+      "@hype-stack/backend/*": ["../backend/exported/*"],
+      "@backend/*": ["../backend/src/*"],
+      "@prisma/client": ["../backend/src/db/postgres/generated/client"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "nativewind-env.d.ts"],
+  "exclude": ["node_modules", ".expo", "dist"]
+}

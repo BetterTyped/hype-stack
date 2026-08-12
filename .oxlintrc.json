@@ -107,6 +107,28 @@
       }
     },
     {
+      "files": ["apps/mobile/**"],
+      "rules": {
+        "jsx-a11y/prefer-tag-over-role": "off"
+      }
+    },
+    {
+      "files": ["apps/mobile/src/app/**"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    },
+    {
+      "files": ["apps/mobile/src/components/ui/**"],
+      "rules": {
+        "import/namespace": "off",
+        "import/no-named-as-default-member": "off",
+        "no-unused-vars": "off",
+        "react/jsx-no-constructed-context-values": "off",
+        "react-perf/jsx-no-new-object-as-prop": "off"
+      }
+    },
+    {
       "files": [
         "*.spec.ts",
         "*.spec.tsx",

@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Hype Stack",
+    "slug": "hype-stack",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "icon": "./src/assets/images/icon.png",
+    "scheme": "hypestack",
+    "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hypestack.app"
+    },
+    "android": {
+      "package": "com.hypestack.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/images/adaptive-icon.png",
+        "backgroundColor": "#0f0f0e"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./src/assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./src/assets/images/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#0f0f0e"
+        }
+      ],
+      "expo-status-bar"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

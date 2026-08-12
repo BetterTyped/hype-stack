@@ -11,6 +11,23 @@ if (typeof globalThis.ResizeObserver === "undefined") {
   };
 }
 
+// jsdom ships no IntersectionObserver, and framer-motion observes every element
+// it animates into view via `whileInView`.
+if (typeof globalThis.IntersectionObserver === "undefined") {
+  globalThis.IntersectionObserver = class IntersectionObserver {
+    root = null;
+    rootMargin = "";
+    scrollMargin = "";
+    thresholds = [];
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+    takeRecords() {
+      return [];
+    }
+  };
+}
+
 afterEach(() => {
   cleanup();
 });
