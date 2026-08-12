@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.spec.json" }],
+  "compilerOptions": {
+    "composite": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "strict": true,
+    "jsx": "react-jsx",
+    "lib": ["es2023", "dom"],
+    "outDir": "dist",
+    "rootDir": "../..",
+    "paths": {
+      "@/assets/*": ["./src/assets/*"],
+      "@/*": ["./src/*"],
+      "@hype-stack/backend": ["../backend/exported/index.ts"],
+      "@hype-stack/backend/*": ["../backend/exported/*"],
+      "@backend/*": ["../backend/src/*"],
+      "@prisma/client": ["../backend/src/db/postgres/generated/client"]
+    }
+  },
+  "files": [],
+  "include": []
+}

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Deliberately bare. Title, description and icons come from
+         src/routes/__root.tsx, and the pre-paint theme script is injected by a
+         Vite plugin (as a file, not inline - MV3 CSP forbids inline scripts on
+         extension pages). Only parsing directives belong here. -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="/" />
+    <style>
+      /* Extension popups size themselves to content (up to 800x600); give the
+         app a sane floor so it doesn't collapse. Harmless in the dev server. */
+      html,
+      body,
+      #root {
+        min-width: 400px;
+        min-height: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>

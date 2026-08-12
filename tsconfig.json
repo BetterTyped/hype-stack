@@ -11,6 +11,9 @@
     },
     {
       "path": "./apps/admin-e2e"
+    },
+    {
+      "path": "./apps/extension-e2e"
     }
   ]
 }
