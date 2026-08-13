@@ -113,7 +113,7 @@
       }
     },
     {
-      "files": ["apps/mobile/src/app/**"],
+      "files": ["apps/mobile/src/routes/**"],
       "rules": {
         "import/no-default-export": "off"
       }

@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@hype-stack/backend": "workspace:*",
+    "@hype-stack/enums": "workspace:*",
     "@hyper-fetch/core": "^8.1.1",
     "@hyper-fetch/react": "^8.1.1",
     "@hyper-fetch/sockets": "^8.1.1",

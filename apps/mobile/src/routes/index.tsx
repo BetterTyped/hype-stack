@@ -3,13 +3,15 @@ import { ArrowRight, BellIcon, KeyRoundIcon, ServerIcon, ZapIcon } from "lucide-
 import { Image, type ImageStyle, ScrollView, View } from "react-native";
 
 import logoSource from "@/assets/images/logo.png";
-import { BackendStatus } from "@/components/api/backend-status";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Icon } from "@/components/ui/icon";
 import { Separator } from "@/components/ui/separator";
 import { Text } from "@/components/ui/text";
+
+// Replaces only this screen when it crashes; the root layout keeps working.
+export { PageError as ErrorBoundary } from "@/components/errors/page-error";
 
 const SCREEN_OPTIONS = {
   title: "Hype Stack",
@@ -45,7 +47,6 @@ export default function HomeScreen() {
           <Text variant="muted" className="text-center">
             The same design tokens and the same typed API client as the web app, running on React Native.
           </Text>
-          <BackendStatus />
         </View>
 
         <Separator />
@@ -70,7 +71,7 @@ export default function HomeScreen() {
           <CardHeader>
             <CardTitle>Start here</CardTitle>
             <CardDescription>
-              Edit <Text variant="code">src/app/index.tsx</Text> and call the backend through{" "}
+              Edit <Text variant="code">src/routes/index.tsx</Text> and call the backend through{" "}
               <Text variant="code">sdk</Text> from <Text variant="code">@/api/sdk</Text>.
             </CardDescription>
           </CardHeader>

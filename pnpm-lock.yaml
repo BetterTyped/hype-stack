@@ -931,6 +931,9 @@ importers:
       '@hype-stack/backend':
         specifier: workspace:*
         version: link:../backend
+      '@hype-stack/enums':
+        specifier: workspace:*
+        version: link:../../packages/enums
       '@hyper-fetch/core':
         specifier: ^8.1.1
         version: 8.1.1
