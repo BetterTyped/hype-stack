@@ -9,12 +9,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Icon } from "@/components/ui/icon";
 import { Separator } from "@/components/ui/separator";
 import { Text } from "@/components/ui/text";
+import { m } from "@/paraglide/messages.js";
 
 // Replaces only this screen when it crashes; the root layout keeps working.
 export { PageError as ErrorBoundary } from "@/components/errors/page-error";
 
 const SCREEN_OPTIONS = {
-  title: "Hype Stack",
+  title: m.app_title(),
   headerRight: () => <ThemeToggle />,
 };
 
@@ -24,10 +25,10 @@ const LOGO_STYLE: ImageStyle = {
 };
 
 const modules = [
-  { icon: KeyRoundIcon, label: "Authentication", detail: "Auth, MFA & email flows" },
-  { icon: ServerIcon, label: "Backend API", detail: "Hono, Prisma, Kysely, Valkey cache" },
-  { icon: BellIcon, label: "Notifications", detail: "In-app + email with real-time delivery" },
-  { icon: ZapIcon, label: "Real-time", detail: "Type-safe WebSockets with HyperFetch" },
+  { icon: KeyRoundIcon, label: m.home_module_auth_label(), detail: m.home_module_auth_detail() },
+  { icon: ServerIcon, label: m.home_module_backend_label(), detail: m.home_module_backend_detail() },
+  { icon: BellIcon, label: m.home_module_notifications_label(), detail: m.home_module_notifications_detail() },
+  { icon: ZapIcon, label: m.home_module_realtime_label(), detail: m.home_module_realtime_detail() },
 ];
 
 export default function HomeScreen() {
@@ -42,10 +43,10 @@ export default function HomeScreen() {
         <View className="items-center gap-3 pt-4">
           <Image source={logoSource} style={LOGO_STYLE} resizeMode="contain" />
           <Text variant="h3" className="text-center">
-            Stop building boilerplate.
+            {m.home_hero_heading()}
           </Text>
           <Text variant="muted" className="text-center">
-            The same design tokens and the same typed API client as the web app, running on React Native.
+            {m.home_hero_subtitle()}
           </Text>
         </View>
 
@@ -69,7 +70,7 @@ export default function HomeScreen() {
 
         <Card className="w-full">
           <CardHeader>
-            <CardTitle>Start here</CardTitle>
+            <CardTitle>{m.home_start_title()}</CardTitle>
             <CardDescription>
               Edit <Text variant="code">src/routes/index.tsx</Text> and call the backend through{" "}
               <Text variant="code">sdk</Text> from <Text variant="code">@/api/sdk</Text>.
@@ -77,11 +78,11 @@ export default function HomeScreen() {
           </CardHeader>
           <CardContent className="flex-row gap-2">
             <Button className="flex-1">
-              <Text>Get Started</Text>
+              <Text>{m.home_get_started()}</Text>
               <Icon as={ArrowRight} className="size-4" />
             </Button>
             <Button variant="outline" className="flex-1">
-              <Text>Components</Text>
+              <Text>{m.home_components()}</Text>
             </Button>
           </CardContent>
         </Card>

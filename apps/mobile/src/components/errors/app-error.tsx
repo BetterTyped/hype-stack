@@ -3,11 +3,11 @@ import { ArrowLeftIcon, RefreshCwIcon, TriangleAlertIcon } from "lucide-react-na
 import { useEffect } from "react";
 import { Linking, View } from "react-native";
 
-import { appConfig } from "@hype-stack/enums";
-
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
+import { m } from "@/paraglide/messages.js";
+import { appConfig } from "@hype-stack/enums";
 
 const ISSUES_URL = `https://github.com/${appConfig.repository.owner}/${appConfig.repository.name}/issues`;
 
@@ -28,10 +28,10 @@ export const AppError = ({ error, retry }: ErrorBoundaryProps) => {
 
       <View className="items-center gap-2">
         <Text variant="h3" className="text-center">
-          App crashed
+          {m.error_app_crashed()}
         </Text>
         <Text variant="muted" className="text-center">
-          {error.message || "Something went wrong"}
+          {error.message || m.error_generic_message()}
         </Text>
       </View>
 
@@ -39,17 +39,17 @@ export const AppError = ({ error, retry }: ErrorBoundaryProps) => {
         <Link href="/" asChild>
           <Button variant="secondary">
             <Icon as={ArrowLeftIcon} className="size-4" />
-            <Text>Go to Home</Text>
+            <Text>{m.error_go_home()}</Text>
           </Button>
         </Link>
         <Button variant="ghost" onPress={() => void retry()}>
           <Icon as={RefreshCwIcon} className="size-4" />
-          <Text>Try again</Text>
+          <Text>{m.error_try_again()}</Text>
         </Button>
       </View>
 
       <Button variant="link" onPress={() => void Linking.openURL(ISSUES_URL)}>
-        <Text variant="muted">If the problem persists, report a bug</Text>
+        <Text variant="muted">{m.error_report_bug()}</Text>
       </Button>
     </View>
   );

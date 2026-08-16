@@ -2,6 +2,7 @@ import path from "node:path";
 import { reactNative } from "vitest-native";
 import { defineConfig, type Plugin } from "vitest/config";
 
+import { paraglidePlugin } from "./configs/paraglide.config";
 import packageJson from "./package.json";
 
 /*
@@ -36,7 +37,10 @@ export default defineConfig({
   // The native engine runs the real React Native JavaScript and mocks only the
   // native-module boundary. Reanimated, AsyncStorage, safe-area, screens, and
   // the Expo modules are shadowed by auto-detected presets - no manual mocks.
-  plugins: [reactNative({ engine: "native", transform: untranspiledPackages }), projectSetup()],
+  // Tests import messages like anything else, and `src/paraglide` is generated,
+  // so the compiler runs here too — otherwise a fresh clone cannot resolve
+  // `@/paraglide/*` until some other command happens to have written it.
+  plugins: [reactNative({ engine: "native", transform: untranspiledPackages }), projectSetup(), paraglidePlugin()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),

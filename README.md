@@ -119,7 +119,7 @@ No lock-in. No runtime dependency. Just code in your repo.
 </td>
 <td width="50%" align="center">
 <a href="https://www.hype-stack.dev/templates/open-calendar">
-<img src="https://www.hype-stack.dev/assets/01-landing-hero-DA_84olZ.png" alt="Open Calendar" />
+<img src="./.github/assets/open-calendar.png" alt="Open Calendar" />
 </a>
 <br/>
 <a href="https://www.hype-stack.dev/templates/open-calendar"><b>Open Calendar</b></a>

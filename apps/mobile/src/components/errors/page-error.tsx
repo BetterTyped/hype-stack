@@ -6,6 +6,7 @@ import { View } from "react-native";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
+import { m } from "@/paraglide/messages.js";
 
 /**
  * Screen-level error boundary, exported as `ErrorBoundary` from individual
@@ -26,10 +27,10 @@ export const PageError = ({ error, retry }: ErrorBoundaryProps) => {
 
       <View className="items-center gap-2">
         <Text variant="h3" className="text-center">
-          Screen crashed
+          {m.error_screen_crashed()}
         </Text>
         <Text variant="muted" className="text-center">
-          {error.message || "Something went wrong"}
+          {error.message || m.error_generic_message()}
         </Text>
       </View>
 
@@ -37,12 +38,12 @@ export const PageError = ({ error, retry }: ErrorBoundaryProps) => {
         <Link href="/" asChild>
           <Button variant="secondary">
             <Icon as={ArrowLeftIcon} className="size-4" />
-            <Text>Go to Home</Text>
+            <Text>{m.error_go_home()}</Text>
           </Button>
         </Link>
         <Button variant="ghost" onPress={() => void retry()}>
           <Icon as={RefreshCwIcon} className="size-4" />
-          <Text>Try again</Text>
+          <Text>{m.error_try_again()}</Text>
         </Button>
       </View>
     </View>
