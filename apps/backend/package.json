@@ -20,13 +20,14 @@
     }
   },
   "scripts": {
-    "generate": "prisma generate && tsc -p tsconfig.app.json --emitDeclarationOnly",
+    "generate": "prisma generate && npm run generate:messages && tsc -p tsconfig.app.json --emitDeclarationOnly",
+    "generate:messages": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --emit-ts-declarations --silent",
     "migration:create": "prisma migrate dev",
     "migration:latest": "prisma migrate deploy",
     "migration:down": "prisma migrate resolve --rolled-back",
     "migration:reset": "prisma migrate reset",
     "rebuild-db": "./scripts/rebuild-db.sh",
-    "typecheck": "prisma generate && tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit",
+    "typecheck": "prisma generate && npm run generate:messages && tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:services": "docker compose -f docker-compose.test.yml up -d && sleep 10",

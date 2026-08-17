@@ -1,3 +1,4 @@
+import { m } from "@backend/paraglide/messages.js";
 import { HTTPException } from "hono/http-exception";
 import { ZodError } from "zod";
 import { $ZodIssue } from "zod/v4/core";
@@ -9,7 +10,7 @@ import { ValidationError, ValidationErrorCode } from "./types";
  * Handles validation errors from Zod or Hono validator
  */
 export function handleValidationError(error: ZodError | HTTPException, details: ErrorDetails): ValidationError {
-  const message = "Validation Error";
+  const message = m.error_validation();
   let issues: $ZodIssue[] = [];
 
   if (error instanceof ZodError) {
@@ -28,7 +29,7 @@ export function handleValidationError(error: ZodError | HTTPException, details: 
           {
             code: "custom",
             path: [],
-            message: typeof parsed?.message === "string" ? parsed.message : "Invalid input",
+            message: typeof parsed?.message === "string" ? parsed.message : m.error_invalid_input(),
             params: {},
           } as unknown as $ZodIssue,
         ];
@@ -38,7 +39,7 @@ export function handleValidationError(error: ZodError | HTTPException, details: 
         {
           code: "custom",
           path: [],
-          message: (error as Error).message || "Invalid input",
+          message: (error as Error).message || m.error_invalid_input(),
           params: {},
         } as unknown as $ZodIssue,
       ];
@@ -49,7 +50,7 @@ export function handleValidationError(error: ZodError | HTTPException, details: 
       {
         code: "custom",
         path: [],
-        message: "Invalid input",
+        message: m.error_invalid_input(),
         params: {},
       } as unknown as $ZodIssue,
     ];

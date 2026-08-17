@@ -1,4 +1,5 @@
 import { logger } from "@backend/libs/logger/logger";
+import { m } from "@backend/paraglide/messages.js";
 
 import { ErrorDetails } from "../types";
 import { DatabaseError, DatabaseErrorCode } from "./types";
@@ -14,10 +15,10 @@ export function handleDatabaseError(error: Error, details: ErrorDetails): Databa
   // Check for specific Kysely/database error types
   if (error.message.includes("connection")) {
     code = DatabaseErrorCode.DATABASE_CONNECTION_ERROR;
-    message = "Database connection failed";
+    message = m.error_database_connection();
   } else if (error.message.includes("timeout")) {
     code = DatabaseErrorCode.DATABASE_TIMEOUT_ERROR;
-    message = "Database operation timed out";
+    message = m.error_database_timeout();
   } else if (
     error.message.includes("constraint") ||
     error.message.includes("UNIQUE") ||
@@ -25,7 +26,7 @@ export function handleDatabaseError(error: Error, details: ErrorDetails): Databa
     error.message.includes("check constraint")
   ) {
     code = DatabaseErrorCode.DATABASE_CONSTRAINT_ERROR;
-    message = "Database constraint violation";
+    message = m.error_database_constraint();
 
     // Try to extract constraint name
     const constraintMatch = error.message.match(/constraint "([^"]+)"/i);
@@ -39,10 +40,10 @@ export function handleDatabaseError(error: Error, details: ErrorDetails): Databa
     error.message.includes("column")
   ) {
     code = DatabaseErrorCode.DATABASE_QUERY_ERROR;
-    message = "Database query error";
+    message = m.error_database_query();
   } else {
     code = DatabaseErrorCode.DATABASE_UNKNOWN_ERROR;
-    message = "An unknown database error occurred";
+    message = m.error_database_unknown();
   }
 
   // Try to extract table name from error message

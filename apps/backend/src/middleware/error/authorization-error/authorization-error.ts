@@ -1,4 +1,5 @@
 import { logger } from "@backend/libs/logger/logger";
+import { m } from "@backend/paraglide/messages.js";
 import { HTTPException } from "hono/http-exception";
 import { ContentfulStatusCode } from "hono/utils/http-status";
 
@@ -10,18 +11,18 @@ import { AuthorizationError, AuthorizationErrorCode } from "./types";
  */
 export function handleAuthorizationError(error: Error | HTTPException, details: ErrorDetails): AuthorizationError {
   let code: AuthorizationErrorCode = AuthorizationErrorCode.AUTHORIZATION_FORBIDDEN;
-  let message = "Forbidden";
+  let message: string = m.error_forbidden();
   let statusCode: ContentfulStatusCode = 403;
   const extraDetails: Record<string, unknown> = {};
 
   if (error instanceof HTTPException) {
     if (error.status === 403) {
       code = AuthorizationErrorCode.AUTHORIZATION_FORBIDDEN;
-      message = error.message || "Forbidden";
+      message = error.message || m.error_forbidden();
       statusCode = 403;
     } else {
       statusCode = (error.status as ContentfulStatusCode) || 403;
-      message = error.message || "Forbidden";
+      message = error.message || m.error_forbidden();
     }
   } else if (error instanceof AuthorizationError) {
     code = error.code;
@@ -31,7 +32,7 @@ export function handleAuthorizationError(error: Error | HTTPException, details: 
     const msg = error.message.toLowerCase();
     if (msg.includes("permission") || msg.includes("forbidden") || msg.includes("not allowed")) {
       code = AuthorizationErrorCode.AUTHORIZATION_FORBIDDEN;
-      message = "Insufficient permissions";
+      message = m.error_insufficient_permissions();
     }
 
     const requiredMatch = error.message.match(/required permissions?:\s*([^\n]+)/i);

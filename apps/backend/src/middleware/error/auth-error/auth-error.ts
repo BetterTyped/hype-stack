@@ -1,4 +1,5 @@
 import { logger } from "@backend/libs/logger/logger";
+import { m } from "@backend/paraglide/messages.js";
 import { HTTPException } from "hono/http-exception";
 import { ContentfulStatusCode } from "hono/utils/http-status";
 
@@ -19,17 +20,17 @@ export function handleAuthError(error: Error | HTTPException, details: ErrorDeta
     switch (error.status) {
       case 401:
         code = AuthErrorCode.AUTH_UNAUTHORIZED;
-        message = "Authentication required";
+        message = m.error_auth_required();
         statusCode = 401;
         break;
       case 403:
         code = AuthErrorCode.AUTH_FORBIDDEN;
-        message = "Access forbidden";
+        message = m.error_auth_forbidden();
         statusCode = 403;
         break;
       default:
         code = AuthErrorCode.AUTH_UNAUTHORIZED;
-        message = error.message || "Authentication failed";
+        message = error.message || m.error_auth_failed();
         statusCode = error.status as ContentfulStatusCode;
     }
   } else {
@@ -44,26 +45,26 @@ export function handleAuthError(error: Error | HTTPException, details: ErrorDeta
       (errorMessage.includes("expired") || errorMessage.includes("expire"))
     ) {
       code = AuthErrorCode.AUTH_TOKEN_EXPIRED;
-      message = "Authentication token has expired";
+      message = m.error_auth_token_expired();
       statusCode = 401;
     } else if (
       errorMessage.includes("token") &&
       (errorMessage.includes("invalid") || errorMessage.includes("malformed"))
     ) {
       code = AuthErrorCode.AUTH_TOKEN_INVALID;
-      message = "Invalid authentication token";
+      message = m.error_auth_token_invalid();
       statusCode = 401;
     } else if (errorMessage.includes("user") && errorMessage.includes("not found")) {
       code = AuthErrorCode.AUTH_USER_NOT_FOUND;
-      message = "User not found";
+      message = m.error_auth_user_not_found();
       statusCode = 404;
     } else if (errorMessage.includes("unauthorized") || errorMessage.includes("authentication")) {
       code = AuthErrorCode.AUTH_UNAUTHORIZED;
-      message = "Authentication required";
+      message = m.error_auth_required();
       statusCode = 401;
     } else if (errorMessage.includes("forbidden") || errorMessage.includes("permission")) {
       code = AuthErrorCode.AUTH_FORBIDDEN;
-      message = "Insufficient permissions";
+      message = m.error_insufficient_permissions();
       statusCode = 403;
 
       // Try to extract required permission from error message
@@ -73,7 +74,7 @@ export function handleAuthError(error: Error | HTTPException, details: ErrorDeta
       }
     } else {
       code = AuthErrorCode.AUTH_UNAUTHORIZED;
-      message = "Authentication failed";
+      message = m.error_auth_failed();
       statusCode = 401;
     }
   }

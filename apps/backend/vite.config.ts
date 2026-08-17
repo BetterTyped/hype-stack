@@ -3,6 +3,8 @@ import { builtinModules } from "node:module";
 import * as path from "path";
 import { defineConfig } from "vitest/config";
 
+import { paraglidePlugin } from "./configs/paraglide.config";
+
 const packageJson = JSON.parse(readFileSync(path.resolve(__dirname, "package.json"), "utf-8"));
 const allDependencies = [
   ...Object.keys(packageJson.dependencies || {}),
@@ -25,6 +27,7 @@ export default defineConfig({
     include: ["hono", "@hono/node-server"],
   },
   plugins: [
+    paraglidePlugin(),
     {
       name: "copy-prisma-client",
       writeBundle() {

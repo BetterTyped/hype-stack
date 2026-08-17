@@ -12,6 +12,8 @@ import { logger } from "./libs/logger/logger";
 import { ApplicationError, AuthorizationError, DatabaseError, ValidationError } from "./middleware/error";
 import { AuthError } from "./middleware/error/auth-error/types";
 import { errorMiddleware, onError } from "./middleware/error/error-middleware";
+import { m } from "./paraglide/messages.js";
+import { paraglideMiddleware } from "./paraglide/server.js";
 import { registerRoutes } from "./routes";
 import { registerSockets } from "./sockets";
 import { freePort } from "./utils/misc/free-port";
@@ -52,7 +54,7 @@ const initialize = async (app: Hono, server: ReturnType<typeof serve>) => {
    * Registering
    * -----------------------------------------------------------------------------------------------*/
   app.get("/ping/*", (c) => {
-    return c.json<{ message: string; success: boolean }>({ message: "Pong", success: true });
+    return c.json<{ message: string; success: boolean }>({ message: m.pong(), success: true });
   });
   registerSockets(app);
   registerRoutes(app);
@@ -94,7 +96,11 @@ const startServer = async () => {
   await freePort(port);
   const server = serve(
     {
-      fetch: app.fetch,
+      // The locale is resolved per request the same way the SSR server does it
+      // (the locale cookie, then Accept-Language, then the base locale) and
+      // kept in AsyncLocalStorage, so concurrent requests cannot read each
+      // other's locale and every m.*() call in a handler picks it up.
+      fetch: (request) => paraglideMiddleware(request, () => app.fetch(request)),
       port,
     },
     (info) => {
