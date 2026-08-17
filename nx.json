@@ -71,6 +71,7 @@
   "targetDefaults": {
     "build": {
       "dependsOn": [
+        "generate",
         "^build"
       ]
     },
@@ -81,6 +82,7 @@
     },
     "typecheck": {
       "dependsOn": [
+        "generate",
         "^generate",
         "^build"
       ]
