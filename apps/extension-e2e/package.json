@@ -11,6 +11,11 @@
   "nx": {
     "implicitDependencies": [
       "@hype-stack/extension"
-    ]
+    ],
+    "targets": {
+      "typecheck": {
+        "dependsOn": []
+      }
+    }
   }
 }
