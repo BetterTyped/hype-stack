@@ -18,14 +18,14 @@ importers:
         specifier: ^5.4.0
         version: 5.4.0(react-hook-form@7.82.0(react@19.2.5))
       '@hyper-fetch/core':
-        specifier: ^8.1.1
-        version: 8.1.1
+        specifier: ^8.2.2
+        version: 8.2.2
       '@hyper-fetch/react':
-        specifier: ^8.1.1
-        version: 8.1.1(@hyper-fetch/core@8.1.1)(@hyper-fetch/sockets@8.1.1(@hyper-fetch/core@8.1.1))(react@19.2.5)
+        specifier: ^8.2.2
+        version: 8.2.2(@hyper-fetch/core@8.2.2)(@hyper-fetch/sockets@8.2.2(@hyper-fetch/core@8.2.2))(react@19.2.5)
       '@hyper-fetch/sockets':
-        specifier: ^8.1.1
-        version: 8.1.1(@hyper-fetch/core@8.1.1)
+        specifier: ^8.2.2
+        version: 8.2.2(@hyper-fetch/core@8.2.2)
       '@inlang/paraglide-js':
         specifier: ^2.23.1
         version: 2.23.1(@typescript/typescript6@6.0.2)(babel-plugin-macros@3.1.0)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.46.2)(yaml@2.9.0))
@@ -157,14 +157,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/enums
       '@hyper-fetch/core':
-        specifier: ^8.1.1
-        version: 8.1.1
+        specifier: ^8.2.2
+        version: 8.2.2
       '@hyper-fetch/react':
-        specifier: ^8.1.1
-        version: 8.1.1(@hyper-fetch/core@8.1.1)(@hyper-fetch/sockets@8.1.1(@hyper-fetch/core@8.1.1))(react@19.2.5)
+        specifier: ^8.2.2
+        version: 8.2.2(@hyper-fetch/core@8.2.2)(@hyper-fetch/sockets@8.2.2(@hyper-fetch/core@8.2.2))(react@19.2.5)
       '@hyper-fetch/sockets':
-        specifier: ^8.1.1
-        version: 8.1.1(@hyper-fetch/core@8.1.1)
+        specifier: ^8.2.2
+        version: 8.2.2(@hyper-fetch/core@8.2.2)
       '@mdx-js/react':
         specifier: ^3.1.1
         version: 3.1.1(@types/react@19.2.14)(react@19.2.5)
@@ -941,14 +941,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/enums
       '@hyper-fetch/core':
-        specifier: ^8.1.1
-        version: 8.1.1
+        specifier: ^8.2.2
+        version: 8.2.2
       '@hyper-fetch/react':
-        specifier: ^8.1.1
-        version: 8.1.1(@hyper-fetch/core@8.1.1)(@hyper-fetch/sockets@8.1.1(@hyper-fetch/core@8.1.1))(react@19.2.3)
+        specifier: ^8.2.2
+        version: 8.2.2(@hyper-fetch/core@8.2.2)(@hyper-fetch/sockets@8.2.2(@hyper-fetch/core@8.2.2))(react@19.2.3)
       '@hyper-fetch/sockets':
-        specifier: ^8.1.1
-        version: 8.1.1(@hyper-fetch/core@8.1.1)
+        specifier: ^8.2.2
+        version: 8.2.2(@hyper-fetch/core@8.2.2)
       '@react-native-async-storage/async-storage':
         specifier: 2.2.0
         version: 2.2.0(react-native@0.86.2(@babel/core@7.29.0)(@react-native/metro-config@0.86.2(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))
@@ -3055,11 +3055,11 @@ packages:
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
 
-  '@hyper-fetch/core@8.1.1':
-    resolution: {integrity: sha512-363AyCteVnZgmPCDnILl3LAf4qiahNsgObh6Kx7gqrtSR6HAoK26I1XlMZFoOcvrEDGMCbcsBEVUOOeTt12g4g==}
+  '@hyper-fetch/core@8.2.2':
+    resolution: {integrity: sha512-ni1UObhOgSWpOfLmO4u5pcYNG5MeeQaKKmuMxWpMAakn4U4P8D3Qn5pIiy6hzug8UEnGYy9+N47jJwSaEYJZ2Q==}
 
-  '@hyper-fetch/react@8.1.1':
-    resolution: {integrity: sha512-+EWmxtBL5dVHQajv79NH8AMZNUgCAUNKfUcrIcyCOMcA4skzwmFarOipdXug9oVGDWRF9E8xuprGJ1AiCFZ3ZA==}
+  '@hyper-fetch/react@8.2.2':
+    resolution: {integrity: sha512-4eDRZ8CkP3Azdj+RoOeGXZ10PT8glTFmUhHwiKtSf1LsA/0S/gt6E/YGP2qk2rY/uwAaJiWfwYP9mOjhvoj1GA==}
     peerDependencies:
       '@hyper-fetch/core': '*'
       '@hyper-fetch/sockets': '*'
@@ -3068,8 +3068,8 @@ packages:
       '@hyper-fetch/sockets':
         optional: true
 
-  '@hyper-fetch/sockets@8.1.1':
-    resolution: {integrity: sha512-TFuIPAY/4ZQWK5Gy64FauR+ftlfmieLAyO8f+63vN1YPGQ+E3rRiNkktPuQvLfkFCDvviXLoIWKgiM8HsS5TTA==}
+  '@hyper-fetch/sockets@8.2.2':
+    resolution: {integrity: sha512-bg+I44BIGdWB5EXgnBXf20tg17dnQR4OD5ZMdjqKhT5SKEPhaZ2iY8NYo5wlquoPLvSMiT1B4jQTPY9unFmMow==}
     peerDependencies:
       '@hyper-fetch/core': '*'
 
@@ -17282,31 +17282,31 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
-  '@hyper-fetch/core@8.1.1':
+  '@hyper-fetch/core@8.2.2':
     dependencies:
       events: 3.3.0
 
-  '@hyper-fetch/react@8.1.1(@hyper-fetch/core@8.1.1)(@hyper-fetch/sockets@8.1.1(@hyper-fetch/core@8.1.1))(react@19.2.3)':
+  '@hyper-fetch/react@8.2.2(@hyper-fetch/core@8.2.2)(@hyper-fetch/sockets@8.2.2(@hyper-fetch/core@8.2.2))(react@19.2.3)':
     dependencies:
       '@better-hooks/lifecycle': 2.0.0(react@19.2.3)
       '@better-hooks/performance': 2.1.0(react@19.2.3)
-      '@hyper-fetch/core': 8.1.1
+      '@hyper-fetch/core': 8.2.2
       react: 19.2.3
     optionalDependencies:
-      '@hyper-fetch/sockets': 8.1.1(@hyper-fetch/core@8.1.1)
+      '@hyper-fetch/sockets': 8.2.2(@hyper-fetch/core@8.2.2)
 
-  '@hyper-fetch/react@8.1.1(@hyper-fetch/core@8.1.1)(@hyper-fetch/sockets@8.1.1(@hyper-fetch/core@8.1.1))(react@19.2.5)':
+  '@hyper-fetch/react@8.2.2(@hyper-fetch/core@8.2.2)(@hyper-fetch/sockets@8.2.2(@hyper-fetch/core@8.2.2))(react@19.2.5)':
     dependencies:
       '@better-hooks/lifecycle': 2.0.0(react@19.2.5)
       '@better-hooks/performance': 2.1.0(react@19.2.5)
-      '@hyper-fetch/core': 8.1.1
+      '@hyper-fetch/core': 8.2.2
       react: 19.2.5
     optionalDependencies:
-      '@hyper-fetch/sockets': 8.1.1(@hyper-fetch/core@8.1.1)
+      '@hyper-fetch/sockets': 8.2.2(@hyper-fetch/core@8.2.2)
 
-  '@hyper-fetch/sockets@8.1.1(@hyper-fetch/core@8.1.1)':
+  '@hyper-fetch/sockets@8.2.2(@hyper-fetch/core@8.2.2)':
     dependencies:
-      '@hyper-fetch/core': 8.1.1
+      '@hyper-fetch/core': 8.2.2
       events: 3.3.0
 
   '@inlang/paraglide-js@2.23.1(@typescript/typescript6@6.0.2)(babel-plugin-macros@3.1.0)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.46.2)(yaml@2.9.0))':
@@ -20451,7 +20451,9 @@ snapshots:
       metro-runtime: 0.84.4
     transitivePeerDependencies:
       - '@babel/core'
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@react-native/normalize-colors@0.74.89': {}
 
