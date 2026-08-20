@@ -5,6 +5,15 @@
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
+    "splash": {
+      "image": "./src/assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#f9f5ee",
+      "dark": {
+        "image": "./src/assets/images/splash-dark.png",
+        "backgroundColor": "#14110e"
+      }
+    },
     "scheme": "hypestack",
     "userInterfaceStyle": "automatic",
     "assetBundlePatterns": ["**/*"],
@@ -31,7 +40,11 @@
         {
           "image": "./src/assets/images/splash.png",
           "resizeMode": "contain",
-          "backgroundColor": "#0f0f0e"
+          "backgroundColor": "#f9f5ee",
+          "dark": {
+            "image": "./src/assets/images/splash-dark.png",
+            "backgroundColor": "#14110e"
+          }
         }
       ],
       "expo-status-bar"
