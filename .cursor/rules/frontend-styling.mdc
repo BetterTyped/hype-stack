@@ -1,12 +1,14 @@
 ---
-description: Frontend styling and UI component conventions
-globs: apps/frontend/src/**/*
+description: Client app styling and UI component conventions (frontend, admin, mobile, extension)
+globs: apps/frontend/src/**/*,apps/admin/src/**/*,apps/mobile/src/**/*,apps/extension/src/**/*
 alwaysApply: false
 ---
 
 # Frontend Styling
 
-Style all frontend UI with **Tailwind CSS** utility classes and **shadcn/ui** components.
+Applies to all client apps: `apps/frontend`, `apps/admin`, `apps/mobile`, and `apps/extension`.
+
+Style all client UI with **Tailwind CSS** utility classes and **shadcn/ui** components. On mobile, Tailwind classes are applied through **NativeWind** on React Native primitives — the same utility-class conventions apply, but use React Native components instead of shadcn/ui, and skip the web-specific page layout section below.
 
 - Use Tailwind utility classes for layout, spacing, typography, and colors. Do not write custom CSS unless Tailwind cannot express the style.
 - Use existing shadcn/ui primitives from `components/ui/` (Button, Input, Label, Card, Alert, Dialog, etc.) before creating custom components.
@@ -15,7 +17,7 @@ Style all frontend UI with **Tailwind CSS** utility classes and **shadcn/ui** co
 - Use CSS variables defined in `assets/styles.css` for theme tokens (colors, radius, etc.) rather than hard-coded hex values in application code.
 - Keep email templates (React Email in the backend) styled with the `<Tailwind>` wrapper from `@react-email/components` so the same utility-class approach applies to emails.
 
-## Page Layout Consistency
+## Page Layout Consistency (web apps only)
 
 All pages rendered inside the app layout (`<Outlet />`) must follow the same structural pattern:
 

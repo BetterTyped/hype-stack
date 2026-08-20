@@ -1,23 +1,24 @@
 ---
-globs: apps/frontend/**/*.test.ts,apps/frontend/**/*.test.tsx
+description: Client app testing conventions - real hooks and SDK with HyperFetch setMock at the network boundary
+globs: apps/frontend/**/*.test.ts,apps/frontend/**/*.test.tsx,apps/admin/**/*.test.ts,apps/admin/**/*.test.tsx,apps/mobile/**/*.test.ts,apps/mobile/**/*.test.tsx,apps/extension/**/*.test.ts,apps/extension/**/*.test.tsx
 alwaysApply: false
 ---
 
 # Frontend Testing Guidelines
 
+Applies to all client apps: `apps/frontend`, `apps/admin`, `apps/mobile`, and `apps/extension`.
+
+The shared philosophy (no `vi.mock` except unavailable third parties, reusable mock helpers, Arrange/Act/Assert, no vitest imports) lives in the testing-philosophy rule. Below are the client-app specifics.
+
 ## Core Philosophy
 
-**Test real code. No mocks unless physically impossible.**
+Components render with real hooks, real SDK, real state management. The only boundary is the network — HyperFetch `setMock` intercepts HTTP requests so components behave exactly like production, just with controlled responses.
 
-Components render with real hooks, real SDK, real state management. The only boundary is the network -- HyperFetch `setMock` intercepts HTTP requests so components behave exactly like production, just with controlled responses.
-
-**`vi.mock` is FORBIDDEN unless there is no other way.** If you think you need `vi.mock`, you're wrong. Find the real way. The only acceptable reason to mock is **third-party integrations that are not available in the test environment** (external SaaS APIs with no local equivalent). This also keeps tests fast by avoiding external network calls.
-
-When a new third-party integration needs mocking, **build a reusable helper in `src/testing/helpers/`** so every test file can import a single function instead of duplicating setup. Keep mock helpers focused, typed, and documented so future tests get mocking for free.
+New third-party mocks go in the app's `src/testing/helpers/` as reusable helpers.
 
 ## Network mocks
 
-HyperFetch `setMock` on request objects. This is NOT mocking -- it's the framework's built-in test mode that replaces the network layer while keeping everything else real.
+HyperFetch `setMock` on request objects. This is NOT mocking — it's the framework's built-in test mode that replaces the network layer while keeping everything else real.
 
 ```tsx
 import { sdk } from "@/api/sdk";
@@ -43,27 +44,24 @@ afterEach(() => {
 
 ## What is NEVER acceptable
 
-- `vi.mock("@hyper-fetch/react")` -- NO
-- `vi.mock("@/api/sdk")` -- NO
-- `vi.mock("@/hooks/use-auth")` -- NO
-- `vi.mock("@tanstack/react-router")` -- NO (use a test router provider)
-- `vi.mock` on ANY internal module -- NO
+- `vi.mock("@hyper-fetch/react")` — NO
+- `vi.mock("@/api/sdk")` — NO
+- `vi.mock("@/hooks/use-auth")` — NO
+- `vi.mock("@tanstack/react-router")` — NO (use a test router provider)
+- `vi.mock` on ANY internal module — NO
 
 ## Setup
 
 - **Global** (`src/testing/setup/setup.ts`): `@testing-library/jest-dom/vitest`, `cleanup()` after each test.
-- **Config**: `configs/vite.base.config.ts` -- jsdom, globals enabled.
+- **Config**: `configs/vite.base.config.ts` — jsdom, globals enabled.
 - **Env vars**: `VITE_API_BASE_URL`, `VITE_APP_TYPE=web`, `VITE_ENVIRONMENT=test`.
 
 ## Critical Rules
 
-1. **NEVER import vitest** -- globals are available.
-2. **NEVER `vi.mock` anything** unless physically impossible without it. `setMock` handles API data.
-3. **Use `@testing-library/react`** -- `render`, `screen`, `fireEvent`, `waitFor`.
-4. **No `any` types**.
-5. **No snapshot tests**.
-6. **Tests must be independent** -- clean up `setMock` in `afterEach`.
-7. **Every test MUST use `// Arrange`, `// Act`, `// Assert` comments** to clearly separate setup, execution, and verification. Skip `// Arrange` only when there is no setup.
+1. **NEVER `vi.mock` anything** unless physically impossible without it. `setMock` handles API data.
+2. **Use `@testing-library/react`** — `render`, `screen`, `fireEvent`, `waitFor` (on mobile, `@testing-library/react-native`).
+3. **No snapshot tests**.
+4. **Clean up `setMock` in `afterEach`** so tests stay independent.
 
 ## File Structure
 
@@ -74,9 +72,9 @@ afterEach(() => {
 ## What to Test
 
 - Renders correct elements with real hooks running against `setMock` data
-- Loading, error, empty, success states -- all driven by `setMock` responses
+- Loading, error, empty, success states — all driven by `setMock` responses
 - User interactions with real handlers firing real logic
-- Navigation, form submission, conditional rendering -- all real
+- Navigation, form submission, conditional rendering — all real
 
 ## What NOT to Test
 

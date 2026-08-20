@@ -1,0 +1,29 @@
+---
+description: Commit message convention and pnpm/Nx monorepo rules
+alwaysApply: true
+---
+
+# Git and Monorepo
+
+## Commit messages
+
+Commits follow the conventional-commit + git-cz emoji style already in the history:
+
+- `feat: 🎸 <subject>` — new feature
+- `fix: 🐛 <subject>` — bug fix
+- `fix: 💄 <subject>` — visual/style fix
+- `chore: <subject>` — tooling, deps, housekeeping
+- `refactor: <subject>` — behavior-preserving restructuring
+- `docs: ✏️ <subject>` — documentation
+
+Subject is imperative and lowercase ("add invitation flow", not "Added invitation flow."). Match this format exactly when authoring commits.
+
+## Monorepo
+
+pnpm workspaces + Nx.
+
+- Internal packages are `@hype-stack/*` and referenced with `"workspace:*"` — never a version number.
+- Shared code used by multiple apps lives in `packages/`; code used by one app stays inside that app. Don't promote to `packages/` until a second real consumer exists.
+- Run app-scoped scripts with `pnpm --filter @hype-stack/<app> <script>`; repo-wide targets run through the root scripts (Nx handles caching and ordering).
+- Add dependencies to the specific app or package that uses them, not the workspace root (root is for tooling only).
+- After changing generated types or cross-app contracts (backend routes, socket events, enums), regenerate with `pnpm generate` so dependent apps pick up the new types.

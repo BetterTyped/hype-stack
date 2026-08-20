@@ -1,0 +1,24 @@
+---
+description: Canonical domain vocabulary and architecture decision records
+alwaysApply: true
+---
+
+# Domain Vocabulary and Decisions
+
+## Glossary (`CONTEXT.md`)
+
+Canonical domain terms live in `CONTEXT.md` at the repo root. Consistent vocabulary is what keeps schemas, routes, types, and UI copy coherent across sessions.
+
+- **Use glossary terms exactly** — in code, schemas, route paths, DB tables, and messages. Do not invent synonyms (`account` vs `user` vs `member`, `cancel` vs `revoke` — pick the canonical one).
+- When you introduce a new domain concept, add it to `CONTEXT.md` in the same change: one line, term + definition.
+- When the user's wording conflicts with the glossary, point out the conflict and ask which term wins — then update the glossary if it changes.
+- If `CONTEXT.md` does not exist yet, create it the first time a domain term needs pinning down.
+
+## Architecture Decision Records (`docs/adr/`)
+
+Significant architectural decisions get a short ADR in `docs/adr/NNNN-<slug>.md`: context, decision, consequences — a few paragraphs, not an essay.
+
+- **Read existing ADRs before proposing structural changes** in the area you're touching.
+- **Do not re-litigate recorded decisions.** If a decision looks wrong, say so and ask — never silently refactor around it.
+- Record a new ADR when a decision is hard to reverse, cross-cutting, or the kind of thing a future session would otherwise "helpfully" undo (library choice, data model shape, seam placement).
+- Create `docs/adr/` lazily, when the first ADR is needed.

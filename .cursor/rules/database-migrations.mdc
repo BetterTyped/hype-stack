@@ -1,0 +1,21 @@
+---
+description: Database schema change workflow - Prisma migrations, client regeneration, test DB sync. Apply whenever changing schema.prisma or database structure.
+alwaysApply: false
+---
+
+# Database Migrations
+
+Schema changes follow one workflow. All commands run in `apps/backend` (or via `pnpm --filter @hype-stack/backend <script>`).
+
+1. **Edit `schema.prisma`** — the single source of truth for database structure.
+2. **Create the migration**: `pnpm migration:create` (runs `prisma migrate dev` — prompts for a name and applies it to the dev DB).
+3. **Regenerate the client**: `pnpm generate` (Prisma client + message compilation + type declarations).
+4. **Sync the test database** before running integration tests: `pnpm test:setup` (starts the test Docker services, applies migrations, regenerates the client against the test DB). Use `pnpm test:clean` to tear it down.
+
+## Rules
+
+- Never edit an already-applied migration file — create a new migration instead.
+- Never change the database schema outside a migration (no manual SQL against dev/prod).
+- Deploying migrations uses `pnpm migration:latest` (`prisma migrate deploy`); `pnpm migration:reset` and `pnpm rebuild-db` are destructive dev-only resets.
+- Remember the ORM split: Prisma owns schema and inserts, Kysely owns query building — a schema change usually touches both the Prisma schema and the Kysely types generated from it.
+- After a schema change, update the affected `db/queries` / `db/mutations` functions and their integration tests in the same change.

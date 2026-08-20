@@ -1,12 +1,11 @@
 ---
-description:
-globs:
+description: Backend tech stack and general coding rules
 alwaysApply: true
 ---
 
 # Backend
 
-This is an full-stack monorepo. The backend lives in `apps/backend`.
+This is a full-stack monorepo. The backend lives in `apps/backend`.
 
 ## Tech Stack
 
@@ -14,10 +13,10 @@ This is an full-stack monorepo. The backend lives in `apps/backend`.
 2. Database: **Postgres**
 3. ORM: **Prisma**
 4. Query Builder: **Kysely**
-5. Cache: **Redis**
+5. Cache: **Valkey** (Redis-compatible, lives in `src/cache/valkey`)
 6. Requests: **HyperFetch**
 
 ## General Rules
 
-- NEVER USE `as any` -- always find the right types.
+- NEVER USE `as any` — always find the right types.
 - NEVER USE dynamic imports.

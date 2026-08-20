@@ -1,12 +1,14 @@
 ---
-description: Frontend feature vertical architecture rules
-globs: apps/frontend/src/features/**/*
+description: Client app feature vertical architecture rules (frontend, admin, mobile, extension)
+globs: apps/frontend/src/features/**/*,apps/admin/src/features/**/*,apps/mobile/src/features/**/*,apps/extension/src/features/**/*
 alwaysApply: false
 ---
 
 # Frontend Features
 
-When working in `apps/frontend/src/features`, organize code by vertical domain ownership using `src/features/<domain>/modules/<feature>`.
+Applies to all client apps: `apps/frontend`, `apps/admin`, `apps/mobile`, and `apps/extension`.
+
+When working in an app's `src/features`, organize code by vertical domain ownership using `src/features/<domain>/modules/<feature>`.
 Read `apps/frontend/src/features/README.md` for the full feature guidelines before making structural changes.
 
 - **ALWAYS nest feature code inside `<domain>/modules/<feature>/`.** Never place files directly inside `src/features/<domain>/`, and never use a flat `src/features/<domain>/<feature>/` without the `modules/` layer. Even a single-file feature gets its own module folder: `src/features/settings/modules/profile-tab/profile-tab.tsx`, not `src/features/settings/profile-tab/profile-tab.tsx`.

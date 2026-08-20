@@ -1,6 +1,5 @@
 ---
-description: Backend Hono file upload middleware rules
-globs: apps/backend/src/**/*.ts
+description: Backend Hono file upload middleware rules. Apply when adding or changing file upload routes.
 alwaysApply: false
 ---
 

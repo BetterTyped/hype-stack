@@ -1,0 +1,23 @@
+---
+description: Shared testing philosophy for all apps - test real code, mock only unavailable third parties
+globs: apps/**/*.test.ts,apps/**/*.test.tsx
+alwaysApply: false
+---
+
+# Testing Philosophy (all apps)
+
+**Test real code. No mocks unless physically impossible.**
+
+**`vi.mock` is FORBIDDEN unless there is no other way.** The only acceptable reason to mock is **third-party integrations that are not available in the test environment** (external SaaS APIs with no local equivalent). Everything internal — feature logic, hooks, helpers, utils, state — runs real. This also keeps tests fast by avoiding network calls to external services.
+
+When a new third-party integration needs mocking, **build a reusable mock helper** in the app's testing directory (`src/testing/mocks/` on the backend, `src/testing/helpers/` on the frontend) so every test file imports a single function instead of duplicating setup. Keep mock helpers focused, typed, and documented so future tests get mocking for free.
+
+## Rules shared by every test file
+
+1. **NEVER import vitest** — globals are available.
+2. **No `any` types** — type mocks properly, e.g. `vi.fn<(args) => ReturnType>()`.
+3. **Tests must be independent** — each test creates its own data and cleans up after itself.
+4. **Every test MUST use `// Arrange`, `// Act`, `// Assert` comments** to clearly separate setup, execution, and verification. Skip `// Arrange` only when there is no setup.
+5. **No `try/catch` for error assertions** — use `expect().rejects`.
+
+App-specific conventions live in the backend and frontend testing rules.

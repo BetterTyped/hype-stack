@@ -118,14 +118,15 @@ single file:
 
 ```ts
 // src/routes/workflows/index.ts
-import { getAuthenticatedApp } from "@/utils/misc/hono";
-import { validate } from "@/middleware/validation/validate";
-import { createWorkflow } from "@/features/workflows/modules/create-workflow";
-import { createWorkflowSchema } from "@/features/workflows/modules/create-workflow/schemas/create-workflow.schema";
+import { Hono } from "hono";
 
-export const workflowRoutes = getAuthenticatedApp()
+import { validate } from "@backend/middleware/validation/validate";
+import { createWorkflow } from "@backend/features/workflows/modules/create-workflow";
+import { createWorkflowSchema } from "@backend/features/workflows/modules/create-workflow/schemas/create-workflow.schema";
+
+export const workflowRoutes = new Hono()
   .get("/", async (ctx) => {
-    return ctx.json({ ... });
+    return ctx.json({ workflows: [] });
   })
   .post("/", validate("json", createWorkflowSchema), async (ctx) => {
     const body = ctx.req.valid("json");
@@ -147,9 +148,9 @@ export const registerRoutes = (app: Hono) => {
 
 Route files should stay thin:
 
-- Use `getAuthenticatedApp()` for authenticated route groups or a plain Hono app for public routes.
+- Apply the shared auth middleware to authenticated route groups; public routes use a plain Hono app.
 - Import schemas and module functions from the owning domain.
-- Use descriptive route params such as `:workflowId` -- avoid generic `:id`.
+- Use descriptive route params such as `:workflowId` — avoid generic `:id`.
 - Throw typed application errors and let global error middleware serialize them.
 - Move logic into the owning module when a handler starts doing more than request/response coordination.
 
@@ -183,17 +184,12 @@ export type LoginSchema = z.infer<typeof loginSchema>;
 - Use the shared `getPaginatedQuery` helper for paginated reads.
 
 ```ts
-import { getPaginatedQuery } from "@/utils/database/pagination";
+import { postgres } from "@backend/context";
+import { getPaginatedQuery } from "@backend/db/utils/pagination";
 
-export const getMany = async ({
-  context,
-  queryParams,
-}: {
-  context: Context;
-  queryParams: QueryParams;
-}) => {
+export const getManyQuery = async ({ queryParams }: { queryParams: QueryParams }) => {
   const { limit = 20, offset = 0 } = queryParamsSchema.parse(queryParams);
-  const query = context.var.postgres.selectFrom("...").selectAll();
+  const query = postgres.qb.selectFrom("workflow").selectAll();
   return getPaginatedQuery({ query, limit, offset });
 };
 ```
@@ -201,7 +197,7 @@ export const getMany = async ({
 ## Errors And Permissions
 
 Use predefined errors with `ApplicationError` to throw errors. We do not need try/catch since we have a global
-middleware handling errors -- just throw with the correct error class.
+middleware handling errors — just throw with the correct error class.
 
 - Use application errors for domain failures (not found, invalid state, bad request).
 - Use auth errors for authentication/session failures.

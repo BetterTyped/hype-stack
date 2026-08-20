@@ -1,6 +1,5 @@
 ---
-description: Use the typed frontendUrl() helper when building links to the frontend from backend code
-globs: apps/backend/src/**/*.ts
+description: Use the typed frontendUrl() helper when building links to the frontend from backend code (email links, OAuth redirects).
 alwaysApply: false
 ---
 
@@ -22,4 +21,4 @@ const url = frontendUrl({
 - **NEVER** build frontend URLs with template literals like `` `${process.env.FRONTEND_URL}/login?token=${t}` ``.
 - **NEVER** use `process.env.FRONTEND_URL` directly to construct page links. The helper reads it internally.
 - All frontend paths and their search params are typed in `RouteDefinitions` inside the helper file. If a new route is needed, add it there.
-- The helper validates paths and search params at compile time -- typos and wrong params cause type errors.
+- The helper validates paths and search params at compile time — typos and wrong params cause type errors.

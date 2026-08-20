@@ -1,6 +1,5 @@
 ---
-description: Backend deletion mutations must remove owned dependencies
-globs: apps/backend/src/**/*.ts
+description: Backend deletion mutations must remove owned dependencies in a single transaction. Apply when writing or changing delete mutations.
 alwaysApply: false
 ---
 

@@ -1,33 +1,31 @@
 ---
+description: Backend testing conventions - integration tests against real Docker services
 globs: apps/backend/**/*.test.ts
 alwaysApply: false
 ---
 
 # Backend Testing Guidelines
 
-## Core Philosophy
+The shared philosophy (no `vi.mock` except unavailable third parties, reusable mock helpers, Arrange/Act/Assert, no vitest imports) lives in the testing-philosophy rule. Below are the backend specifics.
 
-**Test real code. No mocks unless physically impossible.**
+## Core Philosophy
 
 Feature module tests (`features/<domain>/modules/<feature>/index.ts`) are INTEGRATION TESTS.
 They use real DB (Postgres), real cache (Valkey), real storage (S3/RustFS) from the test Docker environment.
 They create real data via `db/mutations/` functions, query it back, and verify the full flow.
 
-**`vi.mock` is FORBIDDEN unless there is no other way.** If you think you need `vi.mock`, you're wrong. Find the real way. The only acceptable reason to mock is **third-party integrations that are not available in the test Docker environment** (external SaaS APIs with no local equivalent). This also keeps tests fast by avoiding network calls to external services.
+**Everything runs real:**
 
-Currently mocked third-party services:
+- Database queries/mutations — real Postgres from Docker
+- Valkey operations — real Valkey from Docker
+- S3/Storage operations — real RustFS from Docker
+- Internal feature logic, helpers, utils, channels — all real
 
-- Auth (external SaaS -- auth, organizations, memberships, invitations)
-- Resend (external SaaS -- email sending)
+**Only third-party SaaS without a local equivalent is mocked.** Currently mocked:
 
-When a new third-party integration needs mocking, **build a reusable helper in `src/testing/helpers/`** so every test file can import a single function instead of duplicating setup. Keep mock helpers focused, typed, and documented so future tests get mocking for free.
+- Resend (external SaaS — email sending), via the reusable helper in `src/testing/mocks/resend.mock.ts`
 
-**Everything else runs real:**
-
-- Database queries/mutations -- real Postgres from Docker
-- Valkey/Redis operations -- real Valkey from Docker
-- S3/Storage operations -- real RustFS from Docker
-- Internal feature logic, helpers, utils, channels, services -- all real
+New third-party mocks go in `src/testing/mocks/` as reusable helpers.
 
 **Unit tests are ONLY for:**
 
@@ -39,7 +37,7 @@ When a new third-party integration needs mocking, **build a reusable helper in `
 ## Setup Architecture
 
 - **Global** (`src/testing/setup/setup.ts`): loads `.env.test`, sets `NODE_ENV=test`. Runs for every test.
-- **Integration** (`setupIntegrationTest()`): connects to real Postgres, Valkey, S3. Call at top of integration test files.
+- **Integration** (`setupIntegrationTest()` from `src/testing/setup/test-utils.ts`): connects to real Postgres, Valkey, S3. Call at top of integration test files.
 
 ```typescript
 import { setupIntegrationTest } from "@backend/testing/setup/test-utils";
@@ -58,34 +56,36 @@ beforeEach(async () => {
 
 ## Critical Rules
 
-1. **NEVER import vitest** -- globals are available.
-2. **NEVER mock DB, Valkey, or S3** -- they run in Docker.
-3. **Create real data** -- use `db/mutations/` to insert, `db/queries/` to verify.
-4. **Mock only third-party services unavailable in Docker** (Resend, etc.) -- build reusable mock helpers in `src/testing/helpers/` so every test reuses the same setup.
-5. **No `try/catch` for error assertions** -- use `expect().rejects`.
-6. **No `any` types** -- use `vi.fn<(args) => ReturnType>()`.
-7. **Tests must be independent** -- each test creates its own data, `flushAll()` in `beforeEach`.
-8. **Every test MUST use `// Arrange`, `// Act`, `// Assert` comments** to clearly separate setup, execution, and verification. Skip `// Arrange` only when there is no setup.
+1. **NEVER mock DB, Valkey, or S3** — they run in Docker.
+2. **Create real data** — use `db/mutations/` to insert, `db/queries/` to verify.
+3. **Mock only third-party services unavailable in Docker** (Resend, etc.) — via reusable helpers in `src/testing/mocks/`.
 
-## Example 3rd Party Mock Pattern
+## Example Third-Party Mock Pattern
 
-Create reusable mocks in `src/testing/helpers/workos.mock.ts`:
+The real Resend helper (`src/testing/mocks/resend.mock.ts`) is the template for new mocks:
 
 ```typescript
-export function mockWorkos() {
-  const mock = {
-    userManagement: {
-      createUser: vi.fn(),
-      authenticateWithPassword: vi.fn(),
-      // ... all methods used in tests
-    },
-    organizations: {
-      createOrganization: vi.fn(),
-      // ... all methods
+import * as resendModule from "@backend/libs/email/resend";
+
+export type ResendMock = {
+  emails: {
+    send: ReturnType<typeof vi.fn>;
+  };
+};
+
+export function createResendMock(): ResendMock {
+  return {
+    emails: {
+      send: vi.fn().mockResolvedValue({ id: "mock_email_id" }),
     },
   };
-  vi.spyOn(context, "workos", "get").mockReturnValue(mock as unknown as WorkOS);
-  return mock;
+}
+
+export function installResendMock(mock: ResendMock): void {
+  Object.defineProperty(resendModule, "resend", {
+    get: () => mock,
+    configurable: true,
+  });
 }
 ```
 
@@ -100,16 +100,16 @@ beforeEach(async () => {
 });
 
 it("creates project and persists it", async () => {
-  // Arrange -- insert real data
+  // Arrange — insert real data
   const orgId = "org_test_1";
   const userId = "user_test_1";
-  // Act -- call the actual feature function
+  // Act — call the actual feature function
   const result = await createProject({
     data: { name: "Test" },
     creatorId: userId,
     organizationId: orgId,
   });
-  // Assert -- query DB to verify
+  // Assert — query DB to verify
   const saved = await getProjectByIdQuery({
     projectId: result.projectId,
     organizationId: orgId,
@@ -141,4 +141,4 @@ await expect(promise).rejects.toMatchObject({
 
 - External library internals (Prisma, Kysely, Hono routing)
 - TypeScript types, generated code
-- Things already tested by the DB engine (unique constraints fire correctly -- test your code's response)
+- Things already tested by the DB engine (unique constraints fire correctly — test your code's response)

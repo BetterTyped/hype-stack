@@ -1,0 +1,25 @@
+---
+description: Bug-fixing discipline - build a red feedback loop before hypothesizing, ship every fix with a regression test. Apply whenever diagnosing or fixing a bug, failure, or regression.
+alwaysApply: false
+---
+
+# Debugging Discipline
+
+## Feedback loop first
+
+Before hypothesizing about a bug's cause, **build a repro that goes red on this bug** — usually a failing test at the nearest seam:
+
+- Backend: a failing integration test against the real Docker services.
+- Frontend: a failing component test driven by `setMock` responses.
+- If a test can't reach it, a script or curl invocation with a known-bad output counts — but name the command and run it red at least once before touching the fix.
+
+A fix without a red loop is a guess. If you genuinely cannot build a repro, say so explicitly, list what you tried, and ask the user for what's missing (logs, payloads, environment access) instead of proceeding on hypothesis alone.
+
+## Fix against the loop
+
+- Form one hypothesis at a time and test it against the loop — don't shotgun changes across files hoping one lands.
+- The fix is done when the red loop goes green **and** the surrounding suite still passes.
+
+## Every bug fix ships with a regression test
+
+The repro test from step one stays in the codebase as the regression test. If a bug escaped, the test suite had a hole — the fix isn't complete until the hole is closed. Follow the standard testing rules for where it lives and how it's written.

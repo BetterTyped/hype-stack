@@ -1,12 +1,14 @@
 ---
-description: Use HyperFetch SDK for all API and WebSocket communication on the frontend
-globs: apps/frontend/src/**/*
-alwaysApply: true
+description: Use HyperFetch SDK for all API and WebSocket communication in client apps (frontend, admin, mobile, extension)
+globs: apps/frontend/src/**/*,apps/admin/src/**/*,apps/mobile/src/**/*,apps/extension/src/**/*
+alwaysApply: false
 ---
 
 # HyperFetch Data Exchange
 
-All frontend API calls should go through the HyperFetch SDK (`sdk` from `@/api/sdk`) instead of raw `fetch()`, `axios`, or other HTTP clients.
+Applies to all client apps: `apps/frontend`, `apps/admin`, `apps/mobile`, and `apps/extension`. Each has its own `sdk` in `src/api/sdk.ts`.
+
+All client API calls should go through the HyperFetch SDK (`sdk` from `@/api/sdk`) instead of raw `fetch()`, `axios`, or other HTTP clients.
 
 ## HTTP
 
