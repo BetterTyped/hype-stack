@@ -14,7 +14,9 @@ import { m } from "@/paraglide/messages.js";
 // Replaces only this screen when it crashes; the root layout keeps working.
 export { PageError as ErrorBoundary } from "@/components/errors/page-error";
 
+// Opts back into the native header the root layout hides by default.
 const SCREEN_OPTIONS = {
+  headerShown: true,
   title: m.app_title(),
   headerRight: () => <ThemeToggle />,
 };
