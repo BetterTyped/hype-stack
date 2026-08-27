@@ -4,4 +4,11 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
-export type DB = {};
+export type JobRun = {
+    name: string;
+    lastRunAt: Timestamp;
+    updatedAt: Timestamp;
+};
+export type DB = {
+    jobRun: JobRun;
+};

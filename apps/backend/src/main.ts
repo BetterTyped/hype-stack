@@ -12,8 +12,10 @@ import { logger } from "./libs/logger/logger";
 import { ApplicationError, AuthorizationError, DatabaseError, ValidationError } from "./middleware/error";
 import { AuthError } from "./middleware/error/auth-error/types";
 import { errorMiddleware, onError } from "./middleware/error/error-middleware";
+import { startScheduler, stopScheduler } from "./libs/scheduler/scheduler";
 import { m } from "./paraglide/messages.js";
 import { paraglideMiddleware } from "./paraglide/server.js";
+import { jobs } from "./jobs";
 import { registerRoutes } from "./routes";
 import { registerSockets } from "./sockets";
 import { freePort } from "./utils/misc/free-port";
@@ -58,6 +60,10 @@ const initialize = async (app: Hono, server: ReturnType<typeof serve>) => {
   });
   registerSockets(app);
   registerRoutes(app);
+
+  // The scheduler needs the database (advisory locks, job_run bookkeeping), so it starts after
+  // context setup; jobs are registered in src/jobs/index.ts.
+  startScheduler(jobs);
 
   /* -------------------------------------------------------------------------------------------------
    * Handlers
@@ -113,6 +119,7 @@ const startServer = async () => {
    * -----------------------------------------------------------------------------------------------*/
   const shutdown = () => {
     logger.info("Shutting down server...");
+    stopScheduler();
     server.close();
     process.exit(0);
   };

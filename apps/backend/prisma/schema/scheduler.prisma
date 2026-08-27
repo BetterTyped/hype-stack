@@ -1,0 +1,10 @@
+// Bookkeeping for the in-process scheduler (src/libs/scheduler): one row per job holding the
+// last executed fire time. It deduplicates near-simultaneous fires across instances and lets
+// catch-up jobs detect a fire missed during a deploy. Infrastructure, not business data.
+model JobRun {
+  name      String   @id @db.VarChar(120)
+  lastRunAt DateTime @map("last_run_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("job_run")
+}
