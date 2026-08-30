@@ -12,7 +12,7 @@
       "@/*": ["./src/*"],
       "@hype-stack/backend": ["../backend/exported/index.ts"],
       "@hype-stack/backend/*": ["../backend/exported/*"],
-      "@backend/*": ["../backend/src/*"],
+      "@backend/*": ["../backend/exported/src/*"],
       "@prisma/client": ["../backend/src/db/postgres/generated/client"]
     }
   },
