@@ -702,6 +702,9 @@ importers:
       '@tanstack/react-store':
         specifier: ^0.9.3
         version: 0.9.3(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@tanstack/router-core':
+        specifier: 1.171.15
+        version: 1.171.15
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1

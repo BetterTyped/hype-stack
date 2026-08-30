@@ -51,6 +51,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tanstack/react-router": "^1.168.33",
     "@tanstack/react-store": "^0.9.3",
+    "@tanstack/router-core": "1.171.15",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
