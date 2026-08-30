@@ -1,6 +1,4 @@
-import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
-import { reactCompilerPreset } from "@vitejs/plugin-react";
 import react from "@vitejs/plugin-react";
 import { existsSync } from "fs";
 import path from "path";
@@ -53,12 +51,6 @@ export default defineConfig((props) => {
       port: 4300,
       host: "localhost",
     },
-    plugins: [
-      tailwindcss(),
-      ...(baseConfig.plugins || []),
-      react(),
-      babel({ presets: [reactCompilerPreset()] }),
-      svgr(),
-    ],
+    plugins: [tailwindcss(), ...(baseConfig.plugins || []), react({ compiler: true }), svgr()],
   } as ReturnType<UserConfigFnObject>;
 });

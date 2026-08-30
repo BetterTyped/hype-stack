@@ -27,7 +27,7 @@
     "@sentry/node": "^10.50.0",
     "@sentry/react": "^10.50.0",
     "@sentry/vite-plugin": "^5.2.0",
-    "@vitejs/plugin-react": "^6.0.1",
+    "@vitejs/plugin-react": "^6.1.1",
     "dotenv": "^17.4.2",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
@@ -66,5 +66,5 @@
     "shared/*",
     "libs/*"
   ],
-  "packageManager": "pnpm@10.33.2+sha512.a90faf6feeab71ad6c6e57f94e0fe1a12f5dcc22cd754db40ae9593eb6a3e0b6b12e3540218bb37ae083404b1f2ce6db2a4121e979829b4aff94b99f49da1cf8"
+  "packageManager": "pnpm@12.1.0+sha512.d9b8276d97f6ec86e49815877f91ee9f63cee61f2063b304e43b6dab8fa07ce8a9afd46d2facd39f921e6a9d06b3c75a81349c7b888c2d22886bae0229901037"
 }

@@ -5,7 +5,7 @@ ARG NODE_VERSION=24-alpine
 FROM node:${NODE_VERSION} AS builder
 WORKDIR /app
 
-RUN corepack enable && corepack prepare pnpm@10 --activate
+RUN corepack enable && corepack prepare pnpm@12 --activate
 
 # .npmrc carries the public-hoist-pattern the workspace relies on. Without it
 # pnpm keeps every package isolated, so tsc cannot see types hoisted from other
@@ -35,7 +35,7 @@ FROM node:${NODE_VERSION} AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-RUN corepack enable && corepack prepare pnpm@10 --activate
+RUN corepack enable && corepack prepare pnpm@12 --activate
 
 # In a pnpm monorepo the backend's deps are symlinks in apps/backend/node_modules
 # pointing into the root .pnpm store, and workspace packages (e.g. @hype-stack/enums)

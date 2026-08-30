@@ -1,8 +1,4 @@
-import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { reactCompilerPreset } from "@vitejs/plugin-react";
 import react from "@vitejs/plugin-react";
 import { existsSync } from "fs";
 import { nitro } from "nitro/vite";
@@ -59,13 +55,12 @@ export default defineConfig((props) => {
     plugins: [
       tailwindcss(),
       ...(baseConfig.plugins || []),
-      react(),
+      react({ compiler: true }),
       // Nitro registers any index.html at the Vite root as its catch-all
       // renderer template, which preempts TanStack Start's SSR handler and
       // serves that file raw. index.html has to stay at the root for the CSR
       // and Electron builds, so Nitro's renderer is what gives way.
       nitro({ renderer: false }),
-      babel({ presets: [reactCompilerPreset()] }),
       svgr(),
     ],
   } as ReturnType<UserConfigFnObject>;

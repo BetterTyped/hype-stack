@@ -1,10 +1,8 @@
-import babel from "@rolldown/plugin-babel";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
-import { reactCompilerPreset } from "@vitejs/plugin-react";
 import react from "@vitejs/plugin-react";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
@@ -142,8 +140,7 @@ export default defineConfig(({ mode }) => {
     themeBootstrapPlugin(),
     manifestPlugin({ browser: targetBrowser, version: appVersion, apiOrigin }),
     tailwindcss(),
-    react(),
-    babel({ presets: [reactCompilerPreset()] }),
+    react({ compiler: true }),
     svgr(),
   ];
 

@@ -70,13 +70,12 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
-    "@rolldown/plugin-babel": "^0.2.3",
     "@tailwindcss/vite": "^4.2.4",
     "@tanstack/router-plugin": "^1.167.27",
     "@types/chrome": "^0.2.5",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "babel-plugin-react-compiler": "^1.0.0"
+    "oxc-transform-react": "^0.145.0"
   },
   "nx": {
     "targets": {

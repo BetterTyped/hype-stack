@@ -4,7 +4,23 @@ packages:
   - "shared/*"
   - "libs/*"
 
-# pnpm blocks lifecycle scripts by default. Electron's postinstall downloads the
-# platform binary, without it `electron-forge start` cannot find an executable.
-onlyBuiltDependencies:
-  - electron
+# pnpm blocks lifecycle scripts by default, and pnpm 12 turns an undeclared
+# build script into a hard install error, so every package that wants to run one
+# has to get an explicit true/false here.
+#
+# Everything here was already being skipped under pnpm 10 and the workspace
+# built fine without it, so these stay denied rather than newly granted.
+# electron stays allowed as a no-op: electron 43 ships no install scripts (it
+# fetches its binary lazily via @electron/get on first run), but the entry keeps
+# the old intent if a future version reintroduces one.
+allowBuilds:
+  electron: true
+  "@prisma/engines": false
+  "@sentry/cli": false
+  electron-winstaller: false
+  esbuild: false
+  fs-xattr: false
+  macos-alias: false
+  nx: false
+  prisma: false
+  unrs-resolver: false
