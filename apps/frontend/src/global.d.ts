@@ -2,6 +2,11 @@
 /* eslint-disable import/no-default-export */
 /// <reference types="@electron-forge/plugin-vite/forge-vite-env" />
 /// <reference types="vite/client" />
+// TanStack Start is what augments route options with `server.handlers`, which
+// the /sitemap.xml and /robots.txt routes answer from. Nothing else in the app
+// pulls the package in at type level - `server.ts` imports only its entry
+// subpath - so the augmentation is referenced here, once, for the whole program.
+/// <reference types="@tanstack/react-start" />
 
 import type { ElectronAPI } from "@electron-toolkit/preload";
 
