@@ -12,13 +12,22 @@ let s3: S3Client;
 const knownBuckets = new Set<string>();
 
 export const initializeStorage = () => {
+  const endpoint = process.env.RUSTFS_ENDPOINT;
+  const accessKeyId = process.env.RUSTFS_ACCESS_KEY;
+  const secretAccessKey = process.env.RUSTFS_SECRET_KEY;
+
+  // Standalone-typesafe on purpose: this file is typechecked by other apps
+  // through backend/exported, where the ProcessEnv augmentation is absent.
+  if (!endpoint || !accessKeyId || !secretAccessKey) {
+    throw new Error(
+      "RUSTFS_ENDPOINT, RUSTFS_ACCESS_KEY, and RUSTFS_SECRET_KEY must be set. Configure them in apps/backend/.env.",
+    );
+  }
+
   s3 = new S3Client({
-    endpoint: process.env.RUSTFS_ENDPOINT,
+    endpoint,
     region: "us-east-1",
-    credentials: {
-      accessKeyId: process.env.RUSTFS_ACCESS_KEY,
-      secretAccessKey: process.env.RUSTFS_SECRET_KEY,
-    },
+    credentials: { accessKeyId, secretAccessKey },
     forcePathStyle: true,
   });
 

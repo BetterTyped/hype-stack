@@ -6,6 +6,12 @@ export type ValkeyClient = Valkey;
 export const initializeValkeyClient = async (): Promise<Valkey> => {
   const url = process.env.VALKEY_URL;
 
+  // Standalone-typesafe on purpose: this file is typechecked by other apps
+  // through backend/exported, where the ProcessEnv augmentation is absent.
+  if (!url) {
+    throw new Error("VALKEY_URL is not set. Configure it in apps/backend/.env.");
+  }
+
   const client = new Valkey(url, { password: process.env.VALKEY_PASSWORD });
 
   client.on("error", (error) => {
