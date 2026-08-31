@@ -4,6 +4,21 @@ packages:
   - "shared/*"
   - "libs/*"
 
+# Vite's dep optimizer emits bare imports for transitive dependencies (e.g.
+# `@sentry/core` from inside the prebundled `@sentry/react`), which pnpm's
+# isolated node_modules cannot resolve from the app directory. Public hoisting
+# puts them in the root node_modules so those imports resolve, and it also
+# satisfies Electron Forge, which refuses to run under pnpm without a declared
+# hoisting strategy.
+#
+# This lived in `.npmrc` as `public-hoist-pattern[]=*` until pnpm 12, which
+# reads hoisting settings only from this file. The .npmrc spelling is not an
+# error, it is silently ignored, so the first symptom was TS7016 "Could not
+# find a declaration file for module 'react'" from backend email templates in
+# generated projects, which had been resolving react through this hoist.
+publicHoistPattern:
+  - "*"
+
 # pnpm blocks lifecycle scripts by default, and pnpm 12 turns an undeclared
 # build script into a hard install error, so every package that wants to run one
 # has to get an explicit true/false here.
