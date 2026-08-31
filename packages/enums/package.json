@@ -24,6 +24,9 @@
         "options": {
           "passWithNoTests": true
         }
+      },
+      "typecheck": {
+        "dependsOn": ["build", "generate", "^generate", "^build"]
       }
     }
   }
