@@ -12,11 +12,12 @@ WORKDIR /repo
 # pnpm validates --frozen-lockfile against every workspace member, so all
 # manifests must be present even though we only build admin.
 FROM base AS deps
-# .npmrc carries the public-hoist-pattern the apps rely on, so module resolution
-# in the image matches local. ELECTRON_SKIP_BINARY_DOWNLOAD avoids pulling the
+# pnpm-workspace.yaml carries the publicHoistPattern the apps rely on (pnpm 12
+# stopped reading it from .npmrc, which is gone), so module resolution in the
+# image matches local. ELECTRON_SKIP_BINARY_DOWNLOAD avoids pulling the
 # Electron binary that pnpm-workspace.yaml allows but this server never uses.
 ENV ELECTRON_SKIP_BINARY_DOWNLOAD=1
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/admin/package.json apps/admin/
 COPY apps/admin-e2e/package.json apps/admin-e2e/
 COPY apps/backend/package.json apps/backend/

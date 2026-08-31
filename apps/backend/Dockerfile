@@ -7,10 +7,17 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@12 --activate
 
-# .npmrc carries the public-hoist-pattern the workspace relies on. Without it
-# pnpm keeps every package isolated, so tsc cannot see types hoisted from other
-# workspace apps (e.g. @types/react, which the backend email templates need).
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.base.json .npmrc ./
+# No nx daemon inside the image build. The nx 23 daemon watches the workspace,
+# and `pnpm generate` writes the whole paraglide output mid-run; that watcher
+# batch reset the daemon socket (ECONNRESET, "Daemon process terminated") and
+# failed the layer. A RUN layer is single-shot, so the daemon buys nothing here.
+ENV NX_DAEMON=false
+
+# pnpm-workspace.yaml carries publicHoistPattern (pnpm 12 stopped reading it
+# from .npmrc, which is gone). Without the hoist pnpm keeps every package
+# isolated, so tsc cannot see types hoisted from other workspace apps (e.g.
+# @types/react, which the backend email templates need).
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.base.json ./
 COPY apps ./apps
 COPY packages ./packages
 
