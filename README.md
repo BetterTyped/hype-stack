@@ -38,7 +38,7 @@ npx @hype-stack/cli deploy
 Support for <a href="https://railway.app">Railway</a> and <a href="https://fly.io">Fly.io</a>
 
 <p align="center">
-<a href="https://discord.gg/DQXAJw36v">
+<a href="https://www.hype-stack.dev/discord">
 <img src="./.github/assets/discord.png" alt="Join our Discord community" />
 </a>
 </p>
