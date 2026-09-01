@@ -221,9 +221,8 @@ npx @hype-stack/cli create
 # Start infrastructure
 cd apps/backend && docker compose up -d && cd ../..
 
-# Run migrations
-pnpm --filter backend exec prisma migrate deploy
-pnpm --filter backend exec prisma generate
+# Create and apply the initial migration (the repo ships the schema, not migrations)
+pnpm --filter ./apps/backend exec prisma migrate dev --name init
 
 # Launch everything
 pnpm dev
