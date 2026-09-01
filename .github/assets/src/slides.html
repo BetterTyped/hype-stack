@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hype Stack README slides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;800&display=swap">
+<style>
+  :root {
+    --slide-bg: #1f1a15; --panel: #2a241c; --panel-2: #262019; --line: #3d352a;
+    --ink: #f6f1e9; --soft: #a3978a; --faint: #6f655a; --accent: #ef7b2e; --green: #5fca8e;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #121010; color: #cfc8bf; font-family: "Inter", -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 40px 20px 120px; }
+  .slide { width: 1270px; height: 760px; flex: none; background: var(--slide-bg); position: relative; overflow: hidden; color: var(--ink); }
+  .slide::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(rgba(246,241,233,0.05) 1px, transparent 1.3px),
+      radial-gradient(900px 500px at 12% -10%, rgba(239,123,46,0.13), transparent 65%),
+      radial-gradient(700px 500px at 105% 115%, rgba(239,123,46,0.07), transparent 60%);
+    background-size: 30px 30px, auto, auto; }
+  .slide > * { position: relative; }
+  h2.headline { position: absolute; top: 96px; left: 72px; margin: 0; font-size: 64px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.06; max-width: 700px; text-wrap: balance; }
+  .headline .a { color: var(--accent); }
+  .window { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    box-shadow: 0 0 0 6px rgba(246,241,233,0.045), 0 0 0 7px rgba(61,53,42,0.9), 0 24px 60px rgba(0,0,0,0.45); }
+  .winbar { display: flex; align-items: center; gap: 7px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  .winbar .d { width: 10px; height: 10px; border-radius: 50%; background: #4a4136; }
+  .winbar .t { margin-left: 8px; font: 500 12px/1 "JetBrains Mono", monospace; color: var(--faint); }
+  .mono { font-family: "JetBrains Mono", monospace; }
+  .tree { color: var(--soft); }
+  .tree .dir { color: var(--ink); font-weight: 600; }
+  .tree .add { color: var(--green); }
+  .tree .ind { padding-left: 26px; }
+  .bignum { font: 800 200px/0.9 "JetBrains Mono", monospace; letter-spacing: -0.06em;
+    background: linear-gradient(135deg, #ef7b2e 20%, #ffd9ae 90%); -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 20px 50px rgba(239,123,46,0.25)); }
+  .sum { position: absolute; left: 50%; transform: translateX(-50%); bottom: 66px; font: 500 15px/1 "JetBrains Mono", monospace; color: var(--soft); white-space: nowrap; }
+  .sum b { color: var(--accent); font-weight: 600; }
+  .chip { white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 11px; border-radius: 8px; font: 500 12.5px/1 "JetBrains Mono", monospace; }
+  .chip.good { border: 1px solid rgba(95,202,142,0.45); background: rgba(95,202,142,0.1); color: var(--green); box-shadow: 0 0 18px -6px rgba(95,202,142,0.55); }
+  .chip.meta { color: var(--soft); border: 1px solid var(--line); background: rgba(246,241,233,0.04); }
+
+  /* deploy */
+  #deploy h2.headline { left: 0; right: 0; max-width: none; text-align: center; white-space: nowrap; }
+  #deploy .term { position: absolute; left: 50%; transform: translateX(-50%); top: 258px; width: 880px; }
+  #deploy .term .body { padding: 26px 34px 30px; font-size: 16px; line-height: 2.15; font-family: "JetBrains Mono", monospace; }
+  #deploy .p { color: var(--faint); } #deploy .c { color: var(--ink); font-weight: 600; } #deploy .ok { color: var(--green); } #deploy .dim { color: var(--soft); } #deploy .url { color: var(--accent); }
+  #deploy .meta { position: absolute; top: 122px; right: 72px; display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+
+  /* compose */
+  #compose h2.headline { left: 0; right: 0; max-width: none; text-align: center; white-space: nowrap; }
+  #compose .stat { position: absolute; left: 50%; transform: translateX(-50%); top: 236px; width: 860px;
+    background: #f2efe8; border-radius: 22px; padding: 28px 34px 28px; color: #262320;
+    box-shadow: 0 0 0 6px rgba(246,241,233,0.09), 0 30px 70px rgba(0,0,0,0.5); }
+  #compose .stat .tag { font: 600 11px/1 "JetBrains Mono", monospace; letter-spacing: 0.22em; text-transform: uppercase; color: #a49c90; }
+  #compose .stat .big { font: 700 40px/1 "JetBrains Mono", monospace; letter-spacing: -0.03em; color: #262320; margin: 16px 0 22px; }
+  #compose .stat .big .m { color: #e05a10; }
+  #compose .stat .cells { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  #compose .stat .cell { height: 44px; border-radius: 8px; background: rgba(224,90,16,0.72); display: flex; align-items: center; justify-content: center;
+    font: 600 12.5px/1 "JetBrains Mono", monospace; color: #fff7f0; letter-spacing: 0.02em; }
+  #compose .stat .cell.own { background: rgba(224,90,16,0.12); border: 1.5px dashed rgba(224,90,16,0.7); color: #c24d0c; }
+  #compose .stat .cell.todo { background: transparent; border: 1px solid #d8d2c6; color: #a49c90; }
+  #compose .stat .legend { display: flex; gap: 22px; margin-top: 18px; font: 500 10px/1 "JetBrains Mono", monospace; letter-spacing: 0.14em; text-transform: uppercase; color: #8a8276; }
+  #compose .stat .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  #compose .stat .legend i { width: 10px; height: 10px; border-radius: 3px; background: rgba(224,90,16,0.72); }
+  #compose .stat .legend i.own { background: rgba(224,90,16,0.12); border: 1.5px dashed rgba(224,90,16,0.7); }
+  #compose .stat .legend i.todo { background: transparent; border: 1px solid #d8d2c6; }
+  #compose .stat .line { font: 500 14px/1.45 "Inter", sans-serif; color: #8a8276; margin-top: 16px; }
+
+  /* clients */
+  #clients h2.headline { font-size: 64px; left: 0; right: 0; max-width: none; text-align: center; white-space: nowrap; }
+  #clients .meta { position: absolute; top: 122px; right: 72px; display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+  #clients .grid { position: absolute; left: 72px; right: 72px; top: 264px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+  #clients .tile { display: flex; flex-direction: column; gap: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 22px 22px 20px; box-shadow: 0 18px 44px rgba(0,0,0,0.35); }
+  #clients .tile .ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--panel-2); border: 1px solid var(--line); }
+  #clients .tile .ic svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  #clients .tile .nm { font: 700 17px/1.2 "Inter", sans-serif; color: var(--ink); letter-spacing: -0.01em; }
+  #clients .tile .sb { font: 400 11.5px/1.5 "JetBrains Mono", monospace; color: var(--faint); }
+  #clients .be { position: absolute; left: 72px; right: 72px; top: 486px; display: flex; align-items: center; gap: 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 20px 24px; box-shadow: 0 18px 44px rgba(0,0,0,0.35); }
+  #clients .be .nm { font: 700 17px/1.2 "Inter", sans-serif; color: var(--ink); }
+  #clients .be .sb { font: 400 12px/1.5 "JetBrains Mono", monospace; color: var(--faint); margin-left: auto; }
+  #clients .foot { position: absolute; left: 72px; bottom: 62px; display: flex; align-items: center; gap: 10px; font: 500 14px/1 "JetBrains Mono", monospace; color: var(--accent); }
+  #clients .foot .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+  /* mcp */
+  #mcp h2.headline { left: 0; right: 0; max-width: none; text-align: center; white-space: nowrap; }
+  #mcp .term { position: absolute; left: 50%; transform: translateX(-50%); top: 236px; width: 880px; }
+  #mcp .term .body { padding: 26px 34px 30px; font-size: 16px; line-height: 2.15; font-family: "JetBrains Mono", monospace; }
+  #mcp .p { color: var(--faint); } #mcp .c { color: var(--ink); font-weight: 600; } #mcp .ok { color: var(--green); } #mcp .dim { color: var(--soft); } #mcp .fn { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<section class="slide" id="deploy">
+  <h2 class="headline">Deploy the <span class="a">entire stack.</span></h2>
+  <div class="term window">
+    <div class="winbar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="t">my-app</span></div>
+    <div class="body">
+      <div><span class="p">$</span> <span class="c">npx @hype-stack/cli deploy</span></div>
+      <div><span class="ok">✓</span> <span class="dim">services provisioned</span> &nbsp;<span class="p">postgres · valkey · storage</span></div>
+      <div><span class="ok">✓</span> <span class="dim">environment variables set</span></div>
+      <div><span class="ok">✓</span> <span class="dim">database migrations applied</span></div>
+      <div><span class="ok">✓</span> <span class="dim">backend live</span> &nbsp;<span class="url">api.my-app.com</span></div>
+      <div><span class="ok">✓</span> <span class="dim">frontend and admin live</span> &nbsp;<span class="url">my-app.com</span></div>
+    </div>
+  </div>
+  <div class="sum">railway or fly.io · provisioning, env, migrations, deploys · <b>one command</b></div>
+</section>
+
+<section class="slide" id="compose">
+  <h2 class="headline">Use feature packs. <span class="a">Or build your own.</span></h2>
+  <div class="stat">
+    <div class="tag">your repo, day one</div>
+    <div class="big">3+ <span class="m">months</span> already written</div>
+    <div class="cells">
+      <span class="cell">auth</span><span class="cell">orgs</span><span class="cell">billing</span><span class="cell">teams</span><span class="cell">notifications</span><span class="cell">emails</span>
+      <span class="cell">admin</span><span class="cell">calendar</span><span class="cell">newsletter</span><span class="cell own">+ your pack</span><span class="cell todo">your product</span><span class="cell todo">your product</span>
+    </div>
+    <div class="legend">
+      <span><i></i>feature packs, done for you</span>
+      <span><i class="own"></i>a pack you wrote</span>
+      <span><i class="todo"></i>your product</span>
+    </div>
+    <div class="line">Every block is source code in your repo. Edit anything, bump nothing.</div>
+  </div>
+  <div class="sum">compose · packs from the catalog &nbsp;·&nbsp; community add · <b>a pack you wrote</b></div>
+</section>
+
+<section class="slide" id="clients">
+  <h2 class="headline">One backend. <span class="a">Five clients.</span></h2>
+  <div class="grid">
+    <div class="tile"><span class="ic"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><span class="nm">Web</span><span class="sb">apps/frontend · ssr</span></div>
+    <div class="tile"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg></span><span class="nm">Desktop</span><span class="sb">electron forge</span></div>
+    <div class="tile"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span><span class="nm">Admin</span><span class="sb">apps/admin</span></div>
+    <div class="tile"><span class="ic"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg></span><span class="nm">Mobile</span><span class="sb">apps/mobile · expo</span></div>
+    <div class="tile"><span class="ic"><svg viewBox="0 0 24 24"><path d="M20.5 7.3 12 12l-8.5-4.7M12 12v9.5M3.5 7.3 12 2.5l8.5 4.8v9.4L12 21.5l-8.5-4.8z"/></svg></span><span class="nm">Extension</span><span class="sb">chrome · edge · firefox</span></div>
+  </div>
+  <div class="be"><span class="nm">Backend</span><span class="sb">apps/backend · hono · prisma · typed http + websockets</span></div>
+  <div class="sum">every client imports the backend types directly · <b>no codegen</b></div>
+</section>
+
+<section class="slide" id="mcp">
+  <h2 class="headline">Your agent can <span class="a">build on it too.</span></h2>
+  <div class="term window">
+    <div class="winbar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="t">my-app</span></div>
+    <div class="body">
+      <div><span class="p">$</span> <span class="c">npx @hype-stack/cli mcp install</span></div>
+      <div><span class="ok">✓</span> <span class="dim">cursor · claude code · windsurf · copilot configured</span></div>
+      <div><span class="ok">✓</span> <span class="dim">server verified</span></div>
+      <div><span class="p">tools</span> &nbsp;<span class="fn">search_catalog</span> <span class="p">·</span> <span class="fn">plan_install</span> <span class="p">·</span> <span class="fn">add_packs</span> <span class="p">·</span> <span class="fn">setup_project</span> <span class="p">· …</span></div>
+    </div>
+  </div>
+  <div class="sum">11 mcp tools · search the catalog, plan an install, add packs, <b>set up the project</b></div>
+</section>
+
+</body>
+</html>
