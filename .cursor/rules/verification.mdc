@@ -6,9 +6,16 @@ alwaysApply: true
 
 # Verification After Changes
 
-- Only run `pnpm typecheck` / `pnpm lint` after large features or refactors touching many files, or when the user explicitly asks.
+- Only run `pnpm typecheck` / `pnpm lint` after large features or refactors touching many files, after any dependency or tooling bump (see below), or when the user explicitly asks.
 - For small and medium fixes, rely on editor/linter diagnostics on the edited files instead of full project typechecks.
 - If changes are scoped to one app, use the app-specific command:
   - Backend: `pnpm --filter @hype-stack/backend typecheck`
   - Frontend: `pnpm --filter @hype-stack/frontend typecheck`
 - Fix any errors you introduced before reporting the work as complete.
+
+## Dependency and test-tooling bumps
+
+A version bump of vitest, vite, typescript, expo, a testing library, or an edit to any `tsconfig*.json` counts as a large change no matter how small the diff. `pnpm test` going green proves nothing on its own: matcher typings (jest-dom, React Native Testing Library) keep passing at runtime while every `expect(...).toHaveTextContent()` fails typecheck.
+
+- Run `pnpm typecheck` and `pnpm test` at the root before the change lands.
+- Never push such a change straight to `main`. Push a branch and run a `hype-stack-www` e2e lane against it first (`HYPE_STACK_TEMPLATE_REF=<branch>` there). The www CLI in dev mode clones `main`, so a broken `main` breaks every e2e lane in that repo at once. Merge only once that lane is green.
