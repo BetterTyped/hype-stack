@@ -16,6 +16,6 @@
       "@prisma/client": ["../backend/src/db/postgres/generated/client"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "nativewind-env.d.ts"],
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "nativewind-env.d.ts", "vitest-env.d.ts"],
   "exclude": ["node_modules", ".expo", "dist"]
 }
