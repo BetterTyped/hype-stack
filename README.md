@@ -83,7 +83,7 @@ Features arrive when you ask for them. The CLI writes whole features into your r
 - 🧪 **Tests included**: Vitest, React Testing Library and Playwright E2E
 
 <p align="center">
-<a href="https://www.hype-stack.dev/discord">
+<a href="https://discord.gg/7upC2kVmyM">
 <img src="./.github/assets/discord.png" alt="Join our Discord community" />
 </a>
 </p>
