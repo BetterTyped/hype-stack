@@ -58,5 +58,3 @@ apps/*/src/db/postgres/generated/
 
 # Workflow run artifacts (generated files)
 workflow-runs/
-# vitest 5 default artifact directory (attachments, blob/json/junit output)
-.vitest/

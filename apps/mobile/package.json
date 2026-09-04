@@ -84,7 +84,7 @@
     "@types/react": "19.2.14",
     "react-test-renderer": "19.2.3",
     "vite": "8.0.10",
-    "vitest": "^5.0.0",
+    "vitest": "^4.1.5",
     "vitest-native": "^0.9.0"
   },
   "nx": {
