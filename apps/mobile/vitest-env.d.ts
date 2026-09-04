@@ -6,6 +6,7 @@
  *
  * The import loads RNTL's global declaration; the augmentation re-attaches it to vitest.
  */
+// oxlint-disable-next-line no-unassigned-import -- loads RNTL's global jest.Matchers declaration
 import "@testing-library/react-native";
 
 declare module "vitest" {
