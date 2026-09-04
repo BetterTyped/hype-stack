@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "./out-tsc/vitest",
     "rootDir": "../..",
-    "types": ["vitest/globals", "vitest/importMeta", "vite/client", "node", "vitest", "@testing-library/jest-dom"],
+    "types": ["vitest/globals", "vitest/importMeta", "vite/client", "node", "vitest", "@testing-library/jest-dom/vitest"],
     "jsx": "react-jsx",
     "strict": true,
     "composite": false,
