@@ -1,0 +1,100 @@
+---
+description: Real-time over WebSockets end to end, SocketRouter and wsEmit on the backend, socketSdk with useListener and useEmitter on the client, auth on upgrade, testing
+globs: apps/backend/src/**/*,apps/frontend/src/**/*,apps/admin/src/**/*,apps/mobile/src/**/*,apps/extension/src/**/*
+alwaysApply: false
+---
+
+# WebSockets
+
+One socket per client app, typed end to end. The backend declares events with `SocketRouter`, the type bridge in `src/types/hono/hono-ws-converter.ts` turns those declarations into `WsSocketSdk`, and the client consumes them through `socketSdk`. No topic string is written twice and nothing is wired by hand.
+
+## How a connection works
+
+- `src/api/client.ts` opens the socket once, at import time, next to the HTTP `client`: `new Socket({ url: \`${wsProtocol}://${wsHost}/ws\` })`. Admin opens a second one on `/ws/admin`. HyperFetch reconnects on its own. Never hand-roll `new WebSocket` or a retry loop.
+- Every frame is JSON `{ topic, data }`. Topics are `<prefix>/<event>` (`notification/new`, `board/op`): the prefix comes from `.socket("/notification", ...)`, the event from `.emitter()` or `.listener()`.
+- The backend serves the upgrade at `/ws` (`createWsRoutes`) and calls `authenticate(headers)` in `onOpen`. `null` closes the socket with code 4001. The browser sends the session cookie with the upgrade, so socket auth reuses the HTTP session and nothing goes in the URL.
+- Connections live in a `ConnectionManager` per namespace (`appWsManager` for `/ws`, `adminWsManager` for `/ws/admin`), keyed by user id with the organization id alongside. That registry is what `toUser`, `toOrganization`, and `broadcast` walk. Namespaces never see each other's connections.
+- `initWebSocket(app)` runs before the routes and `serveWebsockets(server)` after `serve()` in `main.ts`. Both are already there. Do not add a second `createNodeWebSocket`.
+
+## Backend: declare events
+
+Event definitions live in `src/sockets/<domain>/index.ts`, next to but separate from HTTP routes:
+
+```ts
+import { createSocketRouter } from "@backend/libs/websocket/socket-router";
+import { wsValidate } from "@backend/libs/websocket/ws-validate";
+import { z } from "zod";
+
+export type WsNotificationPayload = { id: string; title: string; readAt: string | null };
+
+export const notificationSockets = createSocketRouter()
+  .emitter("new")<WsNotificationPayload>()
+  .listener("mark-read", wsValidate(z.object({ notificationId: z.string() })), async (c) => {
+    await markRead({ notificationId: c.data.notificationId, userId: c.userId });
+  });
+```
+
+- `.emitter(topic)<Payload>()` is server to client. It is type-only; the push happens through `wsEmit`.
+- `.listener(topic, wsValidate(schema), handler)` is client to server. The handler gets `{ userId, organizationId, data, ws }`. Keep it as thin as a route: validate, call a module function, done.
+- A listener has no response channel. Anything the user needs to see comes back through an emitter or an HTTP route, and invalid input is a no-op, not an error.
+- Payload types are plain serializable objects (ISO strings, never `Date`). Export them from the socket file and re-export them from `src/sockets/index.ts` so clients import them from `@hype-stack/backend`.
+
+Register the router in `src/sockets/index.ts`, mirroring `routes/index.ts`:
+
+```ts
+const sockets = new SocketRouter({ manager: appWsManager, authenticate: authenticateWsUpgrade }).socket(
+  "/notification",
+  notificationSockets,
+);
+```
+
+Only the root router takes `manager` and `authenticate`. `authenticate` is `(headers: Headers) => Promise<WsAuthResult | null>` and comes from the auth starter (`@backend/middleware/auth/ws-auth`). The template default returns `null` and rejects every connection until it is wired. Never accept a socket without a user id.
+
+### Pushing from a feature
+
+Server-side pushes go through `wsEmit` (`@backend/sockets/emit`), from the domain's `features/<domain>/websockets/emitters.ts`:
+
+```ts
+import { wsEmit } from "@backend/sockets/emit";
+
+export const pushNotification = (userId: string, notification: NotificationRecord) =>
+  wsEmit.toUser({ userId, topic: "notification/new", data: serialize(notification) });
+```
+
+`toUser`, `toUsers`, `toOrganization`, and `broadcast` are checked against every declared emitter, so a wrong topic or payload fails at compile time. Never call `appWsManager.pushToUser` directly. Call the emitter after the database write commits, from the module or mutation that owns the change, so a failed write never announces itself.
+
+## Client: consume events
+
+```ts
+import { useEmitter, useListener } from "@hyper-fetch/react";
+
+import { client } from "@/api/client";
+import { socketSdk } from "@/api/sdk";
+
+const incoming = useListener(socketSdk.notification.new.$listener);
+incoming.onEvent(({ data }) => {
+  setItems((current) => [data, ...current]);
+  client.cache.invalidate(/\/notifications/);
+});
+
+const markRead = useEmitter(socketSdk.notification.markRead.$emitter);
+markRead.emit({ payload: { notificationId } });
+```
+
+- A backend `.emitter()` becomes `$listener` on the client and a `.listener()` becomes `$emitter`. Kebab-case topics turn camelCase (`mark-read` is `markRead`).
+- Use `socketSdk` inline, always. No re-export files, no aliases, no `useEffect` with `socket.listen`, no raw `WebSocket`.
+- A socket event says something changed; the HTTP cache is still the source of truth. Update local state from the payload for instant feedback, then invalidate the matching cache keys so every `useFetch` of that data catches up.
+- Keep the function that applies an event to state plain (`applyNotification(items, payload)`). That is the part worth a unit test, and it does not need a socket to run.
+
+## Adding an event, in order
+
+1. Declare it in `src/sockets/<domain>/index.ts` and export its payload type.
+2. Register the router in `src/sockets/index.ts` and re-export the type.
+3. Push it from `features/<domain>/websockets/emitters.ts`, or handle it in the listener.
+4. `pnpm generate`, so the client apps see the new `WsSocketSdk`.
+5. Consume it with `useListener` / `useEmitter`.
+
+## Testing
+
+- Backend: register a stub `WSContext` whose `send` is a spy on `appWsManager` for the test user, run the module or mutation, and assert `send` received the serialized `{ topic, data }`. That exercises the real emitter and manager instead of mocking `wsEmit`.
+- Frontend: `src/testing/setup/setup.ts` replaces `WebSocket` with a mock, so importing the SDK never opens a real connection. Test event handling by calling the reducer function directly, and test the HTTP side with the usual network mocks.

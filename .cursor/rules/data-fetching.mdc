@@ -19,6 +19,47 @@ All client API calls should go through the HyperFetch SDK (`sdk` from `@/api/sdk
 - The SDK is fully typed end-to-end from Hono backend routes. Bypassing it loses type safety.
 - New backend endpoints are automatically available on the SDK via the Hono-to-HyperFetch type bridge.
 
+## Responses never throw
+
+`send()` and `submit()` always resolve. A network failure, a timeout, an abort, a 4xx or a 5xx: every one of them comes back as `{ data: null, error, status, success: false }`. There is nothing to catch.
+
+- **Never wrap a HyperFetch call in `try/catch`.** It cannot throw, so the `catch` only hides bugs in the code around it, and it tempts you into `throw new Error(...)` on `result.error`, which turns a typed error back into an exception.
+- Branch on the result: `const { data, error } = await submit(...); if (error || !data) { toast.error(...); return false; }`.
+- With hooks, read `error` from `useFetch`, and use `onSubmitSuccess` / `onSubmitError` on `useSubmit`.
+- A hook or helper that wraps a request returns an outcome (`boolean`, `{ documentId, error: null } | { documentId: null, error }`). It does not throw so that a caller can catch. Callers branch too.
+- `abort()` is cancellation, not failure. After an await, check `signal.aborted` and return quietly instead of reporting the abort as an error.
+- The one place an exception is right is a `fetch`-shaped adapter for a third-party library that only understands rejections (an AI SDK transport, for example). Throw `response.error` after the `await`, still without `try/catch`.
+
+```ts
+// BAD: nothing here can throw, and the real error is thrown away
+try {
+  const result = await request.send();
+  if (result.error) throw new Error("Could not save.");
+} catch {
+  toast.error("Could not save.");
+}
+
+// GOOD: the response is the error channel
+const { data, error } = await request.send();
+if (error || !data) {
+  toast.error("Could not save.");
+  return;
+}
+```
+
+## Lists, search, and pagination
+
+Keep `useFetch` in charge of every page instead of calling `send()` by hand and tracking loading yourself:
+
+- Put every input that shapes the request both in the request (`setQueryParams`) and in `dependencies`, so the cache key follows it.
+- Debounce typing with `bounce: true, bounceTime: 200`. The first fetch is never debounced, only the changes after it.
+- `keepPreviousData: "clean"` when stale results must not show under a new query. The default `"auto"` keeps the last page visible while the next one loads.
+- Accumulate pages in state from `data` and reset when the query changes. Retry is `refetch()`, a failed page is `Boolean(error)`.
+
+## Testing
+
+`setMock` lives on a request instance, and the SDK proxy hands out a fresh instance on every property access. A mock set in a test only reaches code that uses that same instance (a module-level `const request = sdk.users.me.$get`). For code that builds its requests inline, stub `fetch` and answer by URL, the way the starter tests do.
+
 ## Cache Invalidation
 
 - Import `client` from `@/api/client` and use `client.cache.invalidate(pattern)` to invalidate cached data.
@@ -31,6 +72,8 @@ All client API calls should go through the HyperFetch SDK (`sdk` from `@/api/sdk
 
 - **Listening:** `useListener(socketSdk.<domain>.<event>.$listener)` from `@hyper-fetch/react`. Use `onEvent` for incoming data. Never use raw `useEffect` + `.listen()` for socket subscriptions.
 - **Emitting:** `useEmitter(socketSdk.<domain>.<event>.$emitter)` from `@hyper-fetch/react`. Use `emit()` to send data.
-- **Always use `socketSdk` directly** in components and hooks - import it from `@/api/socket`. Do not create intermediate re-export files (e.g. `listeners/index.ts`) or alias variables for socket events. Pass `socketSdk.<domain>.<event>.$listener` / `.$emitter` inline.
+- **Always use `socketSdk` directly** in components and hooks - import it from `@/api/sdk`. Do not create intermediate re-export files (e.g. `listeners/index.ts`) or alias variables for socket events. Pass `socketSdk.<domain>.<event>.$listener` / `.$emitter` inline.
 - For payload types, import them directly from `@hype-stack/backend` (e.g. `WsNotificationPayload`). Do not re-export or alias payload types through barrel files.
 - New backend socket events are automatically available on the frontend SDK via the Hono-to-HyperFetch type bridge - no manual type wiring needed.
+
+The full real-time flow (auth on upgrade, declaring events, pushing from features, testing) is in the websockets rule.
