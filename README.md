@@ -12,7 +12,7 @@ Add the features you need, one command at a time.
 </p>
 
 <p align="center">
-<a href="https://github.com/BetterTyped/hype-stack/blob/main/License.md"><img src="https://img.shields.io/badge/license-MIT-22c55e.svg?style=flat-square" alt="MIT License" /></a>
+<a href="https://github.com/BetterTyped/hype-stack/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-22c55e.svg?style=flat-square" alt="MIT License" /></a>
 <a href="https://www.npmjs.com/package/@hype-stack/cli"><img src="https://img.shields.io/badge/cli-npx%20%40hype--stack%2Fcli-000000.svg?style=flat-square" alt="CLI" /></a>
 <img src="https://img.shields.io/badge/React-19-149eca.svg?style=flat-square&logo=react&logoColor=white" alt="React 19" />
 <img src="https://img.shields.io/badge/TypeScript-6-3178c6.svg?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript 6" />
@@ -357,4 +357,4 @@ Hype Stack gives you the architecture. You choose the features.
 
 ## License
 
-[MIT](https://github.com/BetterTyped/hype-stack/blob/main/License.md)
+[MIT](https://github.com/BetterTyped/hype-stack/blob/main/LICENSE.md)

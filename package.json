@@ -1,7 +1,7 @@
 {
   "name": "@hype-stack/source",
   "version": "0.0.0",
-  "license": "SEE LICENSE IN LICENSE.md",
+  "license": "MIT",
   "scripts": {
     "nx": "nx",
     "dev": "nx run-many --target=serve --parallel --skip-nx-cache",
