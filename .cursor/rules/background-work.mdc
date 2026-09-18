@@ -1,0 +1,77 @@
+---
+description: Background work on the backend, cron jobs in the scheduler vs tasks in the Postgres queue, transactional enqueue, retries, idempotent handlers, PROCESS_ROLE for running a separate worker
+globs: apps/backend/src/**/*
+alwaysApply: false
+---
+
+# Background Work
+
+Two tools, two questions. The scheduler (`src/libs/scheduler`) answers **when**. The task queue (`src/libs/queue`) answers **how much at once**.
+
+| | Job | Task |
+| --- | --- | --- |
+| What | a cron entry | one queued unit of work |
+| Registered in | `src/jobs/index.ts` | `src/queues/index.ts` |
+| Runs | once per fire across all instances | on any instance, up to the queue's `concurrency` each |
+| Good for | sweeps, digests, cleanup, "every night at 3" | parsing an upload, calling a model, sending a batch |
+| Must be | fast: it holds a database transaction while it runs | safe to run twice |
+
+If a job finds slow work, it enqueues tasks and returns. It never does the slow work itself.
+
+## Defining a queue
+
+```ts
+// src/features/reports/queues/render-report.queue.ts
+export const renderReportQueue = defineQueue({
+  name: "render-report",
+  schema: z.object({ reportId: z.string() }),
+  concurrency: 2,
+  exclusive: true,
+  run: async ({ data, signal }) => {
+    await renderReport(data.reportId, signal);
+  },
+  onExhausted: async ({ data }) => {
+    await markReportFailed(data.reportId);
+  },
+});
+```
+
+Then add it to the array in `src/queues/index.ts`. `enqueue` throws for a queue that is not registered there.
+
+## Enqueue in the same transaction as the row
+
+```ts
+await postgres.qb.transaction().execute(async (trx) => {
+  await trx.insertInto("report").values(report).execute();
+  await enqueue(renderReportQueue, { reportId: report.id }, { trx, key: report.id });
+});
+```
+
+The task commits or rolls back with the row. A row can never sit in `queued` with nothing behind it. Never enqueue before the transaction, and never after it in a separate step.
+
+## Rules
+
+- **Payloads are ids, not data.** Put `{ reportId }` in the task and read the row in the handler. The row is the truth, the payload is a pointer.
+- **Status lives in your table.** Keep a status column the UI can read. The queue is plumbing, not a place the frontend looks.
+- **Handlers run twice sometimes.** A crash or a deploy mid-run means a retry. Checkpoint progress in your own tables and resume from it.
+- **Errors a retry cannot fix are not thrown.** Bad file, unsupported format: write the failure to your row and return. Throw only when trying again could help.
+- **`onExhausted` marks the row failed.** It fires once, after the last retry. Sentry gets the error either way.
+- **Pass `signal` to slow calls.** It aborts on expiry and on shutdown.
+- **No `try/catch` to swallow errors in a handler.** Same rule as routes: let it throw, the queue logs, retries, and reports.
+- **Use `exclusive` with a `key`** when the task is "process row X", so a double click cannot process it twice.
+
+## Testing
+
+Workers are off under `NODE_ENV=test`, so nothing runs behind a test's back. `setupIntegrationTest()` starts the queue, which means code under test can enqueue. To test a handler, call the queue's `run` directly with a task object. To test the queue itself, see `src/libs/queue/queue.spec.ts`.
+
+## Running a separate worker
+
+`PROCESS_ROLE` picks what a process does. Same image, same start command.
+
+| Role | API routes | Cron jobs | Task workers |
+| --- | --- | --- | --- |
+| `all` (default) | yes | yes | yes |
+| `web` | yes | no | no |
+| `worker` | `/health` only | yes | yes |
+
+Start with `all`. When background work starts slowing requests down, deploy the backend a second time with `PROCESS_ROLE=worker` (same database, bucket, and provider keys, no public domain, no migration command) and set the public one to `web`. The two never talk to each other. Postgres is the hand-off, so you can run as many workers as you need.

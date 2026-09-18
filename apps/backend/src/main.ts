@@ -13,10 +13,13 @@ import { logger } from "./libs/logger/logger";
 import { ApplicationError, AuthorizationError, DatabaseError, ValidationError } from "./middleware/error";
 import { AuthError } from "./middleware/error/auth-error/types";
 import { errorMiddleware, onError } from "./middleware/error/error-middleware";
+import { getProcessRole, runsWorkers, servesApi } from "./libs/queue/process-role";
+import { startQueues, stopQueues } from "./libs/queue/queue";
 import { startScheduler, stopScheduler } from "./libs/scheduler/scheduler";
 import { m } from "./paraglide/messages.js";
 import { paraglideMiddleware } from "./paraglide/server.js";
 import { jobs } from "./jobs";
+import { queues } from "./queues";
 import { registerRoutes } from "./routes";
 import { registerSockets } from "./sockets";
 import { freePort } from "./utils/misc/free-port";
@@ -69,12 +72,20 @@ const initialize = async (server: ReturnType<typeof serve>): Promise<Hono> => {
   app.get("/ping/*", (c) => {
     return c.json<{ message: string; success: boolean }>({ message: m.pong(), success: true });
   });
-  registerSockets(app);
-  registerRoutes(app);
+  // PROCESS_ROLE=worker keeps /health for the platform's checks and serves nothing else.
+  if (servesApi()) {
+    registerSockets(app);
+    registerRoutes(app);
+  }
+
+  // Every role connects to the task queue, because every role may enqueue; only roles that run
+  // workers pick tasks up. Queues are registered in src/queues/index.ts.
+  await startQueues(queues);
 
   // The scheduler needs the database (advisory locks, job_run bookkeeping), so it starts after
   // context setup; jobs are registered in src/jobs/index.ts.
-  startScheduler(jobs);
+  if (runsWorkers()) startScheduler(jobs);
+  logger.info(`Process role: ${getProcessRole()}`);
 
   /* -------------------------------------------------------------------------------------------------
    * Handlers
@@ -125,15 +136,20 @@ const startServer = async () => {
   /* -------------------------------------------------------------------------------------------------
    * Graceful shutdown
    * -----------------------------------------------------------------------------------------------*/
-  const shutdown = () => {
+  let stopping = false;
+  const shutdown = async () => {
+    if (stopping) return;
+    stopping = true;
     logger.info("Shutting down server...");
     stopScheduler();
     server.close();
+    // Running tasks get up to 30s to finish; anything cut off is retried by the next instance.
+    await stopQueues().catch((error: unknown) => logger.error({ err: error }, "Task queue did not stop cleanly"));
     process.exit(0);
   };
 
-  process.on("SIGINT", shutdown);
-  process.on("SIGTERM", shutdown);
+  process.on("SIGINT", () => void shutdown());
+  process.on("SIGTERM", () => void shutdown());
 
   /* -------------------------------------------------------------------------------------------------
    * Initialize - on failure keep the server alive in dev to surface the reason, exit in prod
