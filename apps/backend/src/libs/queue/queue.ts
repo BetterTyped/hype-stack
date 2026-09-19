@@ -1,6 +1,6 @@
 import { captureException } from "@sentry/node";
-import type { Transaction } from "kysely";
-import { fromKysely, PgBoss, type ConstructorOptions, type JobWithMetadata } from "pg-boss";
+import { CompiledQuery, type Kysely, type Transaction } from "kysely";
+import { fromKysely, PgBoss, type ConstructorOptions, type Db, type JobWithMetadata } from "pg-boss";
 import type { z } from "zod";
 
 import type { DB } from "../../db/postgres/types/types";
@@ -14,12 +14,14 @@ import { logger } from "../logger/logger";
  * sending a batch) belongs here as a task:
  *
  * - Tasks live in Postgres, in their own `pgboss` schema, so there is nothing extra to deploy. The
- *   schema and its connection pool only appear once a queue is registered; until then this module
- *   does nothing at all.
+ *   queue runs on the connection it is handed (`startQueues({ queues, postgres })`), so it opens no
+ *   pool of its own, and the schema only appears once a queue is registered; until then this
+ *   module does nothing at all.
  *   `enqueue` accepts the caller's transaction: the task commits or rolls back together with the
  *   row it is about, so a row can never sit "queued" with no task behind it.
  * - Tasks run inside the backend process, with a per-queue concurrency cap. Every instance works
- *   them, so adding a replica adds capacity.
+ *   them, so adding a replica adds capacity. Nothing here assumes the server is the only place
+ *   that can work them: anything that has a database connection can call `startQueues`.
  * - A failed run is retried with backoff up to `retryLimit`, then `onExhausted` fires once so the
  *   feature can mark its own row as failed. A handler that hits an error no retry can fix (bad
  *   file, unsupported format) should record that itself and return normally.
@@ -80,7 +82,11 @@ export type EnqueueOptions = {
 };
 
 export type StartQueuesOptions = {
-  /** Overrides the test-environment default. Specs turn workers on to exercise retries. */
+  /** The queues to register, normally the array from src/queues/index.ts. */
+  queues: AnyQueueDefinition[];
+  /** The backend's database handle. The queue runs on its connections instead of opening a pool. */
+  postgres: { qb: Kysely<DB> };
+  /** Work tasks in this process. Defaults to true, and to false under NODE_ENV=test. */
   workers?: boolean;
   /** Seconds between polls of an idle queue. Defaults to 2. */
   pollingIntervalSeconds?: number;
@@ -154,21 +160,34 @@ const registerQueue = async (instance: PgBoss, queue: AnyQueueDefinition): Promi
 };
 
 /**
- * Connect, install or migrate the `pgboss` schema, register every queue, and (unless under test)
- * start working them. Safe to call once per process; call `stopQueues` on shutdown.
+ * pg-boss speaks plain SQL through one method, so it can run on the backend's own connections. The
+ * plugins come off for it: CamelCasePlugin would rename the columns pg-boss reads back.
  */
-export const startQueues = async (queues: AnyQueueDefinition[], options: StartQueuesOptions = {}): Promise<void> => {
+const toBossDb = (postgres: StartQueuesOptions["postgres"]): Db => {
+  const raw = postgres.qb.withoutPlugins();
+  return {
+    executeSql: async (text, values = []) => {
+      const result = await raw.executeQuery(CompiledQuery.raw(text, values));
+      return { rows: result.rows };
+    },
+  };
+};
+
+/**
+ * Install or migrate the `pgboss` schema, register every queue, and (unless under test) start
+ * working them. Safe to call once per process; call `stopQueues` on shutdown.
+ */
+export const startQueues = async (options: StartQueuesOptions): Promise<void> => {
+  const { queues } = options;
   if (boss) return;
-  // Free until used: a project with no queue gets no connection pool and no `pgboss` schema. The
-  // registry ships empty, and the first pack that adds a queue turns this on.
+  // Free until used: a project with no queue gets no `pgboss` schema and no polling. The registry
+  // ships empty, and the first pack that adds a queue turns this on.
   if (queues.length === 0) return;
   assertValidQueues(queues);
 
   const instance = new PgBoss({
-    connectionString: process.env.DATABASE_URL,
+    db: toBossDb(options.postgres),
     schema: SCHEMA,
-    // Small on purpose: this pool sits next to the Prisma and Kysely pools on the same database.
-    max: 4,
     // Cron stays with the scheduler module; one clock is enough.
     schedule: false,
     ...options.boss,
@@ -237,7 +256,7 @@ export const enqueue = async <T>(
   });
 };
 
-/** Lets in-flight tasks finish (up to 30s), then closes the pool. */
+/** Lets in-flight tasks finish (up to 30s). The database connection belongs to the caller and stays open. */
 export const stopQueues = async (): Promise<void> => {
   if (!boss) return;
   const instance = boss;

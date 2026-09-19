@@ -66,4 +66,4 @@ Workers are off under `NODE_ENV=test`, so nothing runs behind a test's back. `se
 
 ## Where tasks run
 
-Inside the backend process, next to the API and the scheduler. The queue is free until used: with nothing in `src/queues/index.ts` it opens no connections and creates no schema. There is no separate worker to deploy. Every instance works tasks, each up to the queue's `concurrency`, so adding a backend replica adds capacity. Keep `concurrency` low for anything memory-heavy: it shares the process with your requests.
+Inside the backend process, next to the API and the scheduler. `main.ts` starts it with `startQueues({ queues, postgres })`, and it runs on that connection, so it opens no pool of its own. The queue is free until used: with nothing in `src/queues/index.ts` it opens no connections and creates no schema. There is no separate worker to deploy. Every instance works tasks, each up to the queue's `concurrency`, so adding a backend replica adds capacity. Keep `concurrency` low for anything memory-heavy: it shares the process with your requests.

@@ -6,7 +6,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 
 import { Env, validateEnv } from "./config/env/env.config";
-import { setupContext } from "./context";
+import { postgres, setupContext } from "./context";
 import { createAppSwapper, createBootApp } from "./libs/boot/boot-app";
 import { BootState, BootStage, getBootState, setBootError } from "./libs/boot/boot-state";
 import { logger } from "./libs/logger/logger";
@@ -76,7 +76,7 @@ const initialize = async (server: ReturnType<typeof serve>): Promise<Hono> => {
 
   // The task queue lives in Postgres, so it starts after context setup; queues are registered in
   // src/queues/index.ts and worked by this same process.
-  await startQueues(queues);
+  await startQueues({ queues, postgres });
 
   // The scheduler needs the database (advisory locks, job_run bookkeeping), so it starts after
   // context setup; jobs are registered in src/jobs/index.ts.
