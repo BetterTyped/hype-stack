@@ -1,5 +1,5 @@
 ---
-description: Background work on the backend, cron jobs in the scheduler vs tasks in the Postgres queue, transactional enqueue, retries, idempotent handlers, PROCESS_ROLE for running a separate worker
+description: Background work on the backend, cron jobs in the scheduler vs tasks in the Postgres queue, transactional enqueue, retries, idempotent handlers
 globs: apps/backend/src/**/*
 alwaysApply: false
 ---
@@ -64,14 +64,6 @@ The task commits or rolls back with the row. A row can never sit in `queued` wit
 
 Workers are off under `NODE_ENV=test`, so nothing runs behind a test's back. `setupIntegrationTest()` starts the queue, which means code under test can enqueue. To test a handler, call the queue's `run` directly with a task object. To test the queue itself, see `src/libs/queue/queue.spec.ts`.
 
-## Running a separate worker
+## Where tasks run
 
-`PROCESS_ROLE` picks what a process does. Same image, same start command.
-
-| Role | API routes | Cron jobs | Task workers |
-| --- | --- | --- | --- |
-| `all` (default) | yes | yes | yes |
-| `web` | yes | no | no |
-| `worker` | `/health` only | yes | yes |
-
-Start with `all`. When background work starts slowing requests down, deploy the backend a second time with `PROCESS_ROLE=worker` (same database, bucket, and provider keys, no public domain, no migration command) and set the public one to `web`. The two never talk to each other. Postgres is the hand-off, so you can run as many workers as you need.
+Inside the backend process, next to the API and the scheduler. `main.ts` starts it with `startQueues({ queues, postgres })`, and it runs on that connection, so it opens no pool of its own. The queue is free until used: with nothing in `src/queues/index.ts` it opens no connections and creates no schema. There is no separate worker to deploy. Every instance works tasks, each up to the queue's `concurrency`, so adding a backend replica adds capacity. Keep `concurrency` low for anything memory-heavy: it shares the process with your requests.

@@ -82,7 +82,7 @@ export function setupIntegrationTest(): TestEnv {
       await setupContext(testHonoApp);
       // Code under test may enqueue. Workers stay off in tests, so nothing runs behind a test's
       // back; call a queue's `run` directly to exercise a handler.
-      await startQueues(queues);
+      await startQueues({ queues, postgres: context.postgres });
 
       sharedTestEnv = new TestEnv(context.postgres, context.valkey);
     }

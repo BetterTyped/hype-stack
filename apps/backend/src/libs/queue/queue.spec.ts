@@ -84,7 +84,9 @@ describe("task queue", () => {
   // is a no-op while an instance is up, so swap it for this spec's queues in a throwaway schema.
   const start = async (workers: boolean) => {
     await stopQueues();
-    await startQueues([plain, failing, capped, exclusive], {
+    await startQueues({
+      queues: [plain, failing, capped, exclusive],
+      postgres: env.postgres,
       workers,
       pollingIntervalSeconds: 0.5,
       boss: { schema: SCHEMA },
@@ -101,6 +103,18 @@ describe("task queue", () => {
   afterEach(async () => {
     await stopQueues();
     await sql`drop schema if exists ${sql.id(SCHEMA)} cascade`.execute(env.db);
+  });
+
+  it("costs nothing until a queue is registered: no schema, and a clear error on enqueue", async () => {
+    await stopQueues();
+
+    await startQueues({ queues: [], postgres: env.postgres, boss: { schema: SCHEMA } });
+
+    const schemas = await sql<{ count: string }>`
+      select count(*) as count from information_schema.schemata where schema_name = ${SCHEMA}
+    `.execute(env.db);
+    expect(Number(schemas.rows[0]?.count)).toBe(0);
+    await expect(enqueue(plain, { value: "nowhere to go" })).rejects.toThrow(/task queue is not running/);
   });
 
   it("runs an enqueued task with its payload and attempt number", async () => {

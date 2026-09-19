@@ -76,7 +76,7 @@ Features arrive when you ask for them. The CLI writes whole features into your r
 - 📡 **HyperFetch SDK**: typed HTTP and WebSocket client generated from your Hono routes
 - 🗄️ **Postgres + Prisma**: migrations, Kysely queries, pgvector ready
 - ⏰ **Cron scheduler**: in-process jobs with exactly-once runs and catch-up after downtime
-- 📬 **Task queue**: Postgres-backed (pg-boss), retries with backoff, runs in-process or as a separate worker with one env var
+- 📬 **Task queue**: Postgres-backed (pg-boss), retries with backoff, runs inside the API process
 - 🌍 **i18n ready**: Paraglide wired into every app, backend responses included
 - 🎨 **UI ready**: Tailwind v4 + shadcn/ui on web, NativeWind on mobile. CSR or SSR with a script switch
 - ⚡ **Rust-powered DX**: OXC lint/format, React Compiler through oxc, Vite 8 HMR in milliseconds
