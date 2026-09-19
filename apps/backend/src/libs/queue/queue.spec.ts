@@ -103,6 +103,18 @@ describe("task queue", () => {
     await sql`drop schema if exists ${sql.id(SCHEMA)} cascade`.execute(env.db);
   });
 
+  it("costs nothing until a queue is registered: no schema, no pool, and a clear error on enqueue", async () => {
+    await stopQueues();
+
+    await startQueues([], { boss: { schema: SCHEMA } });
+
+    const schemas = await sql<{ count: string }>`
+      select count(*) as count from information_schema.schemata where schema_name = ${SCHEMA}
+    `.execute(env.db);
+    expect(Number(schemas.rows[0]?.count)).toBe(0);
+    await expect(enqueue(plain, { value: "nowhere to go" })).rejects.toThrow(/task queue is not running/);
+  });
+
   it("runs an enqueued task with its payload and attempt number", async () => {
     await start(true);
     await enqueue(plain, { value: "hello" });

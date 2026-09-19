@@ -21,8 +21,6 @@ export const envSchema = z.object({
   RESEND_API_KEY: z.string(),
   // # Sentry
   SENTRY_DSN: z.string(),
-  // # Process role: "all" runs the API, cron, and task workers together; split them with "web" + "worker"
-  PROCESS_ROLE: z.enum(["all", "web", "worker"]).optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

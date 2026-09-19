@@ -5,7 +5,6 @@ import type { z } from "zod";
 
 import type { DB } from "../../db/postgres/types/types";
 import { logger } from "../logger/logger";
-import { runsWorkers } from "./process-role";
 
 /**
  * Task queue on Postgres (pg-boss).
@@ -14,12 +13,13 @@ import { runsWorkers } from "./process-role";
  * tick that should return fast; anything slow or heavy (parsing an upload, calling a model,
  * sending a batch) belongs here as a task:
  *
- * - Tasks live in Postgres, in their own `pgboss` schema, so there is nothing extra to deploy.
+ * - Tasks live in Postgres, in their own `pgboss` schema, so there is nothing extra to deploy. The
+ *   schema and its connection pool only appear once a queue is registered; until then this module
+ *   does nothing at all.
  *   `enqueue` accepts the caller's transaction: the task commits or rolls back together with the
  *   row it is about, so a row can never sit "queued" with no task behind it.
- * - Every backend instance works tasks, with a per-queue concurrency cap per instance. Adding a
- *   replica adds capacity. To split the load off the API, run the same image a second time with
- *   PROCESS_ROLE=worker and set the API to PROCESS_ROLE=web. See `process-role.ts`.
+ * - Tasks run inside the backend process, with a per-queue concurrency cap. Every instance works
+ *   them, so adding a replica adds capacity.
  * - A failed run is retried with backoff up to `retryLimit`, then `onExhausted` fires once so the
  *   feature can mark its own row as failed. A handler that hits an error no retry can fix (bad
  *   file, unsupported format) should record that itself and return normally.
@@ -80,7 +80,7 @@ export type EnqueueOptions = {
 };
 
 export type StartQueuesOptions = {
-  /** Overrides the role and test-environment default. Specs turn workers on to exercise retries. */
+  /** Overrides the test-environment default. Specs turn workers on to exercise retries. */
   workers?: boolean;
   /** Seconds between polls of an idle queue. Defaults to 2. */
   pollingIntervalSeconds?: number;
@@ -154,12 +154,14 @@ const registerQueue = async (instance: PgBoss, queue: AnyQueueDefinition): Promi
 };
 
 /**
- * Connect, install or migrate the `pgboss` schema, register every queue, and (unless this process
- * is web-only or under test) start working them. Every role calls this, because every role may
- * enqueue. Safe to call once per process; call `stopQueues` on shutdown.
+ * Connect, install or migrate the `pgboss` schema, register every queue, and (unless under test)
+ * start working them. Safe to call once per process; call `stopQueues` on shutdown.
  */
 export const startQueues = async (queues: AnyQueueDefinition[], options: StartQueuesOptions = {}): Promise<void> => {
   if (boss) return;
+  // Free until used: a project with no queue gets no connection pool and no `pgboss` schema. The
+  // registry ships empty, and the first pack that adds a queue turns this on.
+  if (queues.length === 0) return;
   assertValidQueues(queues);
 
   const instance = new PgBoss({
@@ -182,7 +184,7 @@ export const startQueues = async (queues: AnyQueueDefinition[], options: StartQu
   boss = instance;
   registered = new Set(queues.map((queue) => queue.name));
 
-  const working = options.workers ?? (runsWorkers() && process.env.NODE_ENV !== "test");
+  const working = options.workers ?? process.env.NODE_ENV !== "test";
   if (working) {
     await Promise.all(
       queues.map((queue) =>
@@ -216,7 +218,12 @@ export const enqueue = async <T>(
   data: T,
   options: EnqueueOptions = {},
 ): Promise<string | null> => {
-  if (!boss) throw new Error("Queue: enqueue called before startQueues");
+  if (!boss) {
+    throw new Error(
+      `Queue: cannot enqueue "${queue.name}", the task queue is not running. ` +
+        "Register the queue in src/queues/index.ts (it only starts when at least one is registered).",
+    );
+  }
   if (!registered.has(queue.name)) {
     throw new Error(`Queue: "${queue.name}" is not registered in src/queues/index.ts`);
   }

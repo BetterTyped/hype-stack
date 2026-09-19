@@ -13,7 +13,6 @@ import { logger } from "./libs/logger/logger";
 import { ApplicationError, AuthorizationError, DatabaseError, ValidationError } from "./middleware/error";
 import { AuthError } from "./middleware/error/auth-error/types";
 import { errorMiddleware, onError } from "./middleware/error/error-middleware";
-import { getProcessRole, runsWorkers, servesApi } from "./libs/queue/process-role";
 import { startQueues, stopQueues } from "./libs/queue/queue";
 import { startScheduler, stopScheduler } from "./libs/scheduler/scheduler";
 import { m } from "./paraglide/messages.js";
@@ -72,20 +71,16 @@ const initialize = async (server: ReturnType<typeof serve>): Promise<Hono> => {
   app.get("/ping/*", (c) => {
     return c.json<{ message: string; success: boolean }>({ message: m.pong(), success: true });
   });
-  // PROCESS_ROLE=worker keeps /health for the platform's checks and serves nothing else.
-  if (servesApi()) {
-    registerSockets(app);
-    registerRoutes(app);
-  }
+  registerSockets(app);
+  registerRoutes(app);
 
-  // Every role connects to the task queue, because every role may enqueue; only roles that run
-  // workers pick tasks up. Queues are registered in src/queues/index.ts.
+  // The task queue lives in Postgres, so it starts after context setup; queues are registered in
+  // src/queues/index.ts and worked by this same process.
   await startQueues(queues);
 
   // The scheduler needs the database (advisory locks, job_run bookkeeping), so it starts after
   // context setup; jobs are registered in src/jobs/index.ts.
-  if (runsWorkers()) startScheduler(jobs);
-  logger.info(`Process role: ${getProcessRole()}`);
+  startScheduler(jobs);
 
   /* -------------------------------------------------------------------------------------------------
    * Handlers
