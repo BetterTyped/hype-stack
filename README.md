@@ -76,6 +76,7 @@ Features arrive when you ask for them. The CLI writes whole features into your r
 - 📡 **HyperFetch SDK**: typed HTTP and WebSocket client generated from your Hono routes
 - 🗄️ **Postgres + Prisma**: migrations, Kysely queries, pgvector ready
 - ⏰ **Cron scheduler**: in-process jobs with exactly-once runs and catch-up after downtime
+- 📬 **Task queue**: Postgres-backed (pg-boss), retries with backoff, runs inside the API process
 - 🌍 **i18n ready**: Paraglide wired into every app, backend responses included
 - 🎨 **UI ready**: Tailwind v4 + shadcn/ui on web, NativeWind on mobile. CSR or SSR with a script switch
 - ⚡ **Rust-powered DX**: OXC lint/format, React Compiler through oxc, Vite 8 HMR in milliseconds
@@ -272,7 +273,7 @@ Every client imports `@internal/backend` as a workspace dependency. Change a res
 | Mobile     | Expo SDK 57, Expo Router, NativeWind                      |
 | Extension  | Vite build for Chrome, Edge and Firefox                   |
 | Desktop    | Electron Forge (macOS, Windows, Linux)                    |
-| Backend    | Hono, Prisma 7, Kysely, Zod, croner, Resend               |
+| Backend    | Hono, Prisma 7, Kysely, Zod, croner, pg-boss, Resend      |
 | Data layer | HyperFetch SDK, typed HTTP and WebSocket bridge           |
 | Database   | PostgreSQL 17 + pgvector                                  |
 | Cache      | Valkey (Redis-compatible)                                 |

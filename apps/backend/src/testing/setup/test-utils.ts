@@ -5,6 +5,8 @@ import * as context from "@backend/context";
 import { setupContext } from "@backend/context";
 import { initializePostgresDb } from "@backend/db/postgres/initialize";
 import { logger } from "@backend/libs/logger/logger";
+import { startQueues, stopQueues } from "@backend/libs/queue/queue";
+import { queues } from "@backend/queues";
 import { Prisma } from "@prisma/client";
 import { Hono } from "hono";
 
@@ -48,6 +50,7 @@ export class TestEnv {
   }
 
   async close(): Promise<void> {
+    await stopQueues();
     await Promise.all([this.db.destroy(), this.postgres.$disconnect(), this.valkey.quit()]);
   }
 }
@@ -77,6 +80,9 @@ export function setupIntegrationTest(): TestEnv {
 
       testHonoApp = new Hono();
       await setupContext(testHonoApp);
+      // Code under test may enqueue. Workers stay off in tests, so nothing runs behind a test's
+      // back; call a queue's `run` directly to exercise a handler.
+      await startQueues({ queues, postgres: context.postgres });
 
       sharedTestEnv = new TestEnv(context.postgres, context.valkey);
     }

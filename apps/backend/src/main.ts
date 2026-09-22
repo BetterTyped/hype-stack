@@ -6,17 +6,19 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 
 import { Env, validateEnv } from "./config/env/env.config";
-import { setupContext } from "./context";
+import { postgres, setupContext } from "./context";
 import { createAppSwapper, createBootApp } from "./libs/boot/boot-app";
 import { BootState, BootStage, getBootState, setBootError } from "./libs/boot/boot-state";
 import { logger } from "./libs/logger/logger";
 import { ApplicationError, AuthorizationError, DatabaseError, ValidationError } from "./middleware/error";
 import { AuthError } from "./middleware/error/auth-error/types";
 import { errorMiddleware, onError } from "./middleware/error/error-middleware";
+import { startQueues, stopQueues } from "./libs/queue/queue";
 import { startScheduler, stopScheduler } from "./libs/scheduler/scheduler";
 import { m } from "./paraglide/messages.js";
 import { paraglideMiddleware } from "./paraglide/server.js";
 import { jobs } from "./jobs";
+import { queues } from "./queues";
 import { registerRoutes } from "./routes";
 import { registerSockets } from "./sockets";
 import { freePort } from "./utils/misc/free-port";
@@ -72,6 +74,10 @@ const initialize = async (server: ReturnType<typeof serve>): Promise<Hono> => {
   registerSockets(app);
   registerRoutes(app);
 
+  // The task queue lives in Postgres, so it starts after context setup; queues are registered in
+  // src/queues/index.ts and worked by this same process.
+  await startQueues({ queues, postgres });
+
   // The scheduler needs the database (advisory locks, job_run bookkeeping), so it starts after
   // context setup; jobs are registered in src/jobs/index.ts.
   startScheduler(jobs);
@@ -125,15 +131,20 @@ const startServer = async () => {
   /* -------------------------------------------------------------------------------------------------
    * Graceful shutdown
    * -----------------------------------------------------------------------------------------------*/
-  const shutdown = () => {
+  let stopping = false;
+  const shutdown = async () => {
+    if (stopping) return;
+    stopping = true;
     logger.info("Shutting down server...");
     stopScheduler();
     server.close();
+    // Running tasks get up to 30s to finish; anything cut off is retried by the next instance.
+    await stopQueues().catch((error: unknown) => logger.error({ err: error }, "Task queue did not stop cleanly"));
     process.exit(0);
   };
 
-  process.on("SIGINT", shutdown);
-  process.on("SIGTERM", shutdown);
+  process.on("SIGINT", () => void shutdown());
+  process.on("SIGTERM", () => void shutdown());
 
   /* -------------------------------------------------------------------------------------------------
    * Initialize - on failure keep the server alive in dev to surface the reason, exit in prod
