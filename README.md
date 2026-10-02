@@ -43,7 +43,7 @@ npx @hype-stack/cli mcp install
 <h2 align="center">Deploy the entire stack with one command</h2>
 
 <p align="center">
-<a href="https://www.hype-stack.dev/docs/cli/deploy">
+<a href="https://www.hype-stack.dev/docs/cli/deploy?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme">
 <img src="./.github/assets/cli-deploy.png" alt="npx @hype-stack/cli deploy: services provisioned, environment variables set, migrations applied, backend, frontend and admin live" />
 </a>
 </p>
@@ -54,7 +54,7 @@ npx @hype-stack/cli deploy
 
 <p align="center">
 Frontend, admin, backend, Postgres, cache and storage, live on <a href="https://railway.app">Railway</a> or <a href="https://fly.io">Fly.io</a>.<br/>
-Mobile builds through EAS. The extension publishes to Chrome, Edge and Firefox. <a href="https://www.hype-stack.dev/docs/cli/deploy">Deploy docs</a>
+Mobile builds through EAS. The extension publishes to Chrome, Edge and Firefox. <a href="https://www.hype-stack.dev/docs/cli/deploy?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme">Deploy docs</a>
 </p>
 
 &nbsp;
@@ -122,14 +122,14 @@ npx @hype-stack/cli community   # Scaffold, validate and install packs anyone wr
 npx @hype-stack/cli mcp install # Give your AI editor the same commands as tools
 ```
 
-No lock-in. No runtime dependency. Just code in your repo. Every command is documented in the [CLI docs](https://www.hype-stack.dev/docs/cli).
+No lock-in. No runtime dependency. Just code in your repo. Every command is documented in the [CLI docs](https://www.hype-stack.dev/docs/cli?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme).
 
 &nbsp;
 
 ## Use Feature Packs. Or Build Your Own.
 
 <p align="center">
-<a href="https://www.hype-stack.dev/packs">
+<a href="https://www.hype-stack.dev/packs?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme">
 <img src="./.github/assets/cli-compose.png" alt="Use feature packs or build your own: npx @hype-stack/cli compose writes 56 files into your repo across backend, frontend and admin" />
 </a>
 </p>
@@ -147,10 +147,10 @@ A pack covers every layer at once: routes, Prisma models, webhook handlers, fron
 | **Cookie Consent** | Banner and preferences. Free |
 
 <p align="center">
-<a href="https://www.hype-stack.dev/packs"><b>Browse packs</b></a> ·
-<a href="https://www.hype-stack.dev/docs/cli/add-pack"><b>Adding a pack</b></a> ·
-<a href="https://www.hype-stack.dev/build-your-own"><b>Write your own pack</b></a> ·
-<a href="https://www.hype-stack.dev/docs/packs-templates/pack-manifest"><b>Manifest reference</b></a>
+<a href="https://www.hype-stack.dev/packs?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme"><b>Browse packs</b></a> ·
+<a href="https://www.hype-stack.dev/docs/cli/add-pack?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme"><b>Adding a pack</b></a> ·
+<a href="https://www.hype-stack.dev/build-your-own?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme"><b>Write your own pack</b></a> ·
+<a href="https://www.hype-stack.dev/docs/packs-templates/pack-manifest?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme"><b>Manifest reference</b></a>
 </p>
 
 > 🔑 Premium packs need a license. Run `npx @hype-stack/cli login` to install the ones your organization owns. The base template, the Basic layout and the Cookie Consent pack are open source forever.
@@ -168,62 +168,62 @@ npx @hype-stack/cli template open-calendar
 <table>
 <tr>
 <td width="50%" align="center">
-<a href="https://www.hype-stack.dev/templates/better-studio">
+<a href="https://www.hype-stack.dev/templates/better-studio?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme">
 <img src="./.github/assets/templates/better-studio.jpg" alt="Better Studio" />
 </a>
 <br/>
-<a href="https://www.hype-stack.dev/templates/better-studio"><b>Better Studio</b></a><br/>
+<a href="https://www.hype-stack.dev/templates/better-studio?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme"><b>Better Studio</b></a><br/>
 <sub>Auth, billing and an app shell</sub>
 </td>
 <td width="50%" align="center">
-<a href="https://www.hype-stack.dev/templates/open-calendar">
+<a href="https://www.hype-stack.dev/templates/open-calendar?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme">
 <img src="./.github/assets/templates/open-calendar.jpg" alt="Open Calendar" />
 </a>
 <br/>
-<a href="https://www.hype-stack.dev/templates/open-calendar"><b>Open Calendar</b></a><br/>
+<a href="https://www.hype-stack.dev/templates/open-calendar?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme"><b>Open Calendar</b></a><br/>
 <sub>Scheduling and calendar</sub>
 </td>
 </tr>
 <tr>
 <td width="50%" align="center">
-<a href="https://www.hype-stack.dev/templates/aether">
+<a href="https://www.hype-stack.dev/templates/aether?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme">
 <img src="./.github/assets/templates/aether.jpg" alt="Aether" />
 </a>
 <br/>
-<a href="https://www.hype-stack.dev/templates/aether"><b>Aether</b></a><br/>
+<a href="https://www.hype-stack.dev/templates/aether?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme"><b>Aether</b></a><br/>
 <sub>AI agent chat</sub>
 </td>
 <td width="50%" align="center">
-<a href="https://www.hype-stack.dev/templates/vault">
+<a href="https://www.hype-stack.dev/templates/vault?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme">
 <img src="./.github/assets/templates/vault.jpg" alt="Vault" />
 </a>
 <br/>
-<a href="https://www.hype-stack.dev/templates/vault"><b>Vault</b></a><br/>
+<a href="https://www.hype-stack.dev/templates/vault?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme"><b>Vault</b></a><br/>
 <sub>Workflow automation</sub>
 </td>
 </tr>
 <tr>
 <td width="50%" align="center">
-<a href="https://www.hype-stack.dev/templates/mind-map">
+<a href="https://www.hype-stack.dev/templates/mind-map?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme">
 <img src="./.github/assets/templates/mind-map.jpg" alt="Mind Map" />
 </a>
 <br/>
-<a href="https://www.hype-stack.dev/templates/mind-map"><b>Mind Map</b></a><br/>
+<a href="https://www.hype-stack.dev/templates/mind-map?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme"><b>Mind Map</b></a><br/>
 <sub>Collaborative whiteboard</sub>
 </td>
 <td width="50%" align="center">
-<a href="https://www.hype-stack.dev/templates/indie-hacker">
+<a href="https://www.hype-stack.dev/templates/indie-hacker?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme">
 <img src="./.github/assets/templates/indie-hacker.jpg" alt="Indie Hacker Portfolio" />
 </a>
 <br/>
-<a href="https://www.hype-stack.dev/templates/indie-hacker"><b>Indie Hacker Portfolio</b></a><br/>
+<a href="https://www.hype-stack.dev/templates/indie-hacker?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme"><b>Indie Hacker Portfolio</b></a><br/>
 <sub>Portfolio with live revenue and a newsletter</sub>
 </td>
 </tr>
 </table>
 
 <p align="center">
-<a href="https://www.hype-stack.dev/templates"><b>All templates</b></a>
+<a href="https://www.hype-stack.dev/templates?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme"><b>All templates</b></a>
 </p>
 
 &nbsp;
@@ -247,19 +247,19 @@ npx @hype-stack/cli template open-calendar
 ## Built for AI Agents
 
 <p align="center">
-<a href="https://www.hype-stack.dev/mcp">
+<a href="https://www.hype-stack.dev/mcp?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme">
 <img src="./.github/assets/mcp-server.png" alt="npx @hype-stack/cli mcp install: 11 MCP tools for Cursor, Claude Code, Windsurf and Copilot" />
 </a>
 </p>
 
-The codebase follows a [vertical architecture](https://tkdodo.eu/blog/the-vertical-codebase): each feature owns its routes, UI, data access, types and tests. `create` writes rules for the editor you pick, and the CLI runs as an MCP server so your agent can search the catalog, plan an install, add packs and set up the project. [MCP docs](https://www.hype-stack.dev/docs/cli/mcp)
+The codebase follows a [vertical architecture](https://tkdodo.eu/blog/the-vertical-codebase): each feature owns its routes, UI, data access, types and tests. `create` writes rules for the editor you pick, and the CLI runs as an MCP server so your agent can search the catalog, plan an install, add packs and set up the project. [MCP docs](https://www.hype-stack.dev/docs/cli/mcp?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme)
 
 &nbsp;
 
 ## One Backend, Five Clients
 
 <p align="center">
-<a href="https://www.hype-stack.dev/application">
+<a href="https://www.hype-stack.dev/application?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme">
 <img src="./.github/assets/five-clients.png" alt="Web, desktop, admin, mobile and extension apps sharing one typed Hono backend" />
 </a>
 </p>
@@ -323,7 +323,7 @@ pnpm typecheck        # Full type checking
 pnpm test             # Run all tests (backend: pnpm test:setup first)
 ```
 
-Full setup, environment variables and troubleshooting live in the [docs](https://www.hype-stack.dev/docs).
+Full setup, environment variables and troubleshooting live in the [docs](https://www.hype-stack.dev/docs?utm_source=hype-stack&utm_medium=referral&utm_campaign=readme).
 
 &nbsp;
 
