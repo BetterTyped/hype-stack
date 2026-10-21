@@ -10,6 +10,7 @@ import { postgres, setupContext } from "./context";
 import { createAppSwapper, createBootApp } from "./libs/boot/boot-app";
 import { BootState, BootStage, getBootState, setBootError } from "./libs/boot/boot-state";
 import { logger } from "./libs/logger/logger";
+import { initSentry } from "./libs/sentry/sentry";
 import { ApplicationError, AuthorizationError, DatabaseError, ValidationError } from "./middleware/error";
 import { AuthError } from "./middleware/error/auth-error/types";
 import { errorMiddleware, onError } from "./middleware/error/error-middleware";
@@ -160,6 +161,9 @@ const startServer = async () => {
       }
     });
 };
+
+// Before anything else runs, so startup failures reach Sentry too.
+initSentry();
 
 process.on("uncaughtException", (error) => {
   logger.error({ err: error }, "Uncaught exception");
