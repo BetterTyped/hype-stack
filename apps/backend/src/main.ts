@@ -137,7 +137,8 @@ const startServer = async () => {
     if (stopping) return;
     stopping = true;
     logger.info("Shutting down server...");
-    stopScheduler();
+    // Not awaited: it waits for running jobs, and exiting below releases their locks anyway.
+    void stopScheduler();
     server.close();
     // Running tasks get up to 30s to finish; anything cut off is retried by the next instance.
     await stopQueues().catch((error: unknown) => logger.error({ err: error }, "Task queue did not stop cleanly"));

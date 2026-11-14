@@ -2,7 +2,7 @@ import { captureException } from "@sentry/node";
 import { Cron } from "croner";
 import { sql } from "kysely";
 
-import { postgres } from "../../context";
+import { createQueryBuilder } from "../../db/postgres/initialize";
 import { logger } from "../logger/logger";
 
 /**
@@ -24,6 +24,9 @@ import { logger } from "../logger/logger";
  * Keep `run` fast: claim work, kick off long work detached, return. The advisory lock and its
  * transaction stay open for the duration of `run`, which is the point for a mutex and a liability
  * for a half-hour task.
+ *
+ * That open transaction never comes from `postgres.qb`, the pool the job itself and every request
+ * query through; see `lockDb`.
  */
 export type JobDefinition = {
   /** Unique, stable identifier. Also the advisory-lock key and the `job_run` primary key. */
@@ -44,7 +47,22 @@ export type JobDefinition = {
 /** Advisory-lock class id for scheduler locks, so they can never collide with other lock users. */
 const LOCK_CLASS_ID = 0x4a_4f_42_53; // "JOBS"
 
+/**
+ * How many jobs run at the same moment in this process; the rest of a busy minute wait their turn.
+ * Jobs query through the same pool as requests, so only a few at a time may be drawing on it.
+ */
+const MAX_JOBS_AT_ONCE = 4;
+
 let active: Cron[] = [];
+
+/**
+ * The connections the locks are held on, apart from `postgres.qb`. A lock's transaction stays open
+ * for the whole run while the job queries through `postgres.qb`. If the lock came from that pool
+ * too, ten jobs due in the same minute would take all ten of its connections and each wait for one
+ * more: none could finish, and every query in the process would queue behind them until a restart.
+ */
+let lockDb: ReturnType<typeof createQueryBuilder> | undefined;
+const getLockDb = () => (lockDb ??= createQueryBuilder({ max: MAX_JOBS_AT_ONCE }));
 
 /**
  * The most recent time the pattern fired at or before `now`, computed from the pattern itself.
@@ -97,9 +115,10 @@ export const assertValidJobs = (jobs: JobDefinition[]): void => {
  * instance can never wedge a job forever. Inside the lock the `job_run` row is the second guard:
  * if another instance already executed this fire (or a later one), this run is a no-op.
  */
-const executeJob = async (job: JobDefinition, fireTime: Date): Promise<void> => {
+export const executeJob = async (job: JobDefinition, fireTime: Date): Promise<void> => {
   try {
-    await postgres.qb.transaction().execute(async (trx) => {
+    const locks = getLockDb();
+    await locks.transaction().execute(async (trx) => {
       const lock = await sql<{ locked: boolean }>`
         select pg_try_advisory_xact_lock(${LOCK_CLASS_ID}, hashtext(${job.name})) as locked
       `.execute(trx);
@@ -160,7 +179,10 @@ export const startScheduler = (jobs: JobDefinition[]): void => {
   logger.info(`Scheduler started with ${jobs.length} job(s)`);
 };
 
-export const stopScheduler = (): void => {
+export const stopScheduler = async (): Promise<void> => {
   for (const cron of active) cron.stop();
   active = [];
+  // Waits for the runs in flight to let go of their locks, then closes the lock connections.
+  await lockDb?.destroy();
+  lockDb = undefined;
 };
