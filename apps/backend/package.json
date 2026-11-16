@@ -32,6 +32,7 @@
     "test:watch": "vitest",
     "test:services": "docker compose -f docker-compose.test.yml up -d && sleep 10",
     "test:migrate": "DATABASE_URL=postgresql://ai_user:ai_password@localhost:5434/hype_stack_test?schema=public prisma migrate deploy",
+    "test:db-push": "DATABASE_URL=postgresql://ai_user:ai_password@localhost:5434/hype_stack_test?schema=public prisma db push",
     "test:generate": "DATABASE_URL=postgresql://ai_user:ai_password@localhost:5434/hype_stack_test?schema=public prisma generate",
     "test:setup": "npm run test:services && npm run test:migrate && npm run test:generate",
     "test:clean": "docker compose -f docker-compose.test.yml down -v"

@@ -104,5 +104,10 @@ jobs:
         run: docker compose -f apps/backend/docker-compose.test.yml --env-file apps/backend/.env.test up -d --wait
       - name: Run test migrations
         run: pnpm --filter @hype-stack/backend test:migrate
+      # With no migrations yet (this template before its first `migration:create`) the step above
+      # applies nothing and the test database stays empty, so build the tables from the schema.
+      - name: Push the schema when there are no migrations
+        if: hashFiles('apps/backend/prisma/migrations/*/migration.sql') == ''
+        run: pnpm --filter @hype-stack/backend test:db-push
       - name: Test
         run: pnpm run test
