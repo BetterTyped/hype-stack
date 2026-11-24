@@ -17,5 +17,8 @@ client.adapter.setRequestDefaults((request) => ({
 const wsProtocol = API_BASE_URL.startsWith("https") ? "wss" : "ws";
 const wsHost = API_BASE_URL.replace(/^https?:\/\//, "");
 
-export const socket = new Socket({ url: `${wsProtocol}://${wsHost}/ws` });
-export const adminSocket = new Socket({ url: `${wsProtocol}://${wsHost}/ws/admin` });
+// Sockets connect wherever a global WebSocket exists, so skip it while rendering on the server.
+const autoConnect = typeof window !== "undefined";
+
+export const socket = new Socket({ url: `${wsProtocol}://${wsHost}/ws`, adapterOptions: { autoConnect } });
+export const adminSocket = new Socket({ url: `${wsProtocol}://${wsHost}/ws/admin`, adapterOptions: { autoConnect } });

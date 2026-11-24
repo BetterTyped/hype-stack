@@ -1,7 +1,7 @@
 import type { SocketRouter } from "@backend/libs/websocket/socket-router";
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Listener, Emitter, SocketInstance } from "@hyper-fetch/sockets";
+import type { ListenerModel, Emitter, SocketInstance } from "@hyper-fetch/sockets";
 
 type Prettify<T> = {
   [K in keyof T]: T[K];
@@ -31,7 +31,7 @@ type NestListeners<Listeners extends Record<string, any>, S extends SocketInstan
     {
       [Topic in keyof Listeners & string]: BuildNestedObject<
         SplitPath<Topic>,
-        { $listener: Listener<Listeners[Topic], Topic, S> }
+        { $listener: ListenerModel<{ response: Listeners[Topic]; topic: Topic; socket: S }> }
       >;
     }[keyof Listeners & string]
   >
@@ -116,12 +116,12 @@ type SocketRoutesToEvents<T extends readonly (readonly [string, SocketRouter<any
  * type Schema = SocketRoutesToSdk<typeof sockets, typeof socket>;
  * // {
  * //   notification: {
- * //     new: { $listener: Listener<WsNotificationPayload, "notification/new", Socket> };
- * //     count: { $listener: Listener<WsUnreadCountPayload, "notification/count", Socket> };
+ * //     new: { $listener: ListenerModel<{ response: WsNotificationPayload; topic: "notification/new"; socket: Socket }> };
+ * //     count: { $listener: ListenerModel<{ response: WsUnreadCountPayload; topic: "notification/count"; socket: Socket }> };
  * //     markRead: { $emitter: Emitter<WsMarkReadPayload, "notification/mark-read", Socket> };
  * //   };
  * //   invitation: {
- * //     new: { $listener: Listener<WsInvitationPayload, "invitation/new", Socket> };
+ * //     new: { $listener: ListenerModel<{ response: WsInvitationPayload; topic: "invitation/new"; socket: Socket }> };
  * //   };
  * // }
  * ```
